@@ -1,0 +1,17 @@
+
+Running 12 tests using 1 worker
+
+  ✓   1 [chromium] › e2e/visibility.spec.ts:72:7 › homepage content is visible › hero, product cards, trust/quality and CTA are visible after load and after scroll (7.8s)
+  ✓   2 [chromium] › e2e/visibility.spec.ts:104:7 › homepage content is visible › an instant jump to the bottom (End key / anchor) still reveals everything passed (3.5s)
+  ✓   3 [chromium] › e2e/visibility.spec.ts:114:7 › homepage content is visible › the hero 'why trust us' anchor lands on the trust journey (5.7s)
+  ✓   4 [chromium] › e2e/visibility.spec.ts:124:7 › degraded environments › JavaScript disabled: every section is visible (1.8s)
+  ✓   5 [chromium] › e2e/visibility.spec.ts:137:7 › degraded environments › IntersectionObserver never fires: scroll fallback reveals content (6.7s)
+  ✓   6 [chromium] › e2e/visibility.spec.ts:161:7 › degraded environments › hydration never happens: the page is still fully visible (3.6s)
+  ✓   7 [chromium] › e2e/visibility.spec.ts:176:7 › degraded environments › slow hydration: above-the-fold content is painted before React runs (1.8s)
+  ✓   8 [chromium] › e2e/visibility.spec.ts:192:7 › degraded environments › prefers-reduced-motion: no entrance motion and nothing hidden (2.6s)
+  ✓   9 [chromium] › e2e/visibility.spec.ts:219:9 › layout integrity › no horizontal overflow at phone (375px) in both locales (11.0s)
+  ✓  10 [chromium] › e2e/visibility.spec.ts:219:9 › layout integrity › no horizontal overflow at tablet (768px) in both locales (12.9s)
+  ✓  11 [chromium] › e2e/visibility.spec.ts:219:9 › layout integrity › no horizontal overflow at desktop (1440px) in both locales (18.0s)
+  ✓  12 [chromium] › e2e/visibility.spec.ts:233:7 › layout integrity › phone: primary interactive targets are at least 44×44 (4.6s)
+
+  12 passed (1.3m)

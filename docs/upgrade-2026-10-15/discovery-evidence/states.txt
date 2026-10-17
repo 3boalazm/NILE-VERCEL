@@ -1,0 +1,9 @@
+Discovery ar/320: empty, filtered, atlas, chapter
+Discovery ar/390: empty, filtered, atlas, chapter
+Discovery ar/768: empty, filtered, atlas, chapter
+Discovery ar/1440: empty, filtered, atlas, chapter
+Discovery en/320: empty, filtered, atlas, chapter
+Discovery en/390: empty, filtered, atlas, chapter
+Discovery en/768: empty, filtered, atlas, chapter
+Discovery en/1440: empty, filtered, atlas, chapter
+32 responsive visits; 32 axe audits; 0 page errors; 0 failures

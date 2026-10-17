@@ -1,0 +1,458 @@
+{
+  "timestamp": "2026-10-15T17:00:15.237Z",
+  "base": "http://127.0.0.1:3000",
+  "visits": [
+    {
+      "locale": "ar",
+      "width": 320,
+      "state": "empty",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "ar",
+      "width": 320,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "ar",
+      "width": 320,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "ar",
+      "width": 320,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "empty",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "ar",
+      "width": 768,
+      "state": "empty",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "ar",
+      "width": 768,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "ar",
+      "width": 768,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "ar",
+      "width": 768,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "empty",
+      "status": 200,
+      "scroll": 1440
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 1440
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 1440
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 1440
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "state": "empty",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "en",
+      "width": 320,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 320
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "empty",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 390
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "state": "empty",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "en",
+      "width": 768,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 768
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "empty",
+      "status": 200,
+      "scroll": 1440
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "filtered",
+      "status": 200,
+      "scroll": 1440
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "atlas",
+      "status": 200,
+      "scroll": 1440
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "chapter",
+      "status": 200,
+      "scroll": 1440
+    }
+  ],
+  "audits": [
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "empty",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "empty",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "filtered",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "filtered",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "atlas",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "atlas",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "chapter",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 390,
+      "state": "chapter",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "empty",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "empty",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "filtered",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "filtered",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "atlas",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "atlas",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "chapter",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "state": "chapter",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "empty",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "empty",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "filtered",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "filtered",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "atlas",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "atlas",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "chapter",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "state": "chapter",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "empty",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "empty",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "filtered",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "filtered",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "atlas",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "atlas",
+      "theme": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "chapter",
+      "theme": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "state": "chapter",
+      "theme": "dark",
+      "violations": []
+    }
+  ],
+  "errors": [],
+  "failures": []
+}

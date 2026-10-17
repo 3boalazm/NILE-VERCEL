@@ -1,0 +1,421 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Tailwind v4's `dark:` defaults to the prefers-color-scheme media query.
+   Our toggle (theme-toggle.tsx) manually adds/removes a `.dark` class on
+   <html> instead, independent of OS preference — without this override,
+   any `dark:` utility (e.g. header.tsx's dark:bg-card) would only react to
+   OS-level dark mode and ignore the toggle entirely. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-anti-flash-white: var(--anti-flash-white);
+  --color-anti-flash-navy: var(--anti-flash-navy);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-plex-mono);
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --animate-marquee: marquee 36s linear infinite;
+  --animate-marquee-rtl: marquee-rtl 36s linear infinite;
+}
+
+:root {
+  --background: #f3f1e9;
+  --foreground: #101d29;
+  --card: #ffffff;
+  --card-foreground: #101d29;
+  --popover: #fff;
+  --popover-foreground: #101d29;
+  --primary: #1749e8;
+  --primary-foreground: #fff;
+  --secondary: #101d29;
+  --secondary-foreground: #f3f1e9;
+  --muted: #e7e9e1;
+  --muted-foreground: #52616a;
+  --accent: #d7ee9a;
+  --accent-foreground: #101d29;
+  --destructive: #bb2929;
+  --border: #cbd2cf;
+  --input: #bdc8c6;
+  --ring: #1749e8;
+  --anti-flash-white: #f3f1e9;
+  --anti-flash-navy: #101d29;
+  --radius: 0.3rem;
+  --chart-1: #1749e8;
+  --chart-2: #d7ee9a;
+  --chart-3: #51667b;
+  --chart-4: #9eb4c5;
+  --chart-5: #101d29;
+  --sidebar: var(--background);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: var(--muted);
+  --sidebar-accent-foreground: var(--foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+  --ca-ink: #101d29;
+  --ca-paper: #f3f1e9;
+  --ca-blue: #1749e8;
+  --ca-line: #d3d3cb;
+  --ca-muted: #59626a;
+  --ca-acid: #d7ee9a;
+  --ca-font: var(--font-sans);
+  --ca-gutter: clamp(22px, 4.2vw, 76px);
+}
+.dark {
+  --background: #101d29;
+  --foreground: #f3f1e9;
+  --card: #172936;
+  --card-foreground: #f3f1e9;
+  --popover: #172936;
+  --popover-foreground: #f3f1e9;
+  --primary: #d7ee9a;
+  --primary-foreground: #101d29;
+  --secondary: #253e53;
+  --secondary-foreground: #f3f1e9;
+  --muted: #253845;
+  --muted-foreground: #bdcbd4;
+  --accent: #253845;
+  --accent-foreground: #f3f1e9;
+  --border: #405665;
+  --input: #506879;
+  --ring: #d7ee9a;
+  --destructive: #ffaaaa;
+}
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 30px;
+  }
+  body {
+    @apply bg-background text-foreground;
+    line-height: 1.8;
+  }
+}
+html[lang="en"] {
+  --font-sans: Arial, Helvetica, sans-serif;
+  --ca-font: Arial, Helvetica, sans-serif;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+}
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--ring);
+  outline-offset: 5px;
+}
+:where(button, a, input, select, textarea) {
+  -webkit-tap-highlight-color: transparent;
+}
+button[data-slot="button"] {
+  min-height: 44px;
+}
+::selection {
+  background: #d7ee9a;
+  color: #101d29;
+}
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 10px;
+  inset-inline-start: 20px;
+  transform: translateY(-180%);
+  padding: 12px 24px;
+  background: #d7ee9a;
+  color: #101d29;
+}
+.skip-link:focus {
+  transform: none;
+}
+.preview-notice {
+  position: relative;
+  z-index: 45;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 34px;
+  background: #d7ee9a;
+  color: #16251c;
+  font-size: 10px;
+  line-height: 1.6;
+  text-align: center;
+  padding: 6px 16px;
+}
+.eyebrow {
+  font-size: 12px;
+  font-weight: 500;
+}
+html[lang="en"] .eyebrow {
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+@media (max-width: 760px) {
+  :root {
+    --ca-gutter: 24px;
+  }
+  .preview-notice {
+    font-size: 9px;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --ca-gutter: 19px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Scroll reveals (components/npf/motion/reveal.tsx) — progressive
+   enhancement, the P0 fix from the UX audit. Server HTML is fully visible
+   and stays visible through first paint and hydration. An element is only
+   hidden once ALL of these hold:
+     1. JavaScript has run: `html.js` is added by the inline head script in
+        layout.tsx (no JS → no class → nothing can hide).
+     2. The user has not asked for reduced motion.
+     3. React has mounted the component and *armed* it because it sits
+        below the viewport (`data-reveal-armed` without `data-revealed`).
+        Anything on screen at mount is revealed in the same task, so the
+        LCP element and above-the-fold content never paint hidden — even
+        while hydration is still running on a slow device.
+   The component flips `data-revealed` on when the element scrolls into
+   view (IntersectionObserver, with a passive scroll sweep as fallback).
+   Only opacity / transform / filter / clip-path are animated — compositor
+   work, no layout. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js [data-reveal] {
+    --reveal-duration: 0.6s;
+    --reveal-ease: cubic-bezier(0.21, 0.47, 0.32, 0.98);
+    transition:
+      opacity var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0s),
+      transform var(--reveal-duration) var(--reveal-ease)
+        var(--reveal-delay, 0s),
+      filter var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0s),
+      clip-path 0.9s cubic-bezier(0.77, 0, 0.18, 1) var(--reveal-delay, 0s);
+  }
+  html.js [data-reveal][data-reveal-armed]:not([data-revealed]) {
+    opacity: 0;
+  }
+  html.js [data-reveal="fadeSlideUp"][data-reveal-armed]:not([data-revealed]) {
+    transform: translateY(24px);
+  }
+  html.js [data-reveal="scaleIn"][data-reveal-armed]:not([data-revealed]) {
+    transform: scale(0.94);
+  }
+  html.js [data-reveal="blurUp"][data-reveal-armed]:not([data-revealed]) {
+    transform: translateY(20px);
+    filter: blur(10px);
+  }
+  html.js [data-reveal="clipReveal"] {
+    clip-path: inset(0 0 0% 0);
+  }
+  html.js [data-reveal="clipReveal"][data-reveal-armed]:not([data-revealed]) {
+    opacity: 1;
+    clip-path: inset(0 0 100% 0);
+  }
+}
+/* Print / save-as-PDF: no scroll, so no reveals — everything is shown. */
+@media print {
+  html.js [data-reveal],
+  html.js .hero-enter,
+  html.js .hero-enter-soft,
+  html.js .hero-enter-media,
+  html.js .page-enter {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Page-transition fade (app/[locale]/template.tsx) — replays on every
+   navigation because templates re-mount. Keyframes rather than a hidden
+   initial state so server HTML never carries opacity:0, and the fade starts
+   from a *visible* 0.4 rather than 0: Chrome never counts content first
+   painted at opacity 0 as an LCP candidate, so a 0→1 page fade would
+   silently drop the hero from the metric (measured: LCP fell back to a
+   40px nav link). */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .page-enter {
+    animation: npf-page-enter 0.3s ease-out both;
+  }
+}
+@keyframes npf-page-enter {
+  from {
+    opacity: 0.4;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Hero entrance (components/npf/hero.tsx). Pure CSS keyframes that start at
+   first paint — deliberately NOT a scroll reveal, so the LCP element never
+   waits on hydration. Stagger via --enter-delay. Three grades:
+     .hero-enter        headline / lead / CTAs — slide + partial fade; the
+                        text is painted (opacity > 0) from the first frame
+                        so it stays an LCP candidate
+     .hero-enter-soft   small trims (eyebrow, chips, floating cards) — may
+                        fade from 0, they are never the LCP element
+     .hero-enter-media  the product photo — settle-in scale, partial fade
+   Disabled entirely under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .hero-enter {
+    animation: npf-hero-enter 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98) both;
+    animation-delay: var(--enter-delay, 0s);
+  }
+  html.js .hero-enter-soft {
+    animation: npf-hero-enter-soft 0.7s cubic-bezier(0.21, 0.47, 0.32, 0.98)
+      both;
+    animation-delay: var(--enter-delay, 0s);
+  }
+  html.js .hero-enter-media {
+    animation: npf-hero-enter-media 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98)
+      both;
+    animation-delay: var(--enter-delay, 0.1s);
+  }
+}
+@keyframes npf-hero-enter {
+  from {
+    opacity: 0.35;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes npf-hero-enter-soft {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes npf-hero-enter-media {
+  from {
+    opacity: 0.5;
+    transform: scale(0.965);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Editorial story band (app/[locale]/page.tsx): a slow, scroll-driven drift
+   of the background photo. Pure CSS (scroll-driven animations) — no JS, no
+   scroll listener, transform-only. Browsers without `animation-timeline`
+   simply show the static photo; reduced-motion users too. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .story-parallax {
+      animation: npf-story-parallax linear both;
+      animation-timeline: view();
+      will-change: transform;
+    }
+  }
+}
+@keyframes npf-story-parallax {
+  from {
+    transform: translateY(-5%) scale(1.12);
+  }
+  to {
+    transform: translateY(5%) scale(1.12);
+  }
+}
+
+/* Trust-journey progress rail (components/npf/trust-journey.tsx). Fully
+   drawn by default; once the component is live (JS + motion allowed) it
+   scales with --journey-progress, which the scroll listener updates.
+   Vertical rail on mobile (scaleY), horizontal on lg+ (scaleX). */
+.journey-fill {
+  transform: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-journey-live] .journey-fill {
+    transform: scaleY(var(--journey-progress, 0));
+    transition: transform 0.15s linear;
+  }
+  @media (min-width: 64rem) {
+    [data-journey-live] .journey-fill {
+      transform: scaleX(var(--journey-progress, 0));
+    }
+  }
+}
+
+/* Partner marquee keyframes (components/npf/brand-marquee.tsx). LTR slides
+   left (translateX 0 → -50%), RTL slides right (0 → +50%) so the strip
+   always moves in the reading direction. The track is duplicated once in
+   the component, so -50%/+50% loops seamlessly. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+@keyframes marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(50%);
+  }
+}

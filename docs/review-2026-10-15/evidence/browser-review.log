@@ -1,0 +1,416 @@
+{
+  "pages": 52,
+  "overflows": [
+    {
+      "route": "/en",
+      "width": 320,
+      "status": 200,
+      "title": "Nile Pharma Food",
+      "lang": "en",
+      "dir": "ltr",
+      "clientWidth": 320,
+      "scrollWidth": 351,
+      "h1": [
+        "European-standard health products, trusted in Egypt"
+      ],
+      "brokenImages": [],
+      "overflowElements": []
+    },
+    {
+      "route": "/en",
+      "width": 1024,
+      "status": 200,
+      "title": "Nile Pharma Food",
+      "lang": "en",
+      "dir": "ltr",
+      "clientWidth": 1024,
+      "scrollWidth": 1155,
+      "h1": [
+        "European-standard health products, trusted in Egypt"
+      ],
+      "brokenImages": [],
+      "overflowElements": [
+        {
+          "tag": "A",
+          "text": "",
+          "right": 1071.390625,
+          "left": 1039.390625
+        },
+        {
+          "tag": "SPAN",
+          "text": "",
+          "right": 1065.390625,
+          "left": 1045.390625
+        },
+        {
+          "tag": "svg",
+          "text": "",
+          "right": 1065.390625,
+          "left": 1045.390625
+        },
+        {
+          "tag": "path",
+          "text": "",
+          "right": 1060.390625,
+          "left": 1047.0989990234375
+        },
+        {
+          "tag": "path",
+          "text": "",
+          "right": 1063.7239990234375,
+          "left": 1049.193115234375
+        },
+        {
+          "tag": "circle",
+          "text": "",
+          "right": 1062.0572509765625,
+          "left": 1058.7239990234375
+        },
+        {
+          "tag": "circle",
+          "text": "",
+          "right": 1053.7239990234375,
+          "left": 1050.390625
+        },
+        {
+          "tag": "A",
+          "text": "AR",
+          "right": 1107.390625,
+          "left": 1087.390625
+        }
+      ]
+    },
+    {
+      "route": "/en/products",
+      "width": 1024,
+      "status": 200,
+      "title": "Products | Nile Pharma Food",
+      "lang": "en",
+      "dir": "ltr",
+      "clientWidth": 1024,
+      "scrollWidth": 1155,
+      "h1": [
+        "Products"
+      ],
+      "brokenImages": [],
+      "overflowElements": [
+        {
+          "tag": "A",
+          "text": "",
+          "right": 1071.390625,
+          "left": 1039.390625
+        },
+        {
+          "tag": "SPAN",
+          "text": "",
+          "right": 1065.390625,
+          "left": 1045.390625
+        },
+        {
+          "tag": "svg",
+          "text": "",
+          "right": 1065.390625,
+          "left": 1045.390625
+        },
+        {
+          "tag": "path",
+          "text": "",
+          "right": 1060.390625,
+          "left": 1047.0989990234375
+        },
+        {
+          "tag": "path",
+          "text": "",
+          "right": 1063.7239990234375,
+          "left": 1049.193115234375
+        },
+        {
+          "tag": "circle",
+          "text": "",
+          "right": 1062.0572509765625,
+          "left": 1058.7239990234375
+        },
+        {
+          "tag": "circle",
+          "text": "",
+          "right": 1053.7239990234375,
+          "left": 1050.390625
+        },
+        {
+          "tag": "A",
+          "text": "AR",
+          "right": 1107.390625,
+          "left": 1087.390625
+        }
+      ],
+      "canonical": "https://nilepharmafood.com/en/products"
+    },
+    {
+      "route": "/ar/products/proxeed-plus",
+      "width": 1024,
+      "status": 200,
+      "title": "Proxeed Plus | نايل فارما فود",
+      "lang": "ar",
+      "dir": "rtl",
+      "clientWidth": 1024,
+      "scrollWidth": 1064,
+      "h1": [
+        "Proxeed Plus"
+      ],
+      "brokenImages": [],
+      "overflowElements": [],
+      "canonical": "https://nilepharmafood.com/ar/products/proxeed-plus"
+    },
+    {
+      "route": "/en/products/proxeed-plus",
+      "width": 1024,
+      "status": 200,
+      "title": "Proxeed Plus | Nile Pharma Food",
+      "lang": "en",
+      "dir": "ltr",
+      "clientWidth": 1024,
+      "scrollWidth": 1155,
+      "h1": [
+        "Proxeed Plus"
+      ],
+      "brokenImages": [],
+      "overflowElements": [
+        {
+          "tag": "A",
+          "text": "",
+          "right": 1071.390625,
+          "left": 1039.390625
+        },
+        {
+          "tag": "SPAN",
+          "text": "",
+          "right": 1065.390625,
+          "left": 1045.390625
+        },
+        {
+          "tag": "svg",
+          "text": "",
+          "right": 1065.390625,
+          "left": 1045.390625
+        },
+        {
+          "tag": "path",
+          "text": "",
+          "right": 1060.390625,
+          "left": 1047.0989990234375
+        },
+        {
+          "tag": "path",
+          "text": "",
+          "right": 1063.7239990234375,
+          "left": 1049.193115234375
+        },
+        {
+          "tag": "circle",
+          "text": "",
+          "right": 1062.0572509765625,
+          "left": 1058.7239990234375
+        },
+        {
+          "tag": "circle",
+          "text": "",
+          "right": 1053.7239990234375,
+          "left": 1050.390625
+        },
+        {
+          "tag": "A",
+          "text": "AR",
+          "right": 1107.390625,
+          "left": 1087.390625
+        }
+      ],
+      "canonical": "https://nilepharmafood.com/en/products/proxeed-plus"
+    }
+  ],
+  "accessibility": [
+    {
+      "route": "/ar",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 6
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "route": "/en",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 6
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "route": "/ar/products",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 2
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "route": "/en/products",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 11
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "route": "/ar/products/proxeed-plus",
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "nodes": 1
+        },
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "route": "/ar/contact",
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "route": "/ar/login",
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    },
+    {
+      "route": "/ar/register",
+      "violations": [
+        {
+          "id": "label-content-name-mismatch",
+          "impact": "serious",
+          "nodes": 1
+        }
+      ]
+    }
+  ],
+  "interaction": [
+    {
+      "test": "locale switch preserves discovery context",
+      "before": "http://127.0.0.1:3000/ar/products?need=men&q=proxeed",
+      "target": "/en/products",
+      "after": "http://127.0.0.1:3000/ar/products?need=men&q=proxeed"
+    },
+    {
+      "test": "mobile header sheet",
+      "visible": true,
+      "closedByEscape": false
+    }
+  ],
+  "pageErrors": [
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')",
+    "Cannot read properties of undefined (reading 'waiting')"
+  ]
+}

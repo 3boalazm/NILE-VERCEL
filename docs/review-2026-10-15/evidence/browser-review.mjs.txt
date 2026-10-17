@@ -1,0 +1,32 @@
+import fs from 'node:fs';
+import {chromium} from '/home/user/NPF/node_modules/playwright/index.mjs';
+import c from '../review-tools/node_modules/@sparticuz/chromium/build/index.js';
+const browser = await chromium.launch({executablePath:await c.executablePath(),args:c.args.filter(a=>!['--single-process','--disable-web-security','--allow-running-insecure-content'].includes(a))});
+const result={environment:{browser:browser.version(),catalog:'mock',commerce:'offline',origin:'http://127.0.0.1:3000'},pages:[],interaction:[],accessibility:[]};
+const ctx=await browser.newContext({reducedMotion:'reduce',serviceWorkers:'block'});
+const page=await ctx.newPage(); const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+const routes=['/ar','/en','/ar/products','/en/products','/ar/products/proxeed-plus','/en/products/proxeed-plus','/ar/contact','/ar/about','/ar/cart','/ar/checkout','/ar/login','/ar/register','/ar/wishlist'];
+for (const width of [320,390,1024,1440]) {
+ await page.setViewportSize({width,height:900});
+ for(const route of routes){
+  const response=await page.goto('http://127.0.0.1:3000'+route); await page.waitForTimeout(200);
+  const measurements=await page.evaluate(()=>({title:document.title,lang:document.documentElement.lang,dir:document.documentElement.dir,clientWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,h1:[...document.querySelectorAll('h1')].map(e=>e.textContent),brokenImages:[...document.images].filter(i=>i.complete&&!i.naturalWidth).map(i=>i.getAttribute('src')),overflowElements:[...document.querySelectorAll('header *')].filter(e=>{const r=e.getBoundingClientRect();return r.width&& (r.right>innerWidth+1||r.left < -1)}).slice(0,8).map(e=>({tag:e.tagName,text:e.textContent?.slice(0,70),right:e.getBoundingClientRect().right,left:e.getBoundingClientRect().left})),canonical:document.querySelector('link[rel=canonical]')?.getAttribute('href')}));
+  result.pages.push({route,width,status:response.status(),...measurements});
+ }
+}
+for(const route of ['/ar','/en','/ar/products','/en/products','/ar/products/proxeed-plus','/ar/contact','/ar/login','/ar/register']){
+ await page.setViewportSize({width:1440,height:900}); await page.goto('http://127.0.0.1:3000'+route);
+ await page.addScriptTag({path:'/home/user/NPF/.cache/review-tools/node_modules/axe-core/axe.min.js'});
+ const a=await page.evaluate(async()=>{const r=await axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa']}});return {violations:r.violations.map(v=>({id:v.id,impact:v.impact,description:v.description,help:v.help,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))})),incomplete:r.incomplete.map(v=>({id:v.id,nodeCount:v.nodes.length}))}});
+ result.accessibility.push({route,...a});
+}
+await page.goto('http://127.0.0.1:3000/ar/products?need=men&q=proxeed');
+const switcher=page.getByRole('link',{name:'Switch to English'});result.interaction.push({test:'locale switch preserves discovery context',before:page.url(),target:await switcher.getAttribute('href')});
+await switcher.click();result.interaction.at(-1).after=page.url();
+await page.setViewportSize({width:390,height:844});await page.goto('http://127.0.0.1:3000/ar');
+await page.locator('header button').last().click();const dialog=page.getByRole('dialog');
+result.interaction.push({test:'mobile header sheet',visible:await dialog.isVisible()});await page.keyboard.press('Escape');result.interaction.at(-1).closedByEscape=!(await dialog.isVisible());
+await page.goto('http://127.0.0.1:3000/ar'); await page.screenshot({path:'/home/user/NPF/docs/review-2026-10-15/evidence/home-ar-mobile.png',fullPage:true});
+await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:3000/en'); await page.screenshot({path:'/home/user/NPF/docs/review-2026-10-15/evidence/home-en-desktop.png',fullPage:true});
+result.pageErrors=errors;fs.writeFileSync('/home/user/NPF/docs/review-2026-10-15/evidence/browser-review.json',JSON.stringify(result,null,2));console.log(JSON.stringify({pages:result.pages.length,overflows:result.pages.filter(p=>p.scrollWidth>p.clientWidth),accessibility:result.accessibility.map(a=>({route:a.route,violations:a.violations.map(v=>({id:v.id,impact:v.impact,nodes:v.nodes.length}))})),interaction:result.interaction,pageErrors:errors},null,2));
+await browser.close();

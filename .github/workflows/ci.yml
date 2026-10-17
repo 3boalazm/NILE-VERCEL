@@ -1,0 +1,188 @@
+name: CI
+
+# build: install, lint, build (build already runs TypeScript
+# type-checking as part of `next build --webpack`, so there's no separate
+# typecheck step). Needs DATABASE_URI/PAYLOAD_SECRET secrets (see
+# src/payload.config.ts — it fails fast if either is missing); a
+# dummy/throwaway Postgres connection string is fine since the build
+# doesn't need real data, just a reachable DB at build time.
+# VENDURE_SHOP_API_URL is deliberately NOT required: catalog pricing
+# prefers live Vendure prices but falls back to the mock bridge when
+# Vendure is unreachable (see src/lib/vendure/pricing.ts).
+#
+# unit: vitest suites (pure logic, no infrastructure).
+#
+# e2e: Playwright smoke suite against `next start` + a fresh Postgres
+# service, seeded via `npm run seed`. Vendure-dependent commerce tests
+# skip themselves when Vendure is unreachable (see e2e/commerce.spec.ts).
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Cancel any previous run for the same PR/branch instead of letting pushes
+# stack up competing for the same runner slots (each push can otherwise leave
+# the heavier build/e2e jobs queued behind their own stale predecessors).
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The build prerenders the catalog routes, so `next build` needs a
+    # REACHABLE Postgres at build time (per README "Notes for deploys").
+    # Self-sufficient service container + throwaway credentials — no repo
+    # secrets required, and the payload config's fail-fast env checks get
+    # real values. (MOCK_CATALOG_FALLBACK is deliberately NOT set: builds
+    # should exercise the real repository, not the mock bridge.)
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: npf_build
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URI: postgresql://postgres:postgres@localhost:5432/npf_build
+      PAYLOAD_SECRET: ci-only-throwaway-secret-not-a-real-credential
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # The storefront build prerenders catalog routes, which read Payload
+      # collections directly; the service container's fresh Postgres has no
+      # schema yet (Payload only creates tables in dev mode), so seed first —
+      # same flow as the e2e job and the README's local build instructions.
+      # The seed is hard-timed (`timeout`) so a hung schema-push prompt fails
+      # loudly instead of stalling the job forever.
+      - name: Seed catalog
+        run: timeout 180 npm run seed
+
+      - name: Generate route types
+        run: npx next typegen
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+  # Dependency-free and database-free, so it runs in seconds and gives the
+  # fastest possible signal. F-11: `.env.example` documented SUPERADMIN_USER /
+  # SUPERADMIN_PASS while the code read SUPERADMIN_USERNAME / SUPERADMIN_PASSWORD
+  # — copying the documented file silently produced a super-admin nobody could
+  # log in as, and nothing failed. This job makes that class of drift a red CI.
+  env-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Environment documentation drift
+        run: node scripts/check-env.mjs
+
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests
+        run: npm run test
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: npf_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URI: postgresql://postgres:postgres@localhost:5432/npf_test
+      PAYLOAD_SECRET: ci-only-throwaway-secret-not-a-real-credential
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Seed catalog
+        run: timeout 180 npm run seed
+
+      - name: Build
+        run: npm run build
+
+      - name: E2E tests
+        run: npm run test:e2e
+
+      # The register's "manual-only" items (F-02b styled error boundary, F-34
+      # skip-link focus order, F-64 offline submit, F-11 CSP not breaking the
+      # app) are asserted in a real browser here, so they cannot silently
+      # regress between releases. Uses the vendored @sparticuz/chromium — no
+      # `playwright install` needed, and it works without network access.
+      - name: Manual-check browser probe
+        run: |
+          npx next start -H 0.0.0.0 -p 3000 &
+          for i in $(seq 1 45); do
+            curl -sf -o /dev/null http://localhost:3000/ar && break
+            sleep 2
+          done
+          node scripts/probe-manual-checks.mjs http://localhost:3000
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

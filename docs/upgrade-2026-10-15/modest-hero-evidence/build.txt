@@ -1,0 +1,89 @@
+
+> storefront@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.4.1 (webpack)
+✓ Running next.config.ts took 318ms
+
+  Creating an optimized production build ...
+⚠ Compiled with warnings in 13.6s
+
+./node_modules/browserslist/node.js
+Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+
+Import trace for requested module:
+./node_modules/browserslist/node.js
+./node_modules/browserslist/index.js
+./node_modules/@serwist/turbopack/dist/index.mjs
+./src/app/serwist/[path]/route.ts
+
+./node_modules/browserslist/node.js
+Critical dependency: require function is used in a way in which dependencies cannot be statically extracted
+
+Import trace for requested module:
+./node_modules/browserslist/node.js
+./node_modules/browserslist/index.js
+./node_modules/@serwist/turbopack/dist/index.mjs
+./src/app/serwist/[path]/route.ts
+
+  Running TypeScript ...
+  Finished TypeScript in 6.5s ...
+  Collecting page data using 1 worker ...
+✓ Running next.config.ts took 291ms
+  Generating static pages using 1 worker (0/76) ...
+  Generating static pages using 1 worker (19/76)
+  Generating static pages using 1 worker (38/76)
+  Generating static pages using 1 worker (57/76)
+✓ Generating static pages using 1 worker (76/76) in 1748ms
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/[...catchall]
+├ ƒ /[locale]/about
+├ ƒ /[locale]/account
+├ ƒ /[locale]/account/addresses
+├ ƒ /[locale]/account/orders
+├ ƒ /[locale]/account/orders/[code]
+├ ƒ /[locale]/account/profile
+├ ƒ /[locale]/blogs
+├ ƒ /[locale]/careers
+├ ƒ /[locale]/cart
+├ ƒ /[locale]/checkout
+├ ƒ /[locale]/checkout/confirmation
+├ ƒ /[locale]/contact
+├ ƒ /[locale]/forgot-password
+├ ƒ /[locale]/lab/hero-abstract
+├ ƒ /[locale]/login
+├ ƒ /[locale]/privacy-policy
+├ ƒ /[locale]/products
+├ ƒ /[locale]/products/[slug]
+├ ƒ /[locale]/quality-sourcing
+├ ƒ /[locale]/register
+├ ƒ /[locale]/reset-password
+├ ƒ /[locale]/shipping-delivery
+├ ƒ /[locale]/story
+├ ƒ /[locale]/terms
+├ ƒ /[locale]/wishlist
+├ ƒ /admin/[[...segments]]
+├ ƒ /api/[...slug]
+├ ƒ /api/graphql
+├ ƒ /api/graphql-playground
+├ ○ /apple-icon.png
+├ ○ /icon.png
+├ ○ /manifest.webmanifest
+├ ○ /offline
+├ ○ /robots.txt
+├   /serwist/[path]
+│ ├ ● /serwist/sw.js.map
+│ └ ● /serwist/sw.js
+└ ○ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand

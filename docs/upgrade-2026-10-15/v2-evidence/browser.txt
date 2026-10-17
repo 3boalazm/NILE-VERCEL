@@ -1,0 +1,38 @@
+Responsive: /ar at 320px
+Responsive: /en at 320px
+Responsive: /ar/products at 320px
+Responsive: /en/products at 320px
+Responsive: /ar/products/proxeed-plus at 320px
+Responsive: /ar at 390px
+Responsive: /en at 390px
+Responsive: /ar/products at 390px
+Responsive: /en/products at 390px
+Responsive: /ar/products/proxeed-plus at 390px
+Responsive: /ar at 768px
+Responsive: /en at 768px
+Responsive: /ar/products at 768px
+Responsive: /en/products at 768px
+Responsive: /ar/products/proxeed-plus at 768px
+Responsive: /ar at 1024px
+Responsive: /en at 1024px
+Responsive: /ar/products at 1024px
+Responsive: /en/products at 1024px
+Responsive: /ar/products/proxeed-plus at 1024px
+Responsive: /ar at 1440px
+Responsive: /en at 1440px
+Responsive: /ar/products at 1440px
+Responsive: /en/products at 1440px
+Responsive: /ar/products/proxeed-plus at 1440px
+Axe: /en (light) — 0 violations
+Axe: /en (dark) — 0 violations
+Axe: /en/products (light) — 0 violations
+Axe: /en/products (dark) — 0 violations
+Axe: /en/products/proxeed-plus (light) — 0 violations
+Axe: /en/products/proxeed-plus (dark) — 0 violations
+Axe: /ar (light) — 0 violations
+Axe: /ar (dark) — 0 violations
+Axe: /ar/products (light) — 0 violations
+Axe: /ar/products (dark) — 0 violations
+Axe: /ar/products/proxeed-plus (light) — 0 violations
+Axe: /ar/products/proxeed-plus (dark) — 0 violations
+PASS: 25 responsive visits, 12 axe audits, audience selection; evidence written to docs/upgrade-2026-10-15/v2-evidence

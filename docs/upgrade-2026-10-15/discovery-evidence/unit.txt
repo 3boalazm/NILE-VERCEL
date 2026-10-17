@@ -1,0 +1,88 @@
+
+> storefront@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.4 /home/user/NPF
+
+ ✓ src/lib/security/rate-limit-hardening.test.ts (5 tests) 139ms
+ ✓ src/lib/security/rate-limit.test.ts (3 tests) 55ms
+stderr | src/lib/cart/actions.test.ts > addToCart > returns network_error when Vendure is down
+{"ts":"2026-10-15T16:59:44.489Z","level":"error","scope":"cart:add","message":"fetch failed","slug":"x","stack":"Error: fetch failed\n    at /home/user/NPF/test/mocks/vendure.ts:45:11\n    at Mock (file:///home/user/NPF/node_modules/vitest/dist/chunks/spy.DDMXghXv.js:353:40)\n    at vendureRequest (/home/user/NPF/src/lib/vendure/client.ts:40:28)\n    at resolveVariantIdBySlug (/home/user/NPF/src/lib/vendure/product-map.ts:21:26)\n    at addToCart (/home/user/NPF/src/lib/cart/actions.ts:56:29)\n    at /home/user/NPF/src/lib/cart/actions.test.ts:106:26\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:1632:35\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:26\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:3334:20\n    at new Promise (<anonymous>)"}
+
+stderr | src/lib/cart/actions.test.ts > updateCartLine / removeCartLine > returns network_error when Vendure is down
+{"ts":"2026-10-15T16:59:44.493Z","level":"error","scope":"cart:update","message":"fetch failed","lineId":"l1","stack":"Error: fetch failed\n    at /home/user/NPF/test/mocks/vendure.ts:45:11\n    at Mock (file:///home/user/NPF/node_modules/vitest/dist/chunks/spy.DDMXghXv.js:353:40)\n    at vendureRequest (/home/user/NPF/src/lib/vendure/client.ts:40:28)\n    at /home/user/NPF/src/lib/cart/actions.ts:123:19\n    at withToken (/home/user/NPF/src/lib/vendure/with-token.ts:19:44)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at updateCartLine (/home/user/NPF/src/lib/cart/actions.ts:120:18)\n    at /home/user/NPF/src/lib/cart/actions.test.ts:129:12\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:20"}
+
+stderr | src/lib/cart/actions.test.ts > getEligibleShippingMethods > returns network_error instead of throwing when Vendure is down
+{"ts":"2026-10-15T16:59:44.496Z","level":"error","scope":"cart:shipping-methods","message":"fetch failed","stack":"Error: fetch failed\n    at /home/user/NPF/test/mocks/vendure.ts:45:11\n    at Mock (file:///home/user/NPF/node_modules/vitest/dist/chunks/spy.DDMXghXv.js:353:40)\n    at vendureRequest (/home/user/NPF/src/lib/vendure/client.ts:40:28)\n    at /home/user/NPF/src/lib/cart/actions.ts:179:7\n    at withToken (/home/user/NPF/src/lib/vendure/with-token.ts:19:44)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at getEligibleShippingMethods (/home/user/NPF/src/lib/cart/actions.ts:176:27)\n    at /home/user/NPF/src/lib/cart/actions.test.ts:170:20\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:20"}
+
+stderr | src/lib/cart/actions.test.ts > placeOrder > returns network_error instead of throwing when Vendure is down
+{"ts":"2026-10-15T16:59:44.504Z","level":"error","scope":"cart:place-order","message":"fetch failed","stack":"Error: fetch failed\n    at /home/user/NPF/test/mocks/vendure.ts:45:11\n    at Mock (file:///home/user/NPF/node_modules/vitest/dist/chunks/spy.DDMXghXv.js:353:40)\n    at vendureRequest (/home/user/NPF/src/lib/vendure/client.ts:40:28)\n    at /home/user/NPF/src/lib/cart/actions.ts:246:7\n    at withToken (/home/user/NPF/src/lib/vendure/with-token.ts:19:44)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at placeOrder (/home/user/NPF/src/lib/cart/actions.ts:243:28)\n    at /home/user/NPF/src/lib/cart/actions.test.ts:320:20\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:20"}
+
+ ✓ src/lib/cart/actions.test.ts (24 tests) 34ms
+stderr | src/lib/auth/actions.test.ts > login > returns network_error when Vendure is down
+{"ts":"2026-10-15T16:59:44.651Z","level":"error","scope":"auth:login","message":"fetch failed","stack":"Error: fetch failed\n    at /home/user/NPF/test/mocks/vendure.ts:45:11\n    at Mock (file:///home/user/NPF/node_modules/vitest/dist/chunks/spy.DDMXghXv.js:353:40)\n    at vendureRequest (/home/user/NPF/src/lib/vendure/client.ts:40:28)\n    at /home/user/NPF/src/lib/auth/actions.ts:31:19\n    at withToken (/home/user/NPF/src/lib/vendure/with-token.ts:19:44)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at login (/home/user/NPF/src/lib/auth/actions.ts:29:18)\n    at /home/user/NPF/src/lib/auth/actions.test.ts:55:12\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:20"}
+
+stderr | src/lib/auth/actions.test.ts > logout > clears the session cookie even when Vendure is unreachable
+{"ts":"2026-10-15T16:59:44.656Z","level":"warn","scope":"auth:logout","message":"fetch failed"}
+
+stderr | src/lib/auth/actions.test.ts > updateProfile / addresses > createAddress returns network_error when Vendure is down
+{"ts":"2026-10-15T16:59:44.662Z","level":"error","scope":"auth:create-address","message":"fetch failed","stack":"Error: fetch failed\n    at /home/user/NPF/test/mocks/vendure.ts:45:11\n    at Mock (file:///home/user/NPF/node_modules/vitest/dist/chunks/spy.DDMXghXv.js:353:40)\n    at vendureRequest (/home/user/NPF/src/lib/vendure/client.ts:40:28)\n    at /home/user/NPF/src/lib/auth/actions.ts:136:7\n    at withToken (/home/user/NPF/src/lib/vendure/with-token.ts:19:44)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at createAddress (/home/user/NPF/src/lib/auth/actions.ts:133:18)\n    at /home/user/NPF/src/lib/auth/actions.test.ts:122:20\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:20"}
+
+stderr | src/lib/auth/actions.test.ts > updateProfile / addresses > deleteAddress surfaces success and survives outages
+{"ts":"2026-10-15T16:59:44.663Z","level":"error","scope":"auth:delete-address","message":"fetch failed","stack":"Error: fetch failed\n    at /home/user/NPF/test/mocks/vendure.ts:45:11\n    at Mock (file:///home/user/NPF/node_modules/vitest/dist/chunks/spy.DDMXghXv.js:353:40)\n    at vendureRequest (/home/user/NPF/src/lib/vendure/client.ts:40:28)\n    at /home/user/NPF/src/lib/auth/actions.ts:164:7\n    at withToken (/home/user/NPF/src/lib/vendure/with-token.ts:19:44)\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at deleteAddress (/home/user/NPF/src/lib/auth/actions.ts:163:18)\n    at /home/user/NPF/src/lib/auth/actions.test.ts:130:12\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:20"}
+
+ ✓ src/lib/auth/actions.test.ts (12 tests) 27ms
+stderr | src/lib/contact/actions.test.ts > persistence mapping > returns server_error when persistence throws
+{"ts":"2026-10-15T16:59:44.801Z","level":"error","scope":"contact:submit","message":"db down","stack":"Error: db down\n    at /home/user/NPF/src/lib/contact/actions.test.ts:110:38\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:1632:35\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:2794:26\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:3334:20\n    at new Promise (<anonymous>)\n    at runWithCancel (file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:3329:10)\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:3314:20\n    at new Promise (<anonymous>)\n    at runWithTimeout (file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:3272:10)\n    at file:///home/user/NPF/node_modules/vitest/dist/chunks/run.Cm2sd7-x.js:3895:64"}
+
+ ✓ src/lib/contact/actions.test.ts (7 tests) 17ms
+ ✓ src/lib/products/catalog-discovery.test.ts (16 tests) 8ms
+ ✓ src/lib/auth/password-reset.test.ts (6 tests) 10ms
+stderr | src/lib/auth/active-customer.test.ts > account outages are not empty accounts > lets the public header degrade but protected routes show a recovery error
+{"ts":"2026-10-15T16:59:45.197Z","level":"warn","scope":"vendure:active-customer","message":"activeCustomer read failed; customer status unavailable"}
+
+stderr | src/lib/auth/active-customer.test.ts > account outages are not empty accounts > lets the public header degrade but protected routes show a recovery error
+{"ts":"2026-10-15T16:59:45.199Z","level":"warn","scope":"vendure:active-customer","message":"activeCustomer read failed; customer status unavailable"}
+
+stderr | src/lib/auth/active-customer.test.ts > account outages are not empty accounts > doesn't render an address service failure as no saved addresses
+{"ts":"2026-10-15T16:59:45.201Z","level":"warn","scope":"vendure:customer-addresses","message":"customer addresses read failed; showing recovery state"}
+
+ ✓ src/lib/auth/active-customer.test.ts (4 tests) 11ms
+stderr | src/lib/vendure/active-order.test.ts > readActiveOrderItems > distinguishes an available empty cart from an unavailable cart
+{"ts":"2026-10-15T16:59:45.427Z","level":"warn","scope":"vendure:active-order","message":"fetch failed"}
+
+ ✓ src/lib/vendure/active-order.test.ts (3 tests) 21ms
+ ✓ src/lib/products/upgrade.test.ts (5 tests) 6ms
+stderr | src/lib/products/mock-fallback.test.ts > degradeToMock > fails closed by default (no mock data in production)
+[payload] getAllProducts failed (db down)
+[payload] MOCK_CATALOG_FALLBACK is not set — failing closed instead of serving mock catalog data to real customers (see .env.example).
+
+stderr | src/lib/products/mock-fallback.test.ts > degradeToMock > re-wraps non-Error failures when failing closed
+[payload] getAllProducts failed (plain string)
+[payload] MOCK_CATALOG_FALLBACK is not set — failing closed instead of serving mock catalog data to real customers (see .env.example).
+
+stderr | src/lib/products/mock-fallback.test.ts > degradeToMock > returns (does not throw) when the fallback is explicitly enabled
+[payload] getAllProducts failed (db down)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+
+ ✓ src/lib/products/mock-fallback.test.ts (6 tests) 12ms
+ ✓ src/lib/vendure/pricing.test.ts (4 tests) 8ms
+ ✓ src/lib/products/payload-repository.test.ts (3 tests) 10ms
+ ✓ src/lib/vendure/client.test.ts (1 test) 16ms
+ ✓ src/lib/auth/redirect.test.ts (14 tests) 6ms
+ ✓ src/components/care-atlas/editorial-assets.test.ts (2 tests) 6ms
+ ✓ src/lib/vendure/order-mapper.test.ts (8 tests) 10ms
+ ✓ src/lib/i18n/dictionaries.test.ts (2 tests) 6ms
+ ✓ src/lib/products/localize.test.ts (5 tests) 5ms
+ ✓ src/lib/pwa/cache-policy.test.ts (2 tests) 5ms
+ ✓ src/lib/email/transport-config.test.ts (4 tests) 6ms
+ ✓ src/lib/products/presentation.test.ts (3 tests) 4ms
+
+ Test Files  22 passed (22)
+      Tests  139 passed (139)
+   Start at  16:59:43
+   Duration  3.49s (tests 44%, import 42%, worker 8%, transform 6%)
+
+    Isolate  22 workers spawned · ~108ms startup each (spawn + environment, per file)
+             at least ~2.27s faster with isolate: false — reuses workers across files instead of one per file

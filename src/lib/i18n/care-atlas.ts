@@ -1,0 +1,188 @@
+import type { Locale } from "./config";
+
+const copy = {
+  ar: {
+    skip: "تجاوز إلى المحتوى",
+    study: "اتجاه جديد قيد المراجعة — نموذج للرئيسية، وليس متجرًا للبيع",
+    brandSub: "عناية، بمعرفة.",
+    navAtlas: "أطلس المنتجات",
+    navWhy: "وجهة نظرنا",
+    navRead: "مساحة المعرفة",
+    navContact: "لنتحدث",
+    heroEyebrow: "مكمّلات غذائية وأجهزة طبية",
+    heroLine1: "الحياة",
+    heroLine2: "أولاً.",
+    heroBody:
+      "نايل فارما فود. مكمّلات غذائية وأجهزة طبية، ومعلومة واضحة تسبق الاختيار. لأن وراء كل منتج، حياة تستحق العناية.",
+    heroCta: "ادخل عالم العناية",
+    heroNote: "الاختيار الجيد\nيبدأ بسؤال جيد.",
+    heroNoteCta: "المعلومة قبل الاختيار",
+    heroBottom: "حياة يومية. تفاصيل تستحق أن نفهمها.",
+    scroll: "اسحب لاكتشاف الحكاية",
+    perspectiveLabel: "وجهة نظرنا",
+    perspective1: "لسنا مجرد",
+    perspective2: "أسماءٍ على رف.",
+    perspectiveBody:
+      "نحن نايل فارما فود. نصل بين منتجات Alfasigma الإيطالية والناس في مصر. ونؤمن أن دورنا لا يقف عند توفير المنتج، بل يمتد إلى وضوح المعلومة عنه.",
+    perspectiveCta: "تعرّف على المنتجات، عن قرب",
+    partner: "الموزّع الرسمي في مصر",
+    perspectiveRule: "وضوحٌ في التفاصيل. مساحةٌ للأسئلة.",
+    atlasLabel: "مساحة للاستكشاف",
+    atlasTitle: "اعرفه. ثم اختَر.",
+    atlasBody:
+      "فهرس تفاعلي. افتح أي منتج، واقرأ تركيبته وطريقة استخدامه من معلوماته الأصلية.",
+    filterAll: "كل المنتجات",
+    filterSupplements: "المكمّلات",
+    filterDevices: "الأجهزة",
+    indexLabel: "الفهرس — اختَر منتجًا",
+    loading: "جارٍ تحميل الفهرس…",
+    empty: "لا توجد منتجات بهذا الاسم. جرّب كلمة أخرى.",
+    indexHelp: "لديك سؤال عن منتج؟",
+    composition: "المكوّنات",
+    usage: "الاستخدام",
+    leaflet: "النشرة",
+    specifications: "المواصفات",
+    productCount: "منتجات",
+    search: "ابحث باسم المنتج",
+    filterLabel: "تصفية المنتجات",
+    detailLabel: "معلومات المنتج",
+    stageLabel: "تفاصيل المنتج المختار",
+    listLabel: "اختيار المنتج",
+    medicalNote:
+      "معلومات للتعرّف على المنتج، وليست توصية علاجية. استشر الطبيب أو الصيدلي قبل الاستخدام.",
+    noInfo:
+      "لا توجد معلومات استخدام منشورة لهذا المنتج في هذا النموذج. يرجى الرجوع إلى تعليمات الجهاز أو المختص.",
+    noComposition: "لا توجد بيانات تركيب منشورة لهذا المنتج في الفهرس.",
+    noLeaflet:
+      "لا توجد نشرة PDF رسمية متاحة لهذا المنتج في الملفات الحالية. لا نستبدلها بملف تسويقي.",
+    askProduct: "اسألنا عن هذا المنتج",
+    openLeaflet: "افتح النشرة الرسمية",
+    newWindow: "PDF · تفتح في نافذة جديدة",
+    selected: "المنتج المختار:",
+    error:
+      "تعذّر تحميل الفهرس. أعد تحميل الصفحة أو راسلنا للاستفسار عن المنتج.",
+    readingLabel: "مساحة المعرفة",
+    reading1: "اقرأ قبل",
+    reading2: "أن تختار.",
+    readingBody:
+      "مش كل معلومة على العبوة بتحكي الحكاية كاملة. هذه ثلاث نقاط تساعدك على قراءة أوضح، وحوار أفضل مع المختص.",
+    question1: "ما الفرق بين المكوّن والجرعة؟",
+    answer1:
+      "اسم المكوّن وحده ليس كافيًا. اقرأ الكمية ووحدة القياس، وهل الرقم لكل كيس أم للجرعة اليومية الكاملة. ستجد سياق الكميات في ملف المنتج والنشرة.",
+    question2: "هل كل دليل علمي ينطبق على المنتج؟",
+    answer2:
+      "هناك فرق بين دراسة عن أحد المكوّنات ودراسة عن التركيبة نفسها. اسأل عن مصدر المعلومة، والفئة التي شملتها الدراسة، وحدود النتيجة. الدليل ليس ضمانًا لنتيجة فردية.",
+    question3: "من أين أبدأ لو عندي سؤال؟",
+    answer3:
+      "ابدأ بالنشرة الرسمية للمنتج. للأسئلة عن حالتك، استشر الطبيب أو الصيدلي. وللاستفسار عن المنتج أو مصدره، تواصل مع فريق نايل فارما فود.",
+    documentLabel: "من المعلومات إلى المصدر",
+    documentType: "النشرة الرسمية · PDF · تفتح في نافذة جديدة",
+    contactLabel: "المعلومة تبدأ بحوار",
+    contact1: "لنبدأ",
+    contact2: "بسؤال جيد.",
+    contactAction: "لنتحدث",
+    contactBody:
+      "عن منتج، أو تعاون، أو معلومة تحتاج توضيحًا. فريق نايل فارما فود يستقبل استفسارك.",
+    location: "مدينة العبور، مصر",
+    imageNote: "الصورة الرئيسية توضيحية مولّدة، وليست حالة عميل.",
+    backTop: "إلى البداية ↑",
+    openMenu: "فتح القائمة",
+    closeMenu: "إغلاق القائمة",
+    emailLabel: "مراسلة نايل فارما فود",
+  },
+  en: {
+    skip: "Skip to content",
+    study: "A new direction for review — homepage concept, not a live store",
+    brandSub: "Care, with understanding.",
+    navAtlas: "The product atlas",
+    navWhy: "Our perspective",
+    navRead: "A clearer picture",
+    navContact: "Let’s talk",
+    heroEyebrow: "FOOD SUPPLEMENTS & MEDICAL DEVICES",
+    heroLine1: "Life,",
+    heroLine2: "first.",
+    heroBody:
+      "Nile Pharma Food. Food supplements, medical devices, and a clearer picture before you choose. Because behind every product, there’s a life worth caring for.",
+    heroCta: "Explore a world of care",
+    heroNote: "A better choice.\nA better question.",
+    heroNoteCta: "Understanding before choosing",
+    heroBottom: "Everyday life. Details worth understanding.",
+    scroll: "Scroll to explore",
+    perspectiveLabel: "Our perspective",
+    perspective1: "Not just names",
+    perspective2: "on a shelf.",
+    perspectiveBody:
+      "We’re Nile Pharma Food. We connect Alfasigma’s Italian products with people in Egypt. Our role goes beyond making a product available. It means making its information clear.",
+    perspectiveCta: "Get to know the products",
+    partner: "Official distributor in Egypt",
+    perspectiveRule: "Clearer details. Room for questions.",
+    atlasLabel: "A space to explore",
+    atlasTitle: "Know it. Then choose.",
+    atlasBody:
+      "An interactive index. Open a product and explore its formulation and use, from its original information.",
+    filterAll: "All products",
+    filterSupplements: "Supplements",
+    filterDevices: "Devices",
+    indexLabel: "THE INDEX — CHOOSE A PRODUCT",
+    loading: "Loading the index…",
+    empty: "No products match that name. Try another search.",
+    indexHelp: "A question about a product?",
+    composition: "Composition",
+    usage: "How to use",
+    leaflet: "The leaflet",
+    specifications: "Specifications",
+    productCount: "PRODUCTS",
+    search: "Search a product",
+    filterLabel: "Filter products",
+    detailLabel: "Product information",
+    stageLabel: "Selected product details",
+    listLabel: "Choose a product",
+    medicalNote:
+      "Information to help you understand a product, not a treatment recommendation. Consult your doctor or pharmacist before use.",
+    noInfo:
+      "No usage information is published for this product in this concept. Please consult the device instructions or a healthcare professional.",
+    noComposition:
+      "No composition data is published for this product in the index.",
+    noLeaflet:
+      "No official PDF leaflet is available for this product in the current files. We don’t replace it with marketing material.",
+    askProduct: "Ask us about this product",
+    openLeaflet: "Open the official leaflet",
+    newWindow: "PDF · opens in a new window",
+    selected: "Selected product:",
+    error:
+      "The index couldn’t load. Refresh the page or email us about the product.",
+    readingLabel: "A clearer picture",
+    reading1: "Read before",
+    reading2: "you choose.",
+    readingBody:
+      "A label doesn’t always tell the whole story. Three things to help you read more clearly, and ask your healthcare professional better questions.",
+    question1: "An ingredient or a daily dose?",
+    answer1:
+      "The ingredient name is only the beginning. Check the amount, the unit, and whether it refers to one sachet or a full daily dose. You’ll find the amount’s context in the product file and leaflet.",
+    question2: "Does every study apply to this product?",
+    answer2:
+      "Research on one ingredient is different from research on a complete formulation. Ask about the source, the people studied, and the limits of the findings. Evidence is not a guarantee of an individual outcome.",
+    question3: "Where should my question start?",
+    answer3:
+      "Start with the official product leaflet. For questions about your own health, talk to your doctor or pharmacist. For product or sourcing inquiries, contact the Nile Pharma Food team.",
+    documentLabel: "FROM INFORMATION TO THE SOURCE",
+    documentType: "Official leaflet · PDF · opens in a new window",
+    contactLabel: "Understanding starts with a conversation",
+    contact1: "Start with",
+    contact2: "a good question.",
+    contactAction: "Let’s talk",
+    contactBody:
+      "A product, a partnership, or something you’d like to understand. The Nile Pharma Food team welcomes your inquiry.",
+    location: "El Obour, Egypt",
+    imageNote:
+      "The hero is an AI-generated illustration, not a customer story.",
+    backTop: "Back to the beginning ↑",
+    openMenu: "Open menu",
+    closeMenu: "Close menu",
+    emailLabel: "Email Nile Pharma Food",
+  },
+} as const;
+
+export function getCareAtlasCopy(locale: Locale) {
+  return copy[locale];
+}

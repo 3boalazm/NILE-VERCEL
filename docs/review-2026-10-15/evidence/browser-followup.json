@@ -1,0 +1,168 @@
+{
+  "localeTarget": "/en/products",
+  "localeActual": "http://127.0.0.1:3000/en/products",
+  "sheetEscape": "passed",
+  "overflow320": [
+    {
+      "tag": "DIV",
+      "text": "",
+      "class": "pointer-events-none absolute -end-32 top-1/2 -z-10 size-[42rem] -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,color-mix(in_oklab,var(--ring)_28%,transparent),transparent)] blur-2xl",
+      "right": 448
+    },
+    {
+      "tag": "DIV",
+      "text": "",
+      "class": "absolute -inset-3 -rotate-2 rounded-[2.75rem] border-2 border-dashed border-primary/15 sm:-inset-4",
+      "right": 322.60569190979004
+    },
+    {
+      "tag": "DIV",
+      "text": "AlfasigmaCA-MIOlimp-LabFine FoodsE-Pharma TrentoNFSAValid through 2030AlfasigmaCA-MIOlimp-LabFine FoodsE-Pharma TrentoNF",
+      "class": "flex w-max items-center gap-12 ps-12 will-change-transform animate-marquee motion-reduce:animate-none rtl:animate-marquee-rtl",
+      "right": 2876
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 350.4375
+    },
+    {
+      "tag": "SPAN",
+      "text": "Olimp-Lab",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 495.71875
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 549.71875
+    },
+    {
+      "tag": "SPAN",
+      "text": "Fine Foods",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 697.578125
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 751.578125
+    },
+    {
+      "tag": "SPAN",
+      "text": "E-Pharma Trento",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 955.40625
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 1009.40625
+    },
+    {
+      "tag": "SPAN",
+      "text": "NFSA",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 1107.796875
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 1161.796875
+    },
+    {
+      "tag": "SPAN",
+      "text": "Valid through 2030",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 1384
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 1438
+    },
+    {
+      "tag": "SPAN",
+      "text": "Alfasigma",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 1577.390625
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 1631.390625
+    },
+    {
+      "tag": "SPAN",
+      "text": "CA-MI",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 1734.4375
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 1788.4375
+    },
+    {
+      "tag": "SPAN",
+      "text": "Olimp-Lab",
+      "class": "whitespace-nowrap font-heading text-lg font-medium text-muted-foreground/70",
+      "right": 1933.71875
+    },
+    {
+      "tag": "SPAN",
+      "text": "",
+      "class": "size-1.5 shrink-0 rounded-full bg-ring/50",
+      "right": 1987.71875
+    }
+  ],
+  "pdpOverflow": [
+    {
+      "tag": "BUTTON",
+      "text": "",
+      "class": "inline-flex size-9 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:size-11 border border-border text-muted-foreground hover:bg-muted hover:text-foreground",
+      "left": -39.65625,
+      "right": -3.65625
+    },
+    {
+      "tag": "svg",
+      "text": "",
+      "class": {},
+      "left": -29.65625,
+      "right": -13.65625
+    },
+    {
+      "tag": "path",
+      "text": "",
+      "class": {},
+      "left": -28.32291603088379,
+      "right": -14.989541053771973
+    }
+  ],
+  "serviceWorker": {
+    "controlled": true,
+    "registrations": [
+      {
+        "scope": "http://127.0.0.1:3000/",
+        "active": "activated"
+      }
+    ],
+    "cacheKeys": [
+      "serwist-precache-v2-http://127.0.0.1:3000/",
+      "others",
+      "static-font-assets",
+      "next-image",
+      "next-static-js-assets",
+      "pages-rsc-prefetch"
+    ]
+  },
+  "pageErrors": []
+}

@@ -1,0 +1,690 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@esbuild-kit/core-utils": {
+      "name": "@esbuild-kit/core-utils",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "esbuild"
+      ],
+      "effects": [
+        "@esbuild-kit/esm-loader"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@esbuild-kit/core-utils"
+      ],
+      "fixAvailable": false
+    },
+    "@esbuild-kit/esm-loader": {
+      "name": "@esbuild-kit/esm-loader",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@esbuild-kit/core-utils"
+      ],
+      "effects": [
+        "drizzle-kit"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@esbuild-kit/esm-loader"
+      ],
+      "fixAvailable": false
+    },
+    "@graphql-tools/utils": {
+      "name": "@graphql-tools/utils",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1241230,
+          "name": "@graphql-tools/utils",
+          "dependency": "@graphql-tools/utils",
+          "title": "GraphQL Tools has prototype pollution in well-established utility function `mergeDeep`",
+          "url": "https://github.com/advisories/GHSA-7mx3-vvmw-hjmv",
+          "severity": "high",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=12.0.0"
+        }
+      ],
+      "effects": [
+        "@vendure/core"
+      ],
+      "range": "<=12.0.0",
+      "nodes": [
+        "node_modules/@graphql-tools/utils"
+      ],
+      "fixAvailable": {
+        "name": "@vendure/core",
+        "version": "3.7.3",
+        "isSemVerMajor": true
+      }
+    },
+    "@lingui/cli": {
+      "name": "@lingui/cli",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "chokidar",
+        "micromatch"
+      ],
+      "effects": [
+        "@lingui/vite-plugin",
+        "@vendure/dashboard"
+      ],
+      "range": ">=3.0.0-1",
+      "nodes": [
+        "node_modules/@lingui/cli"
+      ],
+      "fixAvailable": false
+    },
+    "@lingui/vite-plugin": {
+      "name": "@lingui/vite-plugin",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@lingui/cli"
+      ],
+      "effects": [],
+      "range": "<=5.9.5",
+      "nodes": [
+        "node_modules/@lingui/vite-plugin"
+      ],
+      "fixAvailable": true
+    },
+    "@payloadcms/db-postgres": {
+      "name": "@payloadcms/db-postgres",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        "drizzle-kit"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/@payloadcms/db-postgres"
+      ],
+      "fixAvailable": false
+    },
+    "@payloadcms/next": {
+      "name": "@payloadcms/next",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "sass"
+      ],
+      "effects": [
+        "@payloadcms/richtext-lexical"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/@payloadcms/next"
+      ],
+      "fixAvailable": {
+        "name": "@payloadcms/richtext-lexical",
+        "version": "0.11.4",
+        "isSemVerMajor": true
+      }
+    },
+    "@payloadcms/richtext-lexical": {
+      "name": "@payloadcms/richtext-lexical",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@payloadcms/next"
+      ],
+      "effects": [],
+      "range": "3.0.0-alpha.18 - 4.0.0-internal.fa345ef",
+      "nodes": [
+        "node_modules/@payloadcms/richtext-lexical"
+      ],
+      "fixAvailable": {
+        "name": "@payloadcms/richtext-lexical",
+        "version": "0.11.4",
+        "isSemVerMajor": true
+      }
+    },
+    "@ts-morph/common": {
+      "name": "@ts-morph/common",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "fast-glob"
+      ],
+      "effects": [
+        "ts-morph"
+      ],
+      "range": "0.2.0 - 0.24.0 || 0.26.0 - 0.27.0",
+      "nodes": [
+        "node_modules/@ts-morph/common"
+      ],
+      "fixAvailable": true
+    },
+    "@vendure/core": {
+      "name": "@vendure/core",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@graphql-tools/utils",
+        "csv-parse",
+        "http-proxy-middleware",
+        "re2"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/@vendure/core"
+      ],
+      "fixAvailable": {
+        "name": "@vendure/core",
+        "version": "3.7.3",
+        "isSemVerMajor": true
+      }
+    },
+    "@vendure/dashboard": {
+      "name": "@vendure/dashboard",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "@lingui/cli",
+        "@lingui/vite-plugin",
+        "fast-glob"
+      ],
+      "effects": [],
+      "range": "*",
+      "nodes": [
+        "node_modules/@vendure/dashboard"
+      ],
+      "fixAvailable": false
+    },
+    "braces": {
+      "name": "braces",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240992,
+          "name": "braces",
+          "dependency": "braces",
+          "title": "braces vulnerable to stack-exhaustion denial of service through deeply nested patterns",
+          "url": "https://github.com/advisories/GHSA-vfj7-8cjw-p6xm",
+          "severity": "high",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=3.0.3"
+        }
+      ],
+      "effects": [
+        "chokidar",
+        "micromatch"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/braces"
+      ],
+      "fixAvailable": {
+        "name": "@payloadcms/richtext-lexical",
+        "version": "0.11.4",
+        "isSemVerMajor": true
+      }
+    },
+    "chokidar": {
+      "name": "chokidar",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "braces"
+      ],
+      "effects": [
+        "@lingui/cli",
+        "sass"
+      ],
+      "range": "2.0.0 - 3.6.0",
+      "nodes": [
+        "node_modules/@lingui/cli/node_modules/chokidar",
+        "node_modules/chokidar"
+      ],
+      "fixAvailable": {
+        "name": "@payloadcms/richtext-lexical",
+        "version": "0.11.4",
+        "isSemVerMajor": true
+      }
+    },
+    "csv-parse": {
+      "name": "csv-parse",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1193670,
+          "name": "csv-parse",
+          "dependency": "csv-parse",
+          "title": "node-csv: Prototype replacement still reachable via columns path",
+          "url": "https://github.com/advisories/GHSA-8cw4-87c7-c6xx",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<7.0.2"
+        }
+      ],
+      "effects": [
+        "@vendure/core"
+      ],
+      "range": "<7.0.2",
+      "nodes": [
+        "node_modules/csv-parse"
+      ],
+      "fixAvailable": {
+        "name": "@vendure/core",
+        "version": "3.7.3",
+        "isSemVerMajor": true
+      }
+    },
+    "dompurify": {
+      "name": "dompurify",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1240621,
+          "name": "dompurify",
+          "dependency": "dompurify",
+          "title": "DOMPurify: IN_PLACE: node-removing afterSanitize hook leaves detached subtree event handlers armed, causing DOM XSS",
+          "url": "https://github.com/advisories/GHSA-p98j-92pf-mc4p",
+          "severity": "low",
+          "cwe": [
+            "CWE-79"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": ">=3.4.13 <=3.4.15"
+        },
+        {
+          "source": 1241204,
+          "name": "dompurify",
+          "dependency": "dompurify",
+          "title": "DOMPurify: IN_PLACE returns a force-removed rawtext root whose text carries attacker markup — pure HTML reparse executes",
+          "url": "https://github.com/advisories/GHSA-6688-9rhm-gjv2",
+          "severity": "low",
+          "cwe": [
+            "CWE-79"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<=3.4.15"
+        }
+      ],
+      "effects": [
+        "monaco-editor"
+      ],
+      "range": "<=3.4.15",
+      "nodes": [
+        "node_modules/dompurify"
+      ],
+      "fixAvailable": true
+    },
+    "drizzle-kit": {
+      "name": "drizzle-kit",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "@esbuild-kit/esm-loader"
+      ],
+      "effects": [
+        "@payloadcms/db-postgres"
+      ],
+      "range": "0.19.0 - 1.0.0-beta.1-fd8bfcc",
+      "nodes": [
+        "node_modules/drizzle-kit"
+      ],
+      "fixAvailable": false
+    },
+    "esbuild": {
+      "name": "esbuild",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1102341,
+          "name": "esbuild",
+          "dependency": "esbuild",
+          "title": "esbuild enables any website to send any requests to the development server and read the response",
+          "url": "https://github.com/advisories/GHSA-67mh-4wv8-2f99",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-346"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:N/A:N"
+          },
+          "range": "<=0.24.2"
+        }
+      ],
+      "effects": [
+        "@esbuild-kit/core-utils"
+      ],
+      "range": "<=0.24.2",
+      "nodes": [
+        "node_modules/@esbuild-kit/core-utils/node_modules/esbuild"
+      ],
+      "fixAvailable": false
+    },
+    "fast-glob": {
+      "name": "fast-glob",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "micromatch"
+      ],
+      "effects": [
+        "@ts-morph/common",
+        "@vendure/dashboard"
+      ],
+      "range": "*",
+      "nodes": [
+        "node_modules/fast-glob"
+      ],
+      "fixAvailable": false
+    },
+    "http-proxy-middleware": {
+      "name": "http-proxy-middleware",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "micromatch"
+      ],
+      "effects": [],
+      "range": ">=0.3.0",
+      "nodes": [
+        "node_modules/http-proxy-middleware"
+      ],
+      "fixAvailable": true
+    },
+    "micromatch": {
+      "name": "micromatch",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "braces"
+      ],
+      "effects": [
+        "@lingui/cli",
+        "fast-glob",
+        "http-proxy-middleware"
+      ],
+      "range": ">=0.2.0",
+      "nodes": [
+        "node_modules/micromatch"
+      ],
+      "fixAvailable": false
+    },
+    "monaco-editor": {
+      "name": "monaco-editor",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "dompurify"
+      ],
+      "effects": [],
+      "range": ">=0.57.0-rc.2",
+      "nodes": [
+        "node_modules/monaco-editor"
+      ],
+      "fixAvailable": true
+    },
+    "nodemailer": {
+      "name": "nodemailer",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1239931,
+          "name": "nodemailer",
+          "dependency": "nodemailer",
+          "title": "Nodemailer: Process-global DNS cache reuses TLS `servername` across transports, enabling cross-tenant SMTP credential disclosure",
+          "url": "https://github.com/advisories/GHSA-6vj9-mwq6-2f5v",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-295"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:L/UI:N/S:U/C:H/I:L/A:N"
+          },
+          "range": ">=5.0.0 <10.0.2"
+        },
+        {
+          "source": 1240033,
+          "name": "nodemailer",
+          "dependency": "nodemailer",
+          "title": "Nodemailer: Nested structured recipient arrays bypass the parser depth limit and cause stack exhaustion DoS",
+          "url": "https://github.com/advisories/GHSA-8vvx-rff5-p5rq",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-674"
+          ],
+          "cvss": {
+            "score": 5.9,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<10.0.2"
+        },
+        {
+          "source": 1240113,
+          "name": "nodemailer",
+          "dependency": "nodemailer",
+          "title": "Nodemailer: Quoted local-part can produce malformed envelope recipient through RFC 5322 comment parsing",
+          "url": "https://github.com/advisories/GHSA-g57g-f23g-4646",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-20",
+            "CWE-436"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": ">=9.1.0 <10.0.9"
+        },
+        {
+          "source": 1240114,
+          "name": "nodemailer",
+          "dependency": "nodemailer",
+          "title": "Nodemailer: Quadratic backtracking in the addressparser free-text fallback allows remote denial of service",
+          "url": "https://github.com/advisories/GHSA-v53p-9fqp-m79j",
+          "severity": "high",
+          "cwe": [
+            "CWE-407",
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=10.0.5"
+        },
+        {
+          "source": 1241277,
+          "name": "nodemailer",
+          "dependency": "nodemailer",
+          "title": "Nodemailer addressparser: O(n^2) on comment-joined addresses enables a remote DoS (reachable via mailparser)",
+          "url": "https://github.com/advisories/GHSA-prgh-xp8r-p3m5",
+          "severity": "high",
+          "cwe": [
+            "CWE-400",
+            "CWE-407"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=9.1.0 <=10.0.4"
+        }
+      ],
+      "effects": [],
+      "range": "<=10.0.8",
+      "nodes": [
+        "node_modules/nodemailer"
+      ],
+      "fixAvailable": true
+    },
+    "re2": {
+      "name": "re2",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1130576,
+          "name": "re2",
+          "dependency": "re2",
+          "title": "re2: Out-of-bounds heap read in `exec`/`test`/`match` via attacker-influenced `lastIndex` on a non-ASCII subject → uncatchable process crash (DoS)",
+          "url": "https://github.com/advisories/GHSA-ff84-5f28-78qj",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-125"
+          ],
+          "cvss": {
+            "score": 5.7,
+            "vectorString": "CVSS:3.1/AV:L/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:H"
+          },
+          "range": "<=1.25.1"
+        },
+        {
+          "source": 1130577,
+          "name": "re2",
+          "dependency": "re2",
+          "title": "re2: Global `String.prototype.match` with an empty-matchable pattern never advances → infinite loop with unbounded native memory growth (DoS)",
+          "url": "https://github.com/advisories/GHSA-6hxr-mr5r-9836",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-835"
+          ],
+          "cvss": {
+            "score": 6.2,
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=1.25.1"
+        },
+        {
+          "source": 1138117,
+          "name": "re2",
+          "dependency": "re2",
+          "title": "node-re2: Out-of-bounds heap read in `replace`/`split` via a `Buffer` ending in a truncated multi-byte UTF-8 character → adjacent heap memory disclosed to JavaScript",
+          "url": "https://github.com/advisories/GHSA-j4r3-hg7j-8chg",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-125"
+          ],
+          "cvss": {
+            "score": 5.1,
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:L"
+          },
+          "range": "<=1.26.0"
+        },
+        {
+          "source": 1138118,
+          "name": "re2",
+          "dependency": "re2",
+          "title": "node-re2: String.prototype.replace(re2, template) aborts the Node process (uncatchable ToLocalChecked on empty MaybeLocal) when the result exceeds V8's max string length",
+          "url": "https://github.com/advisories/GHSA-8hcv-x26h-mcgp",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-617"
+          ],
+          "cvss": {
+            "score": 6.2,
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": "<=1.25.0"
+        }
+      ],
+      "effects": [
+        "@vendure/core"
+      ],
+      "range": "<=1.26.0",
+      "nodes": [
+        "node_modules/re2"
+      ],
+      "fixAvailable": {
+        "name": "@vendure/core",
+        "version": "3.7.3",
+        "isSemVerMajor": true
+      }
+    },
+    "sass": {
+      "name": "sass",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "chokidar"
+      ],
+      "effects": [
+        "@payloadcms/next"
+      ],
+      "range": "1.6.0 - 1.78.0",
+      "nodes": [
+        "node_modules/sass"
+      ],
+      "fixAvailable": {
+        "name": "@payloadcms/richtext-lexical",
+        "version": "0.11.4",
+        "isSemVerMajor": true
+      }
+    },
+    "ts-morph": {
+      "name": "ts-morph",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@ts-morph/common"
+      ],
+      "effects": [],
+      "range": "6.0.1 - 23.0.0 || 25.0.0 - 26.0.0",
+      "nodes": [
+        "node_modules/ts-morph"
+      ],
+      "fixAvailable": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 2,
+      "moderate": 7,
+      "high": 16,
+      "critical": 0,
+      "total": 25
+    },
+    "dependencies": {
+      "prod": 1337,
+      "dev": 339,
+      "optional": 292,
+      "peer": 44,
+      "peerOptional": 0,
+      "total": 1946
+    }
+  }
+}

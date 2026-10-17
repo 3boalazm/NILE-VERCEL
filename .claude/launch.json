@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "storefront",
+      "url": "http://localhost:3000"
+    },
+    {
+      "name": "storefront-prod",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "start", "--", "-p", "3002"],
+      "port": 3002
+    }
+  ]
+}

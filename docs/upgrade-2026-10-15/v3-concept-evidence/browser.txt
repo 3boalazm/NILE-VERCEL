@@ -1,0 +1,15 @@
+Responsive ar/320: 320px
+Responsive ar/390: 390px
+Axe ar/390: 0 violations
+Responsive ar/768: 768px
+Responsive ar/1024: 1024px
+Responsive ar/1440: 1440px
+Axe ar/1440: 0 violations
+Responsive en/320: 320px
+Responsive en/390: 390px
+Axe en/390: 0 violations
+Responsive en/768: 768px
+Responsive en/1024: 1024px
+Responsive en/1440: 1440px
+Axe en/1440: 0 violations
+PASS: standalone concept checks. No claim of production commerce or owner visual acceptance.

@@ -1,0 +1,61 @@
+{
+  "legacyPurged": true,
+  "privatePagesAbsent": true,
+  "neutralOfflineFallback": "لا يوجد اتصال بالإنترنت\n\nلحماية خصوصيتك، صفحات الحساب والطلبات مش بتتحفظ أوفلاين. ارجع لما يرجع الاتصال وحاول تاني.\nFor your privacy, account and order pages are never saved offline. Reconnect and try again.\n\nإعادة المحاولة",
+  "blockedRegistrationRenders": true,
+  "errors": [],
+  "caches": [
+    {
+      "name": "serwist-precache-v2-http://127.0.0.1:3000/",
+      "urls": [
+        "http://127.0.0.1:3000/offline?__WB_REVISION__=15b78d5d-c0c5-4f71-bb5a-4798514d5715",
+        "http://127.0.0.1:3000/npf-logo.svg?__WB_REVISION__=a5354f043de24e285bfaf1ddeb3ecd26",
+        "http://127.0.0.1:3000/_next/static/css/3629b7293da3b048.css",
+        "http://127.0.0.1:3000/_next/static/css/4858144d3215dfc6.css",
+        "http://127.0.0.1:3000/_next/static/css/812a6b8b7de44d07.css",
+        "http://127.0.0.1:3000/_next/static/css/d568a47cf72480a2.css",
+        "http://127.0.0.1:3000/_next/static/css/de10addaff7e891e.css",
+        "http://127.0.0.1:3000/_next/static/css/e5d1b6185968e333.css"
+      ]
+    },
+    {
+      "name": "npf-static-v2",
+      "urls": [
+        "http://127.0.0.1:3000/_next/static/chunks/webpack-873deb5a7545021e.js",
+        "http://127.0.0.1:3000/_next/static/chunks/4bd1b696-8cd12253b448cc13.js",
+        "http://127.0.0.1:3000/_next/static/chunks/main-app-4e99aac7a0f8751b.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/global-error-43088879ca6b00a4.js",
+        "http://127.0.0.1:3000/_next/static/chunks/8500-63a4afbeacab3b52.js",
+        "http://127.0.0.1:3000/_next/static/chunks/4136-3edf9f68cfb1af7d.js",
+        "http://127.0.0.1:3000/_next/static/chunks/8409-6373923c44c3aac5.js",
+        "http://127.0.0.1:3000/_next/static/chunks/104-ac85bb769b99be30.js",
+        "http://127.0.0.1:3000/_next/static/chunks/3794-39f2d5bb0d40336b.js",
+        "http://127.0.0.1:3000/_next/static/chunks/1308-f22ff6ba211a98a3.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/cart/page-2a947e9ae0b7315f.js",
+        "http://127.0.0.1:3000/_next/static/chunks/4725-968da2c70c5864b6.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/layout-dff69f5801f4a1a8.js",
+        "http://127.0.0.1:3000/_next/static/chunks/7745-e627ea8e8e93d21e.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/page-c309112134bf96fd.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/not-found-e52ce934b3d99e53.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/error-477c0c4f23405990.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/template-ea9cbcee619081a9.js",
+        "http://127.0.0.1:3000/_next/static/chunks/9391-c2b36083c23b5104.js",
+        "http://127.0.0.1:3000/_next/static/chunks/5660-f9b76c3b8a97e967.js",
+        "http://127.0.0.1:3000/_next/static/media/c050c0dd427d93a6-s.woff2",
+        "http://127.0.0.1:3000/_next/static/media/606cdd767ee835e0-s.woff2",
+        "http://127.0.0.1:3000/_next/static/media/3061f5b6eb250216-s.woff2",
+        "http://127.0.0.1:3000/_next/static/media/a207fa334c982b1c-s.ttf",
+        "http://127.0.0.1:3000/_next/static/chunks/7444-e27ac231f86b3390.js",
+        "http://127.0.0.1:3000/_next/static/chunks/8821-01d7b4362b2836cc.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/login/page-aff4c440ea5e3cde.js",
+        "http://127.0.0.1:3000/_next/static/chunks/app/%5Blocale%5D/checkout/confirmation/page-2684c3bdc1b3c896.js"
+      ]
+    },
+    {
+      "name": "npf-media-v2",
+      "urls": [
+        "http://127.0.0.1:3000/npf-logo-white.svg"
+      ]
+    }
+  ]
+}

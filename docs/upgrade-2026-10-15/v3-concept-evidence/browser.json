@@ -1,0 +1,108 @@
+{
+  "timestamp": "2026-10-15T10:38:39.131Z",
+  "base": "http://127.0.0.1:3100/concepts/care-atlas/index.html",
+  "browser": "153.0.8010.0",
+  "visits": [
+    {
+      "language": "ar",
+      "width": 320,
+      "status": 200,
+      "scroll": 320,
+      "broken": []
+    },
+    {
+      "language": "ar",
+      "width": 390,
+      "status": 200,
+      "scroll": 390,
+      "broken": []
+    },
+    {
+      "language": "ar",
+      "width": 768,
+      "status": 200,
+      "scroll": 768,
+      "broken": []
+    },
+    {
+      "language": "ar",
+      "width": 1024,
+      "status": 200,
+      "scroll": 1024,
+      "broken": []
+    },
+    {
+      "language": "ar",
+      "width": 1440,
+      "status": 200,
+      "scroll": 1440,
+      "broken": []
+    },
+    {
+      "language": "en",
+      "width": 320,
+      "status": 200,
+      "scroll": 320,
+      "broken": []
+    },
+    {
+      "language": "en",
+      "width": 390,
+      "status": 200,
+      "scroll": 390,
+      "broken": []
+    },
+    {
+      "language": "en",
+      "width": 768,
+      "status": 200,
+      "scroll": 768,
+      "broken": []
+    },
+    {
+      "language": "en",
+      "width": 1024,
+      "status": 200,
+      "scroll": 1024,
+      "broken": []
+    },
+    {
+      "language": "en",
+      "width": 1440,
+      "status": 200,
+      "scroll": 1440,
+      "broken": []
+    }
+  ],
+  "accessibility": [
+    {
+      "language": "ar",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "language": "ar",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "language": "en",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "language": "en",
+      "width": 1440,
+      "violations": []
+    }
+  ],
+  "interactions": [
+    "Devices filter + real specifications + no fabricated PDF",
+    "Arabic product-name search + empty state + recovery",
+    "Keyboard product selection + usage + genuine Women PDF",
+    "Language switch preserves selected product and detail",
+    "Mobile modal menu: Escape, focus restore, anchor destination focus"
+  ],
+  "errors": [],
+  "noJavaScript": true
+}

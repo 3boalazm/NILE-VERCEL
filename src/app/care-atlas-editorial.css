@@ -1,0 +1,124 @@
+/* Mark-only header and the four editorial images. Product photography is
+   unchanged; every generated scene carries an explicit illustrative caption. */
+.ca-site .ca-brand {
+  min-width: 52px;
+  min-height: 52px;
+  justify-content: center;
+  padding: 3px 7px;
+}
+.ca-site .ca-brand img {
+  width: 36px;
+  height: 44px;
+  object-fit: contain;
+}
+.ca-site .ca-header .ca-desktop-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.ca-site .ca-editorial-visual {
+  margin: 0;
+  min-width: 0;
+}
+.ca-site .ca-editorial-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1264/848;
+  overflow: hidden;
+  background: #e5e7df;
+  border: 1px solid var(--border);
+}
+.ca-site .ca-editorial-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ca-site .ca-editorial-visual figcaption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 14px 4px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  line-height: 1.9;
+}
+.ca-site .ca-editorial-visual figcaption > span {
+  min-width: 0;
+}
+.ca-site .ca-editorial-visual figcaption > .ca-mono {
+  font-size: 9px;
+  letter-spacing: 0.035em;
+  flex-shrink: 0;
+}
+.ca-site .ca-editorial-visual figcaption > span:last-child {
+  max-width: 66ch;
+}
+.ca-editorial-banner {
+  padding-block: 36px 14px;
+}
+.ca-editorial-banner .ca-editorial-media {
+  aspect-ratio: 2/1;
+  max-height: 610px;
+}
+.ca-site .ca-presence-text {
+  display: block;
+  padding-block: 35px 65px;
+  border-top: 1px solid var(--border);
+}
+.ca-site .ca-presence-text > div {
+  max-width: 780px;
+}
+.ca-site .ca-presence-text .ca-line-link {
+  max-width: 460px;
+}
+.ca-site .ca-editorial-contact {
+  margin-top: 32px;
+}
+.ca-site .ca-editorial-contact .ca-editorial-media {
+  aspect-ratio: 16/10;
+}
+.ca-site .ca-editorial-contact figcaption {
+  flex-direction: column;
+  gap: 4px;
+}
+@media (max-width: 660px) {
+  .ca-site .ca-brand {
+    min-width: 48px;
+    min-height: 48px;
+    padding: 2px 6px;
+  }
+  .ca-site .ca-brand img {
+    width: 32px;
+    height: 40px;
+  }
+  .ca-editorial-banner {
+    padding-block: 24px 8px;
+  }
+  .ca-editorial-banner .ca-editorial-media {
+    aspect-ratio: 4/3;
+  }
+  .ca-site .ca-editorial-visual figcaption {
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 12px;
+  }
+  .ca-site .ca-editorial-visual figcaption > .ca-mono {
+    font-size: 8px;
+  }
+  .ca-site .ca-presence-text {
+    padding-block: 30px 40px;
+  }
+}
+/* Keep the centered navigation clear of the tools at intermediate widths. */
+@media (max-width: 1180px) {
+  .ca-site .ca-header .ca-desktop-nav,
+  .ca-site .ca-header .ca-desktop-tool,
+  .ca-site .ca-header .ca-contact-top {
+    display: none;
+  }
+  .ca-site .ca-header-actions .ca-menu-button {
+    display: flex;
+  }
+}

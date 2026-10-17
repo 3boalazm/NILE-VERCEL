@@ -1,0 +1,36 @@
+Responsive ar/: 320,390,768,1440
+Responsive ar/products: 320,390,768,1440
+Responsive ar/products/proxeed-plus: 320,390,768,1440
+Responsive ar/products/ca-mi-ir-thermometer: 320,390,768,1440
+Responsive ar/about: 320,390,768,1440
+Responsive ar/story: 320,390,768,1440
+Responsive ar/quality-sourcing: 320,390,768,1440
+Responsive ar/contact: 320,390,768,1440
+Responsive ar/login: 320,390,768,1440
+Responsive ar/register: 320,390,768,1440
+Responsive ar/forgot-password: 320,390,768,1440
+Responsive ar/reset-password: 320,390,768,1440
+Responsive ar/cart: 320,390,768,1440
+Responsive ar/checkout: 320,390,768,1440
+Responsive ar/wishlist: 320,390,768,1440
+Responsive ar/privacy-policy: 320,390,768,1440
+Responsive ar/careers: 320,390,768,1440
+Responsive en/: 320,390,768,1440
+Responsive en/products: 320,390,768,1440
+Responsive en/products/proxeed-plus: 320,390,768,1440
+Responsive en/products/ca-mi-ir-thermometer: 320,390,768,1440
+Responsive en/about: 320,390,768,1440
+Responsive en/story: 320,390,768,1440
+Responsive en/quality-sourcing: 320,390,768,1440
+Responsive en/contact: 320,390,768,1440
+Responsive en/login: 320,390,768,1440
+Responsive en/register: 320,390,768,1440
+Responsive en/forgot-password: 320,390,768,1440
+Responsive en/reset-password: 320,390,768,1440
+Responsive en/cart: 320,390,768,1440
+Responsive en/checkout: 320,390,768,1440
+Responsive en/wishlist: 320,390,768,1440
+Responsive en/privacy-policy: 320,390,768,1440
+Responsive en/careers: 320,390,768,1440
+Visits: 136; axe audits: 28; page errors: 0
+PASS — no detected layout/image/axe failures

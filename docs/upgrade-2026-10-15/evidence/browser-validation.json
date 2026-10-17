@@ -1,0 +1,841 @@
+{
+  "catalog": "explicit design preview; mock products, disabled transactions",
+  "pages": [
+    {
+      "route": "/ar",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "صحتك أولًا.والاختيار أوضح.",
+      "brokenImages": []
+    },
+    {
+      "route": "/en",
+      "width": 320,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "Your health first.A clearer choice.",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "المنتجات",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products",
+      "width": 320,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "Products",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products/proxeed-plus",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products/proxeed-plus",
+      "width": 320,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/contact?product=proxeed-plus",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "تواصل معنا",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/contact",
+      "width": 320,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "Contact Us",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/about",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "من نحن",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/cart",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/checkout",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/login",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "تسجيل الدخول",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/register",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "إنشاء حساب جديد",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/wishlist",
+      "width": 320,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "brokenImages": []
+    },
+    {
+      "route": "/en/forgot-password",
+      "width": 320,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 320,
+      "scrollWidth": 320,
+      "h1": "Recover your account",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "صحتك أولًا.والاختيار أوضح.",
+      "brokenImages": []
+    },
+    {
+      "route": "/en",
+      "width": 390,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "Your health first.A clearer choice.",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "المنتجات",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products",
+      "width": 390,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "Products",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products/proxeed-plus",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products/proxeed-plus",
+      "width": 390,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/contact?product=proxeed-plus",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "تواصل معنا",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/contact",
+      "width": 390,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "Contact Us",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/about",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "من نحن",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/cart",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/checkout",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/login",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "تسجيل الدخول",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/register",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "إنشاء حساب جديد",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/wishlist",
+      "width": 390,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "قائمة المفضلة فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/forgot-password",
+      "width": 390,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 390,
+      "scrollWidth": 390,
+      "h1": "Recover your account",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "صحتك أولًا.والاختيار أوضح.",
+      "brokenImages": []
+    },
+    {
+      "route": "/en",
+      "width": 1024,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "Your health first.A clearer choice.",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "المنتجات",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products",
+      "width": 1024,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "Products",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products/proxeed-plus",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products/proxeed-plus",
+      "width": 1024,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/contact?product=proxeed-plus",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "تواصل معنا",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/contact",
+      "width": 1024,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "Contact Us",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/about",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "من نحن",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/cart",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/checkout",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/login",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "تسجيل الدخول",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/register",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "إنشاء حساب جديد",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/wishlist",
+      "width": 1024,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "قائمة المفضلة فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/forgot-password",
+      "width": 1024,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1024,
+      "scrollWidth": 1024,
+      "h1": "Recover your account",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "صحتك أولًا.والاختيار أوضح.",
+      "brokenImages": []
+    },
+    {
+      "route": "/en",
+      "width": 1440,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "Your health first.A clearer choice.",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "المنتجات",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products",
+      "width": 1440,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "Products",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/products/proxeed-plus",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/products/proxeed-plus",
+      "width": 1440,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "Proxeed Plus",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/contact?product=proxeed-plus",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "تواصل معنا",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/contact",
+      "width": 1440,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "Contact Us",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/about",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "من نحن",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/cart",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/checkout",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "سلتك فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/login",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "تسجيل الدخول",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/register",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "إنشاء حساب جديد",
+      "brokenImages": []
+    },
+    {
+      "route": "/ar/wishlist",
+      "width": 1440,
+      "status": 200,
+      "lang": "ar",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "قائمة المفضلة فاضية",
+      "brokenImages": []
+    },
+    {
+      "route": "/en/forgot-password",
+      "width": 1440,
+      "status": 200,
+      "lang": "en",
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "h1": "Recover your account",
+      "brokenImages": []
+    }
+  ],
+  "accessibility": [
+    {
+      "route": "/ar",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 25
+        }
+      ]
+    },
+    {
+      "route": "/en",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 83
+        }
+      ]
+    },
+    {
+      "route": "/ar/products",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 38
+        }
+      ]
+    },
+    {
+      "route": "/en/products/proxeed-plus",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 124
+        }
+      ]
+    },
+    {
+      "route": "/ar/contact",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 19
+        }
+      ]
+    },
+    {
+      "route": "/ar/login",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 8
+        }
+      ]
+    },
+    {
+      "route": "/ar/register",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 8
+        }
+      ]
+    },
+    {
+      "route": "/en/forgot-password",
+      "mode": "light",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 28
+        }
+      ]
+    },
+    {
+      "route": "/ar",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 25
+        }
+      ]
+    },
+    {
+      "route": "/en",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "aria-prohibited-attr",
+          "nodes": 1
+        },
+        {
+          "id": "color-contrast",
+          "nodes": 83
+        }
+      ]
+    },
+    {
+      "route": "/ar/products",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 38
+        }
+      ]
+    },
+    {
+      "route": "/en/products/proxeed-plus",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 124
+        }
+      ]
+    },
+    {
+      "route": "/ar/contact",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 19
+        }
+      ]
+    },
+    {
+      "route": "/ar/login",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 8
+        }
+      ]
+    },
+    {
+      "route": "/ar/register",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 8
+        }
+      ]
+    },
+    {
+      "route": "/en/forgot-password",
+      "mode": "dark",
+      "violations": [],
+      "incomplete": [
+        {
+          "id": "color-contrast",
+          "nodes": 28
+        }
+      ]
+    }
+  ],
+  "interactions": [
+    {
+      "name": "locale preserves discovery",
+      "target": "/en/products?q=proxeed&need=men&sort=name-desc",
+      "after": "http://127.0.0.1:3000/en/products?q=proxeed&need=men&sort=name-desc"
+    },
+    {
+      "name": "mobile navigation",
+      "open": true,
+      "closed": true
+    },
+    {
+      "name": "contextual inquiry",
+      "subject": "Product inquiry: Proxeed Plus"
+    },
+    {
+      "name": "demo pricing cannot enter checkout",
+      "disabled": 5,
+      "schema": {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "Proxeed Plus",
+        "description": "A food supplement to support men's fertility, backed by a published clinical study on the product itself — not just its ingredients.",
+        "image": "https://nilepharmafood.com/products/proxeed-plus-hero.webp",
+        "sku": "PXD-PLS-001",
+        "category": "Food Supplements"
+      }
+    }
+  ],
+  "errors": [],
+  "pwa": {
+    "registrations": [
+      {
+        "scope": "http://127.0.0.1:3000/",
+        "active": true
+      }
+    ],
+    "caches": [
+      "serwist-precache-v2-http://127.0.0.1:3000/",
+      "npf-media-v2",
+      "npf-static-v2"
+    ]
+  }
+}

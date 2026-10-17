@@ -1,0 +1,293 @@
+{
+  "timestamp": "2026-10-15T10:16:23.919Z",
+  "browser": "153.0.8010.0",
+  "base": "http://127.0.0.1:3000",
+  "pages": [
+    {
+      "width": 320,
+      "route": "/ar",
+      "status": 200,
+      "client": 320,
+      "scroll": 320,
+      "broken": []
+    },
+    {
+      "width": 320,
+      "route": "/en",
+      "status": 200,
+      "client": 320,
+      "scroll": 320,
+      "broken": []
+    },
+    {
+      "width": 320,
+      "route": "/ar/products",
+      "status": 200,
+      "client": 320,
+      "scroll": 320,
+      "broken": []
+    },
+    {
+      "width": 320,
+      "route": "/en/products",
+      "status": 200,
+      "client": 320,
+      "scroll": 320,
+      "broken": []
+    },
+    {
+      "width": 320,
+      "route": "/ar/products/proxeed-plus",
+      "status": 200,
+      "client": 320,
+      "scroll": 320,
+      "broken": []
+    },
+    {
+      "width": 390,
+      "route": "/ar",
+      "status": 200,
+      "client": 390,
+      "scroll": 390,
+      "broken": []
+    },
+    {
+      "width": 390,
+      "route": "/en",
+      "status": 200,
+      "client": 390,
+      "scroll": 390,
+      "broken": []
+    },
+    {
+      "width": 390,
+      "route": "/ar/products",
+      "status": 200,
+      "client": 390,
+      "scroll": 390,
+      "broken": []
+    },
+    {
+      "width": 390,
+      "route": "/en/products",
+      "status": 200,
+      "client": 390,
+      "scroll": 390,
+      "broken": []
+    },
+    {
+      "width": 390,
+      "route": "/ar/products/proxeed-plus",
+      "status": 200,
+      "client": 390,
+      "scroll": 390,
+      "broken": []
+    },
+    {
+      "width": 768,
+      "route": "/ar",
+      "status": 200,
+      "client": 768,
+      "scroll": 768,
+      "broken": []
+    },
+    {
+      "width": 768,
+      "route": "/en",
+      "status": 200,
+      "client": 768,
+      "scroll": 768,
+      "broken": []
+    },
+    {
+      "width": 768,
+      "route": "/ar/products",
+      "status": 200,
+      "client": 768,
+      "scroll": 768,
+      "broken": []
+    },
+    {
+      "width": 768,
+      "route": "/en/products",
+      "status": 200,
+      "client": 768,
+      "scroll": 768,
+      "broken": []
+    },
+    {
+      "width": 768,
+      "route": "/ar/products/proxeed-plus",
+      "status": 200,
+      "client": 768,
+      "scroll": 768,
+      "broken": []
+    },
+    {
+      "width": 1024,
+      "route": "/ar",
+      "status": 200,
+      "client": 1024,
+      "scroll": 1024,
+      "broken": []
+    },
+    {
+      "width": 1024,
+      "route": "/en",
+      "status": 200,
+      "client": 1024,
+      "scroll": 1024,
+      "broken": []
+    },
+    {
+      "width": 1024,
+      "route": "/ar/products",
+      "status": 200,
+      "client": 1024,
+      "scroll": 1024,
+      "broken": []
+    },
+    {
+      "width": 1024,
+      "route": "/en/products",
+      "status": 200,
+      "client": 1024,
+      "scroll": 1024,
+      "broken": []
+    },
+    {
+      "width": 1024,
+      "route": "/ar/products/proxeed-plus",
+      "status": 200,
+      "client": 1024,
+      "scroll": 1024,
+      "broken": []
+    },
+    {
+      "width": 1440,
+      "route": "/ar",
+      "status": 200,
+      "client": 1440,
+      "scroll": 1440,
+      "broken": []
+    },
+    {
+      "width": 1440,
+      "route": "/en",
+      "status": 200,
+      "client": 1440,
+      "scroll": 1440,
+      "broken": []
+    },
+    {
+      "width": 1440,
+      "route": "/ar/products",
+      "status": 200,
+      "client": 1440,
+      "scroll": 1440,
+      "broken": []
+    },
+    {
+      "width": 1440,
+      "route": "/en/products",
+      "status": 200,
+      "client": 1440,
+      "scroll": 1440,
+      "broken": []
+    },
+    {
+      "width": 1440,
+      "route": "/ar/products/proxeed-plus",
+      "status": 200,
+      "client": 1440,
+      "scroll": 1440,
+      "broken": []
+    }
+  ],
+  "a11y": [
+    {
+      "locale": "en",
+      "route": "/en",
+      "mode": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "route": "/en",
+      "mode": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "route": "/en/products",
+      "mode": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "route": "/en/products",
+      "mode": "dark",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "route": "/en/products/proxeed-plus",
+      "mode": "light",
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "route": "/en/products/proxeed-plus",
+      "mode": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "route": "/ar",
+      "mode": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "route": "/ar",
+      "mode": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "route": "/ar/products",
+      "mode": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "route": "/ar/products",
+      "mode": "dark",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "route": "/ar/products/proxeed-plus",
+      "mode": "light",
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "route": "/ar/products/proxeed-plus",
+      "mode": "dark",
+      "violations": []
+    }
+  ],
+  "interaction": [
+    {
+      "womenPressed": "true",
+      "womenHeading": [
+        "Proxeed Women",
+        "Proxeed Women Inositol",
+        "Ellamuselle"
+      ],
+      "range": "/en/products?need=womens-health"
+    }
+  ],
+  "errors": []
+}

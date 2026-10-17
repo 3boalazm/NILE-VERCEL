@@ -1,0 +1,529 @@
+{
+  "date": "2026-10-15",
+  "note": "Registry advisories, not proof of exploitability; no audit fix --force or dependency edits during Atlas integration.",
+  "all": {
+    "counts": {
+      "info": 0,
+      "low": 2,
+      "moderate": 7,
+      "high": 21,
+      "critical": 0,
+      "total": 30
+    },
+    "affected": [
+      {
+        "name": "@esbuild-kit/core-utils",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "@esbuild-kit/esm-loader",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "@graphql-tools/utils",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=12.0.0",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@lingui/cli",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=3.0.0-1",
+        "fixAvailable": {
+          "name": "@vendure/dashboard",
+          "version": "3.3.5",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@lingui/vite-plugin",
+        "severity": "high",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": true
+      },
+      {
+        "name": "@next/eslint-plugin-next",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=14.3.0-canary.0",
+        "fixAvailable": {
+          "name": "eslint-config-next",
+          "version": "14.2.35",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@payloadcms/db-postgres",
+        "severity": "moderate",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "@payloadcms/next",
+        "severity": "high",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@payloadcms/richtext-lexical",
+        "severity": "high",
+        "isDirect": true,
+        "range": "3.0.0-alpha.18 - 4.0.0-internal.fa345ef",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@shadcn/registry",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=0.0.0-rc-20261007105214 || >=0.1.0",
+        "fixAvailable": {
+          "name": "shadcn",
+          "version": "1.0.0",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@ts-morph/common",
+        "severity": "high",
+        "isDirect": false,
+        "range": "0.2.0 - 0.24.0 || 0.26.0 - 0.27.0",
+        "fixAvailable": {
+          "name": "@vendure/cli",
+          "version": "3.6.5",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@vendure/cli",
+        "severity": "high",
+        "isDirect": true,
+        "range": ">=2.2.0-next.0",
+        "fixAvailable": {
+          "name": "@vendure/cli",
+          "version": "3.6.5",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@vendure/core",
+        "severity": "high",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@vendure/dashboard",
+        "severity": "high",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": {
+          "name": "@vendure/dashboard",
+          "version": "3.3.5",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "braces",
+        "severity": "high",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "chokidar",
+        "severity": "high",
+        "isDirect": false,
+        "range": "2.0.0 - 3.6.0",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "csv-parse",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<7.0.2",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "dompurify",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<=3.4.15",
+        "fixAvailable": true
+      },
+      {
+        "name": "drizzle-kit",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "0.19.0 - 1.0.0-beta.1-fd8bfcc",
+        "fixAvailable": false
+      },
+      {
+        "name": "esbuild",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<=0.24.2",
+        "fixAvailable": false
+      },
+      {
+        "name": "eslint-config-next",
+        "severity": "high",
+        "isDirect": true,
+        "range": ">=14.3.0-canary.0",
+        "fixAvailable": {
+          "name": "eslint-config-next",
+          "version": "14.2.35",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "fast-glob",
+        "severity": "high",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": {
+          "name": "shadcn",
+          "version": "1.0.0",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "http-proxy-middleware",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=0.3.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "micromatch",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=0.2.0",
+        "fixAvailable": {
+          "name": "shadcn",
+          "version": "1.0.0",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "monaco-editor",
+        "severity": "low",
+        "isDirect": false,
+        "range": ">=0.57.0-rc.2",
+        "fixAvailable": true
+      },
+      {
+        "name": "nodemailer",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=10.0.8",
+        "fixAvailable": true
+      },
+      {
+        "name": "re2",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<=1.26.0",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "sass",
+        "severity": "high",
+        "isDirect": false,
+        "range": "1.6.0 - 1.78.0",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "shadcn",
+        "severity": "high",
+        "isDirect": true,
+        "range": "<=0.0.0-rc-20261007105214 || >=2.0.0",
+        "fixAvailable": {
+          "name": "shadcn",
+          "version": "1.0.0",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "ts-morph",
+        "severity": "high",
+        "isDirect": false,
+        "range": "6.0.1 - 23.0.0 || 25.0.0 - 26.0.0",
+        "fixAvailable": {
+          "name": "@vendure/cli",
+          "version": "3.6.5",
+          "isSemVerMajor": true
+        }
+      }
+    ]
+  },
+  "production": {
+    "counts": {
+      "info": 0,
+      "low": 2,
+      "moderate": 7,
+      "high": 16,
+      "critical": 0,
+      "total": 25
+    },
+    "affected": [
+      {
+        "name": "@esbuild-kit/core-utils",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "@esbuild-kit/esm-loader",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "@graphql-tools/utils",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=12.0.0",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@lingui/cli",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=3.0.0-1",
+        "fixAvailable": false
+      },
+      {
+        "name": "@lingui/vite-plugin",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=5.9.5",
+        "fixAvailable": true
+      },
+      {
+        "name": "@payloadcms/db-postgres",
+        "severity": "moderate",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "@payloadcms/next",
+        "severity": "high",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@payloadcms/richtext-lexical",
+        "severity": "high",
+        "isDirect": true,
+        "range": "3.0.0-alpha.18 - 4.0.0-internal.fa345ef",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@ts-morph/common",
+        "severity": "high",
+        "isDirect": false,
+        "range": "0.2.0 - 0.24.0 || 0.26.0 - 0.27.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "@vendure/core",
+        "severity": "high",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "@vendure/dashboard",
+        "severity": "high",
+        "isDirect": true,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "braces",
+        "severity": "high",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "chokidar",
+        "severity": "high",
+        "isDirect": false,
+        "range": "2.0.0 - 3.6.0",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "csv-parse",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<7.0.2",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "dompurify",
+        "severity": "low",
+        "isDirect": false,
+        "range": "<=3.4.15",
+        "fixAvailable": true
+      },
+      {
+        "name": "drizzle-kit",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "0.19.0 - 1.0.0-beta.1-fd8bfcc",
+        "fixAvailable": false
+      },
+      {
+        "name": "esbuild",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<=0.24.2",
+        "fixAvailable": false
+      },
+      {
+        "name": "fast-glob",
+        "severity": "high",
+        "isDirect": false,
+        "range": "*",
+        "fixAvailable": false
+      },
+      {
+        "name": "http-proxy-middleware",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=0.3.0",
+        "fixAvailable": true
+      },
+      {
+        "name": "micromatch",
+        "severity": "high",
+        "isDirect": false,
+        "range": ">=0.2.0",
+        "fixAvailable": false
+      },
+      {
+        "name": "monaco-editor",
+        "severity": "low",
+        "isDirect": false,
+        "range": ">=0.57.0-rc.2",
+        "fixAvailable": true
+      },
+      {
+        "name": "nodemailer",
+        "severity": "high",
+        "isDirect": false,
+        "range": "<=10.0.8",
+        "fixAvailable": true
+      },
+      {
+        "name": "re2",
+        "severity": "moderate",
+        "isDirect": false,
+        "range": "<=1.26.0",
+        "fixAvailable": {
+          "name": "@vendure/core",
+          "version": "3.7.3",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "sass",
+        "severity": "high",
+        "isDirect": false,
+        "range": "1.6.0 - 1.78.0",
+        "fixAvailable": {
+          "name": "@payloadcms/richtext-lexical",
+          "version": "0.11.4",
+          "isSemVerMajor": true
+        }
+      },
+      {
+        "name": "ts-morph",
+        "severity": "high",
+        "isDirect": false,
+        "range": "6.0.1 - 23.0.0 || 25.0.0 - 26.0.0",
+        "fixAvailable": true
+      }
+    ]
+  }
+}

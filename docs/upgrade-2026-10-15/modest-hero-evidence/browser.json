@@ -1,0 +1,91 @@
+{
+  "visits": [
+    {
+      "locale": "ar",
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=640&q=75",
+      "imageLoaded": true
+    },
+    {
+      "locale": "ar",
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=640&q=75",
+      "imageLoaded": true
+    },
+    {
+      "locale": "ar",
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=828&q=75",
+      "imageLoaded": true
+    },
+    {
+      "locale": "ar",
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=1920&q=75",
+      "imageLoaded": true
+    },
+    {
+      "locale": "en",
+      "status": 200,
+      "width": 320,
+      "scroll": 320,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=1920&q=75",
+      "imageLoaded": true
+    },
+    {
+      "locale": "en",
+      "status": 200,
+      "width": 390,
+      "scroll": 390,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=1920&q=75",
+      "imageLoaded": true
+    },
+    {
+      "locale": "en",
+      "status": 200,
+      "width": 768,
+      "scroll": 768,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=1920&q=75",
+      "imageLoaded": true
+    },
+    {
+      "locale": "en",
+      "status": 200,
+      "width": 1440,
+      "scroll": 1440,
+      "src": "http://127.0.0.1:3000/_next/image?url=%2Fcare-atlas%2Fcoastal-couple-modest.jpg&w=1920&q=75",
+      "imageLoaded": true
+    }
+  ],
+  "audits": [
+    {
+      "locale": "ar",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "locale": "ar",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "locale": "en",
+      "width": 1440,
+      "violations": []
+    }
+  ],
+  "errors": []
+}

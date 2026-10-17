@@ -1,0 +1,688 @@
+[
+  {
+    "slug": "proxeed-plus",
+    "name": "Proxeed Plus",
+    "nameArabic": "بروكسيد بلس",
+    "categorySlug": "supplements",
+    "image": "/concepts/care-atlas/packs/proxeed-plus.webp",
+    "availableForm": "أكياس بودرة بنكهة الليمون، 30 كيس × 5 جم",
+    "shortDescription": "مكمل غذائي لدعم خصوبة الرجال، مدعوم بدراسة سريرية منشورة خاصة بالمنتج نفسه — وليس فقط بمكوناته.",
+    "composition": [
+      {
+        "label": "L-Carnitine fumarate",
+        "value": "3,450 mg"
+      },
+      {
+        "label": "Fructose",
+        "value": "2,000 mg"
+      },
+      {
+        "label": "Acetyl-L-Carnitine HCl",
+        "value": "1,000 mg"
+      },
+      {
+        "label": "فيتامين C",
+        "value": "180 mg"
+      },
+      {
+        "label": "حمض الستريك",
+        "value": "100 mg"
+      },
+      {
+        "label": "Zinc lactate",
+        "value": "20 mg زنك"
+      },
+      {
+        "label": "Coenzyme Q10",
+        "value": "40 mg"
+      },
+      {
+        "label": "حمض الفوليك",
+        "value": "400 µg"
+      },
+      {
+        "label": "سيلينيوم",
+        "value": "100 µg"
+      },
+      {
+        "label": "فيتامين B12",
+        "value": "3 µg"
+      }
+    ],
+    "compositionNote": "لكل 2 كيس (الجرعة اليومية الكاملة)",
+    "usage": "يُذاب كيسان يوميًا (الجرعة الكاملة)، كل كيس في حوالي 120 مل ماء أو عصير برتقال، في نفس الموعد يوميًا، لمدة 4 إلى 6 أشهر — إذ يحتاج الحيوان المنوي حوالي 90 يومًا لينضج.",
+    "downloadUrl": "/downloads/proxeed-plus-leaflet.pdf",
+    "en": {
+      "shortDescription": "A food supplement to support men's fertility, backed by a published clinical study on the product itself — not just its ingredients.",
+      "availableForm": "Lemon-flavored powder sachets, 30 sachets × 5 g",
+      "composition": [
+        {
+          "label": "L-Carnitine fumarate",
+          "value": "3,450 mg"
+        },
+        {
+          "label": "Fructose",
+          "value": "2,000 mg"
+        },
+        {
+          "label": "Acetyl-L-Carnitine HCl",
+          "value": "1,000 mg"
+        },
+        {
+          "label": "Vitamin C",
+          "value": "180 mg"
+        },
+        {
+          "label": "Citric acid",
+          "value": "100 mg"
+        },
+        {
+          "label": "Zinc lactate",
+          "value": "20 mg zinc"
+        },
+        {
+          "label": "Coenzyme Q10",
+          "value": "40 mg"
+        },
+        {
+          "label": "Folic acid",
+          "value": "400 µg"
+        },
+        {
+          "label": "Selenium",
+          "value": "100 µg"
+        },
+        {
+          "label": "Vitamin B12",
+          "value": "3 µg"
+        }
+      ],
+      "compositionNote": "Per 2 sachets (full daily dose)",
+      "usage": "Dissolve two sachets daily (the full dose), each in about 120ml of water or orange juice, at the same time each day, for 4–6 months — sperm take about 90 days to mature."
+    }
+  },
+  {
+    "slug": "proxeed-men",
+    "name": "Proxeed Men",
+    "nameArabic": "بروكسيد رجال",
+    "categorySlug": "supplements",
+    "image": "/concepts/care-atlas/packs/proxeed-men.webp",
+    "availableForm": "أكياس بودرة، 30 كيس × 6.5 جم",
+    "shortDescription": "تركيبة Alfasigma الأوسع طيفًا لدعم الخصوبة — ثلاث صور من الكارنيتين إضافة إلى L-Arginine ومجموعة فيتامينات ومعادن كاملة، وبنفس الادعاء الرسمي المسجّل للزنك والسيلينيوم الموجود في Proxeed Plus.",
+    "composition": [
+      {
+        "label": "L-carnitine fumarate",
+        "value": "3,540 mg"
+      },
+      {
+        "label": "Acetyl-L-carnitine HCl",
+        "value": "1,000 mg"
+      },
+      {
+        "label": "Propionyl-L-carnitine HCl",
+        "value": "504 mg"
+      },
+      {
+        "label": "L-arginine",
+        "value": "1,000 mg"
+      },
+      {
+        "label": "فيتامين C",
+        "value": "180 mg"
+      },
+      {
+        "label": "Coenzyme Q10",
+        "value": "40 mg"
+      },
+      {
+        "label": "فيتامين E",
+        "value": "24 mg"
+      },
+      {
+        "label": "زنك",
+        "value": "15 mg"
+      },
+      {
+        "label": "سيلينيوم",
+        "value": "100 µg"
+      },
+      {
+        "label": "حمض الفوليك",
+        "value": "400 µg"
+      },
+      {
+        "label": "فيتامين D",
+        "value": "7.5 µg"
+      },
+      {
+        "label": "فيتامين B12",
+        "value": "3 µg"
+      }
+    ],
+    "compositionNote": "لكل 2 كيس (الجرعة اليومية الكاملة)",
+    "usage": "كيس واحد صباحًا وكيس واحد مساءً، يُذاب في حوالي 150 مل ماء أو عصير، لمدة عدة أسابيع إلى أشهر حسب النشرة الداخلية للمنتج.",
+    "downloadUrl": "/downloads/proxeed-men-leaflet.pdf",
+    "en": {
+      "shortDescription": "Alfasigma's broadest-spectrum fertility-support formula — three forms of carnitine plus L-Arginine and a complete set of vitamins and minerals, carrying the same officially registered zinc and selenium claim found in Proxeed Plus.",
+      "availableForm": "Powder sachets, 30 sachets × 6.5 g",
+      "composition": [
+        {
+          "label": "L-carnitine fumarate",
+          "value": "3,540 mg"
+        },
+        {
+          "label": "Acetyl-L-carnitine HCl",
+          "value": "1,000 mg"
+        },
+        {
+          "label": "Propionyl-L-carnitine HCl",
+          "value": "504 mg"
+        },
+        {
+          "label": "L-arginine",
+          "value": "1,000 mg"
+        },
+        {
+          "label": "Vitamin C",
+          "value": "180 mg"
+        },
+        {
+          "label": "Coenzyme Q10",
+          "value": "40 mg"
+        },
+        {
+          "label": "Vitamin E",
+          "value": "24 mg"
+        },
+        {
+          "label": "Zinc",
+          "value": "15 mg"
+        },
+        {
+          "label": "Selenium",
+          "value": "100 µg"
+        },
+        {
+          "label": "Folic acid",
+          "value": "400 µg"
+        },
+        {
+          "label": "Vitamin D",
+          "value": "7.5 µg"
+        },
+        {
+          "label": "Vitamin B12",
+          "value": "3 µg"
+        }
+      ],
+      "compositionNote": "Per 2 sachets (full daily dose)",
+      "usage": "One sachet in the morning and one in the evening, dissolved in about 150 ml of water or juice, for several weeks to months per the product's package insert."
+    }
+  },
+  {
+    "slug": "proxeed-women",
+    "name": "Proxeed Women",
+    "nameArabic": "بروكسيد نساء",
+    "categorySlug": "supplements",
+    "image": "/concepts/care-atlas/packs/proxeed-women.webp",
+    "availableForm": "أكياس بودرة بنكهة البرتقال، 30 كيس × 6 جم",
+    "shortDescription": "تركيبة غذائية مدعومة بأبحاث منشورة في حالتين محددتين: استعادة التوازن الأيضي وانتظام الدورة الشهرية لدى مريضات تكيّس المبايض المصاحب بمقاومة الإنسولين، ودعم التعافي الهرموني في حالات انقطاع الدورة الشهرية المرتبط بالإجهاد.",
+    "composition": [
+      {
+        "label": "L-Carnitine",
+        "value": "500 mg"
+      },
+      {
+        "label": "Acetyl-L-Carnitine",
+        "value": "250 mg"
+      },
+      {
+        "label": "L-Arginine",
+        "value": "500 mg"
+      },
+      {
+        "label": "N-Acetyl Cysteine",
+        "value": "50 mg"
+      },
+      {
+        "label": "حديد",
+        "value": "7 mg"
+      },
+      {
+        "label": "زنك",
+        "value": "5 mg"
+      },
+      {
+        "label": "بيتا كاروتين",
+        "value": "4.8 mg"
+      },
+      {
+        "label": "فيتامين C",
+        "value": "90 mg"
+      },
+      {
+        "label": "فيتامين E",
+        "value": "30 mg"
+      },
+      {
+        "label": "فيتامين B5",
+        "value": "6 mg"
+      },
+      {
+        "label": "فيتامين B6",
+        "value": "2 mg"
+      },
+      {
+        "label": "حمض الفوليك",
+        "value": "200 µg"
+      },
+      {
+        "label": "نحاس",
+        "value": "0.5 mg"
+      },
+      {
+        "label": "سيلينيوم",
+        "value": "27.5 µg"
+      },
+      {
+        "label": "فيتامين D3",
+        "value": "5 µg"
+      },
+      {
+        "label": "فيتامين B12",
+        "value": "2.5 µg"
+      }
+    ],
+    "compositionNote": "16 مكوّنًا — بحسب نشرة أطباء Alfasigma الرسمية لتشكيلة Proxeed",
+    "usage": "يُذاب كيس واحد يوميًا في حوالي 120 مل ماء أو عصير برتقال، في نفس الموعد يوميًا مع الإفطار أو الغداء، لمدة 4 إلى 6 أشهر أو طوال فترة محاولة الحمل — إذ تحتاج البويضات حوالي 4 أشهر لتنضج.",
+    "downloadUrl": "/downloads/proxeed-women-leaflet.pdf",
+    "en": {
+      "shortDescription": "A food formula backed by published research in two specific conditions: restoring metabolic balance and menstrual regularity in PCOS patients with insulin resistance, and supporting hormonal recovery in stress-related amenorrhea.",
+      "availableForm": "Orange-flavored powder sachets, 30 sachets × 6 g",
+      "composition": [
+        {
+          "label": "L-Carnitine",
+          "value": "500 mg"
+        },
+        {
+          "label": "Acetyl-L-Carnitine",
+          "value": "250 mg"
+        },
+        {
+          "label": "L-Arginine",
+          "value": "500 mg"
+        },
+        {
+          "label": "N-Acetyl Cysteine",
+          "value": "50 mg"
+        },
+        {
+          "label": "Iron",
+          "value": "7 mg"
+        },
+        {
+          "label": "Zinc",
+          "value": "5 mg"
+        },
+        {
+          "label": "Beta-carotene",
+          "value": "4.8 mg"
+        },
+        {
+          "label": "Vitamin C",
+          "value": "90 mg"
+        },
+        {
+          "label": "Vitamin E",
+          "value": "30 mg"
+        },
+        {
+          "label": "Vitamin B5",
+          "value": "6 mg"
+        },
+        {
+          "label": "Vitamin B6",
+          "value": "2 mg"
+        },
+        {
+          "label": "Folic acid",
+          "value": "200 µg"
+        },
+        {
+          "label": "Copper",
+          "value": "0.5 mg"
+        },
+        {
+          "label": "Selenium",
+          "value": "27.5 µg"
+        },
+        {
+          "label": "Vitamin D3",
+          "value": "5 µg"
+        },
+        {
+          "label": "Vitamin B12",
+          "value": "2.5 µg"
+        }
+      ],
+      "compositionNote": "16 ingredients — per Alfasigma's official Proxeed line doctors' leaflet",
+      "usage": "Dissolve one sachet daily in about 120ml of water or orange juice, at the same time each day with breakfast or lunch, for 4–6 months or as long as you're trying to conceive — oocytes take about 4 months to mature."
+    }
+  },
+  {
+    "slug": "proxeed-women-inositol",
+    "name": "Proxeed Women Inositol",
+    "nameArabic": "بروكسيد نساء إينوزيتول",
+    "categorySlug": "supplements",
+    "image": "/concepts/care-atlas/packs/proxeed-women-inositol.webp",
+    "availableForm": "أكياس بودرة (تفاصيل التعبئة النهائية قيد الاعتماد)",
+    "shortDescription": "يضيف Myo-Inositol — المكوّن الأكثر ارتباطًا في الأبحاث المنشورة بجودة البويضات لدى مريضات تكيّس المبايض — إلى تركيبة Proxeed Women، للسيدات المقبلات على أطفال الأنابيب.",
+    "composition": [
+      {
+        "label": "التركيبة الأساسية",
+        "value": "نفس مكوّنات Proxeed Women"
+      },
+      {
+        "label": "Myo-Inositol",
+        "value": "الكمية الدقيقة لكل كيس غير مؤكدة بعد"
+      }
+    ],
+    "downloadUrl": "/downloads/proxeed-women-inositol-leaflet.pdf",
+    "en": {
+      "shortDescription": "Adds Myo-Inositol — the ingredient most strongly linked in published research to egg quality in PCOS patients — to the Proxeed Women formula, for women preparing for IVF.",
+      "availableForm": "Powder sachets (final packaging details pending approval)",
+      "composition": [
+        {
+          "label": "Base formula",
+          "value": "Same ingredients as Proxeed Women"
+        },
+        {
+          "label": "Myo-Inositol",
+          "value": "Exact amount per sachet not yet confirmed"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "proxerex",
+    "name": "Proxerex",
+    "nameArabic": "بروكس إيركس",
+    "categorySlug": "supplements",
+    "image": "/concepts/care-atlas/packs/proxerex.webp",
+    "availableForm": "أكياس بودرة بنكهة البرتقال، 30 كيس × 6 جم",
+    "shortDescription": "يجمع مكوّنات دُرست كل منها على حدة لدعم الأداء الجنسي للرجال وصحة الأوعية الدموية — تركيبة للعافية العامة، وليست بديلاً لعلاج ضعف الانتصاب.",
+    "composition": [
+      {
+        "label": "L-Arginine",
+        "value": "2,500 mg"
+      },
+      {
+        "label": "Propionyl-L-Carnitine",
+        "value": "250 mg"
+      },
+      {
+        "label": "مستخلص الكاكاو",
+        "value": "200 mg"
+      },
+      {
+        "label": "مستخلص الماكا",
+        "value": "150 mg"
+      },
+      {
+        "label": "Acetyl-L-Carnitine",
+        "value": "125 mg"
+      },
+      {
+        "label": "زنك",
+        "value": "10 mg"
+      },
+      {
+        "label": "Nicotinic acid (النياسين)",
+        "value": "8 mg"
+      },
+      {
+        "label": "سيلينيوم",
+        "value": "50 µg"
+      }
+    ],
+    "compositionNote": "بحسب نشرة أطباء Alfasigma الرسمية لمنتج Proxerex",
+    "usage": "يُذاب كيس واحد يوميًا، يُفضّل مع الوجبة، في حوالي 120 مل عصير أو ماء بارد، يُحرّك جيدًا ويُشرب فورًا. لمدة 2 إلى 4 أشهر، قابلة للتكرار على مدار العام.",
+    "en": {
+      "shortDescription": "Combines ingredients individually studied to support men's sexual performance and vascular health — a general-wellness formula, not a substitute for erectile dysfunction treatment.",
+      "availableForm": "Orange-flavored powder sachets, 30 sachets × 6 g",
+      "composition": [
+        {
+          "label": "L-Arginine",
+          "value": "2,500 mg"
+        },
+        {
+          "label": "Propionyl-L-Carnitine",
+          "value": "250 mg"
+        },
+        {
+          "label": "Cocoa extract",
+          "value": "200 mg"
+        },
+        {
+          "label": "Maca extract",
+          "value": "150 mg"
+        },
+        {
+          "label": "Acetyl-L-Carnitine",
+          "value": "125 mg"
+        },
+        {
+          "label": "Zinc",
+          "value": "10 mg"
+        },
+        {
+          "label": "Nicotinic acid (Niacin)",
+          "value": "8 mg"
+        },
+        {
+          "label": "Selenium",
+          "value": "50 µg"
+        }
+      ],
+      "compositionNote": "Per Alfasigma's official doctors' leaflet for Proxerex",
+      "usage": "Dissolve one sachet daily, preferably with a meal, in about 120ml of juice or cold water, stir well and drink immediately. Take in 2–4 month cycles, repeatable through the year."
+    }
+  },
+  {
+    "slug": "ellamuselle",
+    "name": "Ellamuselle",
+    "nameArabic": "إلاميوسيل",
+    "categorySlug": "supplements",
+    "image": "/concepts/care-atlas/packs/ellamuselle.webp",
+    "availableForm": "أكياس بودرة، 30 كيس بالعلبة",
+    "shortDescription": "يجمع مكوّنات دُرست — كل على حدة وفي دراسة صغيرة واحدة مجتمعة — للرغبة الجنسية للسيدات وراحة سن اليأس، بتوقعات واقعية عن مجال بحثي ما زال في بداياته. المنتج متوقف مؤقتًا عن الطرح حاليًا.",
+    "composition": [
+      {
+        "label": "L-Arginine",
+        "value": "500 mg"
+      },
+      {
+        "label": "Propionyl-L-Carnitine",
+        "value": "250 mg"
+      },
+      {
+        "label": "Muira Puama",
+        "value": "250 mg"
+      },
+      {
+        "label": "Damiana (مستخلص Turnera Diffusa)",
+        "value": "250 mg"
+      },
+      {
+        "label": "Black Cohosh",
+        "value": "40 mg"
+      },
+      {
+        "label": "Ginkgo Biloba",
+        "value": "25 mg"
+      },
+      {
+        "label": "زنك",
+        "value": "10 mg"
+      },
+      {
+        "label": "فيتامين B3 (النياسين)",
+        "value": "8 mg"
+      },
+      {
+        "label": "Genistein",
+        "value": "2.5 mg"
+      }
+    ],
+    "compositionNote": "9 مكوّنات كاملة — بحسب نشرة أطباء Alfasigma الرسمية",
+    "en": {
+      "shortDescription": "Combines ingredients studied — individually, and together in one small study — for women's sexual desire and menopause comfort, with realistic expectations about a research area still in its early stages. Currently paused from sale.",
+      "availableForm": "Powder sachets, 30 sachets per box",
+      "composition": [
+        {
+          "label": "L-Arginine",
+          "value": "500 mg"
+        },
+        {
+          "label": "Propionyl-L-Carnitine",
+          "value": "250 mg"
+        },
+        {
+          "label": "Muira Puama",
+          "value": "250 mg"
+        },
+        {
+          "label": "Damiana (Turnera Diffusa extract)",
+          "value": "250 mg"
+        },
+        {
+          "label": "Black Cohosh",
+          "value": "40 mg"
+        },
+        {
+          "label": "Ginkgo Biloba",
+          "value": "25 mg"
+        },
+        {
+          "label": "Zinc",
+          "value": "10 mg"
+        },
+        {
+          "label": "Vitamin B3 (Niacin)",
+          "value": "8 mg"
+        },
+        {
+          "label": "Genistein",
+          "value": "2.5 mg"
+        }
+      ],
+      "compositionNote": "All 9 ingredients — per Alfasigma's official doctors' leaflet"
+    }
+  },
+  {
+    "slug": "ca-mi-pulse-oximeter",
+    "name": "CA-MI Pulse Oximeter",
+    "nameArabic": "جهاز قياس تشبع الأكسجين CA-MI",
+    "categorySlug": "medical-devices",
+    "image": "/products/ca-mi-pulse-oximeter.jpg",
+    "availableForm": "جهاز قياس تشبع أكسجين طرفي (يُلبس على الإصبع)",
+    "shortDescription": "جهاز قياس تشبع الأكسجين في الدم ومعدل النبض، يُلبس على الإصبع — طراز O2-Easy من CA-MI الإيطالية.",
+    "composition": [
+      {
+        "label": "نطاق قياس الأكسجين (SpO2)",
+        "value": "70–99%"
+      },
+      {
+        "label": "نطاق قياس النبض",
+        "value": "30–235 نبضة/دقيقة"
+      },
+      {
+        "label": "البطارية",
+        "value": "بطاريتان AAA، عمر تشغيل ~30 ساعة"
+      },
+      {
+        "label": "الوزن والحجم",
+        "value": "~50 جم، 5.8 × 3.2 × 3.4 سم"
+      }
+    ],
+    "en": {
+      "shortDescription": "A fingertip device measuring blood oxygen saturation and pulse rate — the O2-Easy model from CA-MI (Italy).",
+      "availableForm": "Fingertip pulse oximeter",
+      "composition": [
+        {
+          "label": "Oxygen (SpO2) measurement range",
+          "value": "70–99%"
+        },
+        {
+          "label": "Pulse measurement range",
+          "value": "30–235 bpm"
+        },
+        {
+          "label": "Battery",
+          "value": "2 x AAA batteries, ~30 hours of operation"
+        },
+        {
+          "label": "Weight & size",
+          "value": "~50 g, 5.8 × 3.2 × 3.4 cm"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "ca-mi-ir-thermometer",
+    "name": "CA-MI IR Thermometer",
+    "nameArabic": "ميزان حرارة بالأشعة تحت الحمراء CA-MI",
+    "categorySlug": "medical-devices",
+    "image": "/products/ca-mi-ir-thermometer.jpg",
+    "availableForm": "ميزان حرارة محمول بدون لمس",
+    "shortDescription": "ميزان حرارة بالأشعة تحت الحمراء بدون لمس، بوضعين للقياس (الجسم والأسطح) — طراز T-One من CA-MI الإيطالية.",
+    "composition": [
+      {
+        "label": "مسافة القياس",
+        "value": "~5 سم"
+      },
+      {
+        "label": "زمن القراءة",
+        "value": "~3 ثوانٍ"
+      },
+      {
+        "label": "الذاكرة",
+        "value": "9–32 قراءة سابقة"
+      },
+      {
+        "label": "البطارية",
+        "value": "بطاريتان AAA"
+      },
+      {
+        "label": "الوزن والحجم",
+        "value": "75–128 جم، 14.6 × 3.8 × 5.4 سم"
+      }
+    ],
+    "en": {
+      "shortDescription": "A non-contact infrared thermometer with two measurement modes (body and surfaces) — the T-One model from CA-MI (Italy).",
+      "availableForm": "Portable non-contact thermometer",
+      "composition": [
+        {
+          "label": "Measurement distance",
+          "value": "~5 cm"
+        },
+        {
+          "label": "Reading time",
+          "value": "~3 seconds"
+        },
+        {
+          "label": "Memory",
+          "value": "9–32 previous readings"
+        },
+        {
+          "label": "Battery",
+          "value": "2 x AAA batteries"
+        },
+        {
+          "label": "Weight & size",
+          "value": "75–128 g, 14.6 × 3.8 × 5.4 cm"
+        }
+      ]
+    }
+  }
+]

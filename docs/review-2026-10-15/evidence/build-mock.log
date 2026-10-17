@@ -1,0 +1,413 @@
+
+> storefront@0.1.0 build
+> next build --webpack
+
+▲ Next.js 16.3.3 (webpack)
+✓ Running next.config.ts took 188ms
+
+  Creating an optimized production build ...
+⚠ Compiled with warnings in 44s
+
+
+  Running TypeScript ...
+  Finished TypeScript in 11.9s ...
+  Collecting page data using 1 worker ...
+[07:08:03] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+              at async bP (/home/user/NPF/.next/server/chunks/260.js:26:12169)
+              at async o.getAllProducts (/home/user/NPF/.next/server/chunks/6770.js:1:73820)
+              at async z (/home/user/NPF/.next/server/app/[locale]/products/[slug]/page.js:1:18923)
+              at async callGenerateStaticParams (/home/user/NPF/node_modules/next/dist/build/static-paths/app.js:453:29)
+              at async generateRouteStaticParams (/home/user/NPF/node_modules/next/dist/build/static-paths/app.js:518:32)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[payload] getAllProducts failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[07:08:03] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+              at async bP (/home/user/NPF/.next/server/chunks/260.js:26:12169)
+              at async o.getAllProducts (/home/user/NPF/.next/server/chunks/6770.js:1:73820)
+              at async z (/home/user/NPF/.next/server/app/[locale]/products/[slug]/page.js:1:18923)
+              at async callGenerateStaticParams (/home/user/NPF/node_modules/next/dist/build/static-paths/app.js:453:29)
+              at async generateRouteStaticParams (/home/user/NPF/node_modules/next/dist/build/static-paths/app.js:518:32)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[payload] getAllProducts failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+  Generating static pages using 1 worker (0/72) ...
+  Generating static pages using 1 worker (18/72)
+  Generating static pages using 1 worker (36/72)
+  Generating static pages using 1 worker (54/72)
+✓ Generating static pages using 1 worker (72/72) in 1008ms
+[07:08:05] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[07:08:05] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[07:08:05] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[07:08:06] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[07:08:06] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[07:08:06] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[07:08:06] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[07:08:06] ERROR: Error: cannot connect to Postgres. Details: connect ECONNREFUSED 127.0.0.1:5432
+    err: {
+      "type": "Error",
+      "message": "connect ECONNREFUSED 127.0.0.1:5432",
+      "stack":
+          Error: connect ECONNREFUSED 127.0.0.1:5432
+              at /home/user/NPF/.next/server/chunks/260.js:311:24031
+              at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+              at async l (/home/user/NPF/.next/server/chunks/260.js:144:7013)
+              at async Object.m [as connect] (/home/user/NPF/.next/server/chunks/260.js:144:7255)
+              at async bM.init (/home/user/NPF/.next/server/chunks/260.js:26:8929)
+              at async bP (/home/user/NPF/.next/server/chunks/260.js:26:12169)
+              at async o.getAllProducts (/home/user/NPF/.next/server/chunks/6770.js:1:73820)
+              at async i (/home/user/NPF/.next/server/app/sitemap.xml/route.js:265:9283)
+              at async i (/home/user/NPF/.next/server/app/sitemap.xml/route.js:265:11301)
+              at async rV.do (/home/user/NPF/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:5:23355)
+              at async rV.handle (/home/user/NPF/node_modules/next/dist/compiled/next-server/app-route.runtime.prod.js:5:28801)
+              at async exportAppRoute (/home/user/NPF/node_modules/next/dist/export/routes/app-route.js:94:26)
+              at async Span.traceAsyncFn (/home/user/NPF/node_modules/next/dist/trace/trace.js:164:20)
+              at async exportPage (/home/user/NPF/node_modules/next/dist/export/worker.js:372:18)
+              at async exportPageWithRetry (/home/user/NPF/node_modules/next/dist/export/worker.js:262:26)
+              at async Promise.all (index 7)
+              at async Object.exportPages (/home/user/NPF/node_modules/next/dist/export/worker.js:349:31)
+      "errno": -111,
+      "code": "ECONNREFUSED",
+      "syscall": "connect",
+      "address": "127.0.0.1",
+      "port": 5432
+    }
+[payload] getAllCategories failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getAllProducts failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getAllCategories failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getAllProducts failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[payload] getProductBySlug("proxeed-plus") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-plus") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-men") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-men") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women-inositol") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women-inositol") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxerex") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxerex") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ellamuselle") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ellamuselle") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[payload] getProductBySlug("proxeed-plus") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-plus") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ca-mi-pulse-oximeter") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ca-mi-pulse-oximeter") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ca-mi-ir-thermometer") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ca-mi-ir-thermometer") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-men") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-men") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women-inositol") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxeed-women-inositol") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxerex") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("proxerex") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ellamuselle") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ellamuselle") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("supplements") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[payload] getProductBySlug("ca-mi-pulse-oximeter") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ca-mi-pulse-oximeter") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ca-mi-ir-thermometer") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductBySlug("ca-mi-ir-thermometer") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[payload] getCategoryBySlug("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getCategoryBySlug("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+[payload] getProductsByCategory("medical-devices") failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+[payload] getAllProducts failed (Error: cannot connect to Postgres: connect ECONNREFUSED 127.0.0.1:5432)
+[payload] MOCK_CATALOG_FALLBACK enabled — serving the mock catalog.
+undefined
+  Finalizing page optimization ...
+  Collecting build traces ...
+
+Route (app)
+┌ ○ /_not-found
+├ ƒ /[locale]
+├ ƒ /[locale]/[...catchall]
+├ ƒ /[locale]/about
+├ ƒ /[locale]/account
+├ ƒ /[locale]/account/addresses
+├ ƒ /[locale]/account/orders
+├ ƒ /[locale]/account/orders/[code]
+├ ƒ /[locale]/account/profile
+├ ƒ /[locale]/blogs
+├ ƒ /[locale]/careers
+├ ƒ /[locale]/cart
+├ ƒ /[locale]/checkout
+├ ƒ /[locale]/checkout/confirmation
+├ ƒ /[locale]/contact
+├ ƒ /[locale]/lab/hero-abstract
+├ ƒ /[locale]/login
+├ ƒ /[locale]/privacy-policy
+├ ƒ /[locale]/products
+├ ƒ /[locale]/products/[slug]
+├ ƒ /[locale]/quality-sourcing
+├ ƒ /[locale]/register
+├ ƒ /[locale]/shipping-delivery
+├ ƒ /[locale]/story
+├ ƒ /[locale]/terms
+├ ƒ /[locale]/wishlist
+├ ƒ /admin/[[...segments]]
+├ ƒ /api/[...slug]
+├ ƒ /api/graphql
+├ ƒ /api/graphql-playground
+├ ○ /apple-icon.png
+├ ○ /icon.png
+├ ○ /manifest.webmanifest
+├ ○ /offline
+├ ○ /robots.txt
+├   /serwist/[path]
+│ ├ ● /serwist/sw.js.map
+│ └ ● /serwist/sw.js
+└ ○ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
