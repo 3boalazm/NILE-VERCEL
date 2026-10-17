@@ -448,7 +448,7 @@ await offlineSubmitProbe(
   // can take seconds, so retry until the URL reflects the choice.
   await page.goto(`${BASE}/ar/products`, { waitUntil: "load" });
   await page.waitForTimeout(2500);
-  const firstName = async () => (await page.locator("h3").first().textContent())?.trim() ?? "";
+  const firstName = async () => (await page.locator(".ca-catalog-card h2").first().textContent())?.trim() ?? "";
   const before = await firstName();
   for (let attempt = 0; attempt < 4 && !page.url().includes("sort=desc"); attempt++) {
     await page.selectOption("form[role=search] select[name=sort]", "desc");
