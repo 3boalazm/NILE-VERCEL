@@ -43,13 +43,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // production); reaching this catch means the database is genuinely down.
     // sitemap.xml is a crawler convenience — when the mock fallback is
     // EXPLICITLY enabled (dev/CI offline browsing, MOCK_CATALOG_FALLBACK=1)
-    // we keep serving static routes + eligible mock slug URLs; otherwise fail
-    // closed so production never advertises mock URLs either.
+    // we keep serving static routes + eligible mock slug URLs.
+    //
+    // Without it, the sitemap degrades to the static routes only: a 500 for
+    // /sitemap.xml tells a crawler "the whole site is broken", while a
+    // sitemap without the product URLs just means "the products are not
+    // listed right now" — and it still advertises no mock URL, which is what
+    // failing closed was protecting.
     if (process.env.MOCK_CATALOG_FALLBACK !== "1" && process.env.MOCK_CATALOG_FALLBACK !== "true") {
-      throw error instanceof Error ? error : new Error(String(error))
+      console.error(`[sitemap] product repository failed (${error instanceof Error ? error.message : error}); serving the static routes only`)
+      products = []
+    } else {
+      console.error(`[sitemap] product repository failed (${error instanceof Error ? error.message : error}); falling back to the mock catalog (MOCK_CATALOG_FALLBACK enabled)`)
+      products = await new MockProductRepository().getAllProducts()
     }
-    console.error(`[sitemap] product repository failed (${error instanceof Error ? error.message : error}); falling back to the mock catalog (MOCK_CATALOG_FALLBACK enabled)`)
-    products = await new MockProductRepository().getAllProducts()
   }
 
   // Articles and jobs are CMS content and a crawler convenience: an outage

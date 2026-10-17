@@ -241,8 +241,10 @@ export function parseEnvForBuild<T extends z.ZodType>(
   if (substituted.length > 0) {
     console.warn(
       `[${scope}] no ${substituted.join("/")} in this build's environment — compiled with build-only placeholders. ` +
-        `Set the real values as environment variables on the host (Vercel: Project Settings → Environment Variables); ` +
-        `the deployed app validates the real runtime values when its CMS routes load and fails loudly if they are missing.`
+        `Set the real values as environment variables on the host (Vercel: Project Settings → Environment Variables). ` +
+        `At runtime the CMS routes (/admin, /api) validate the real values and fail loudly if they are missing; ` +
+        `the storefront keeps serving and reports the failure — the catalog section says it is unavailable and the ` +
+        `server log names the variable (see src/lib/cms/read.ts).`
     )
   }
   return result.data

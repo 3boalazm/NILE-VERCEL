@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { productRepository } from "@/lib/products";
+import { readCmsList } from "@/lib/cms/read";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { PageIntro, CareReading } from "@/components/care-atlas/sections";
 import { AlertTriangleIcon, CheckCircle2Icon, DownloadIcon, MailIcon } from "lucide-react";
@@ -36,9 +37,12 @@ export default async function QualityPage({
     q = d.quality,
     base = `/${locale}`;
   const reportHref = `mailto:${d.contact.email}?subject=${encodeURIComponent(q.batchSubject)}`;
-  const leaflets = (await productRepository.getAllProducts()).filter(
-    (p) => p.downloadUrl,
+  const leafletRead = await readCmsList("quality:leaflets", () =>
+    productRepository.getAllProducts(),
   );
+  // A CMS outage must not delete the sourcing page — only the leaflet list
+  // (which is supplementary) goes away.
+  const leaflets = leafletRead.items.filter((p) => p.downloadUrl);
   return (
     <>
       <PageIntro

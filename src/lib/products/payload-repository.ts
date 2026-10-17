@@ -1,7 +1,6 @@
 import { resolveCatalogPrice } from "./catalog-price"
-import { getPayload } from "payload"
+import { getPayloadClient } from "@/lib/cms/payload-client"
 
-import config from "@/payload.config"
 import { getLivePrices, type LivePrice } from "@/lib/vendure/pricing"
 import type { ProductRepository } from "./repository"
 import type { Product, ProductCategory } from "./types"
@@ -137,8 +136,15 @@ function toCategory(doc: any): ProductCategory {
 }
 
 export class PayloadProductRepository implements ProductRepository {
+  /**
+   * The Payload client is created per call, not at module scope: the config
+   * module validates the runtime environment when it is imported, and a
+   * top-level import turned a missing `DATABASE_URI` / `PAYLOAD_SECRET` into
+   * a failed *page* render instead of a failed *catalog* read. See
+   * `src/lib/cms/payload-client.ts`.
+   */
   private getClient() {
-    return getPayload({ config })
+    return getPayloadClient()
   }
 
   async getAllProducts(): Promise<Product[]> {

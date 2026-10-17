@@ -6,11 +6,13 @@ import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getCareAtlasCopy } from "@/lib/i18n/care-atlas";
 import { productRepository, localizeProduct } from "@/lib/products";
+import { readCms } from "@/lib/cms/read";
 import { publicCatalogProduct } from "@/lib/evidence/store";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { Reveal } from "@/components/npf/motion/reveal";
 import { ProductExplorer } from "@/components/care-atlas/product-explorer";
 import { CareContact, CareReading } from "@/components/care-atlas/sections";
+import { CatalogUnavailable } from "@/components/npf/catalog-unavailable";
 
 export async function generateMetadata({
   params,
@@ -29,12 +31,15 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   if (!isValidLocale(locale)) notFound();
   const c = getCareAtlasCopy(locale),
     base = `/${locale}`;
-  const products = (await productRepository.getAllProducts()).map((p) =>
+  const catalogRead = await readCms("home:products", () =>
+    productRepository.getAllProducts(),
+  );
+  const localizedProducts = (catalogRead.status === "ok" ? catalogRead.value : []).map((p) =>
     localizeProduct(publicCatalogProduct(p), locale),
   );
   const leafletProduct =
-    products.find((p) => p.slug === "proxeed-plus" && p.downloadUrl) ??
-    products.find((p) => p.downloadUrl);
+    localizedProducts.find((p) => p.slug === "proxeed-plus" && p.downloadUrl) ??
+    localizedProducts.find((p) => p.downloadUrl);
   return (
     <div className="ca-home">
       <section className="ca-hero" aria-labelledby="hero-title">
@@ -145,23 +150,32 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
             <p>{c.atlasBody}</p>
           </div>
         </div>
-        <ProductExplorer
-          locale={locale}
-          products={products.map((p) => ({
-            id: p.id,
-            slug: p.slug,
-            name: p.name,
-            nameArabic: p.nameArabic,
-            categorySlug: p.categorySlug,
-            image: p.image,
-            shortDescription: p.shortDescription,
-            availableForm: p.availableForm,
-            composition: p.composition,
-            compositionNote: p.compositionNote,
-            usage: p.usage,
-            downloadUrl: p.downloadUrl,
-          }))}
-        />
+        {catalogRead.status === "unavailable" ? (
+          /* The CMS could not be read (database down, runtime env missing).
+             The page keeps everything else — hero, editorial content,
+             contact, footer — and says plainly that the catalog is not
+             available, instead of replacing the whole homepage with the
+             error boundary. */
+          <CatalogUnavailable locale={locale} className="ca-section-pad" />
+        ) : (
+          <ProductExplorer
+            locale={locale}
+            products={localizedProducts.map((p) => ({
+              id: p.id,
+              slug: p.slug,
+              name: p.name,
+              nameArabic: p.nameArabic,
+              categorySlug: p.categorySlug,
+              image: p.image,
+              shortDescription: p.shortDescription,
+              availableForm: p.availableForm,
+              composition: p.composition,
+              compositionNote: p.compositionNote,
+              usage: p.usage,
+              downloadUrl: p.downloadUrl,
+            }))}
+          />
+        )}
       </section>
       <CareReading
         locale={locale}

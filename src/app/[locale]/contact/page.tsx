@@ -1,5 +1,6 @@
 import { EditorialVisual } from "@/components/care-atlas/editorial-visual";
 import { productRepository } from "@/lib/products";
+import { readCms } from "@/lib/cms/read";
 import { getExperienceCopy } from "@/lib/i18n/experience";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -42,7 +43,15 @@ export default async function ContactPage({
     /^[a-z0-9-]{1,120}$/.test(query.product)
       ? query.product
       : undefined;
-  const product = slug ? await productRepository.getProductBySlug(slug) : null;
+  // The product in the enquiry is a prefill nicety. If the CMS cannot be
+  // read, the contact form must still work — it just starts without a
+  // product name.
+  const productRead = slug
+    ? await readCms("contact:product", () =>
+        productRepository.getProductBySlug(slug),
+      )
+    : null;
+  const product = productRead?.status === "ok" ? productRead.value : null;
   const initialSubject = product
     ? `${getExperienceCopy(locale).contactContext}: ${product.name}`.slice(
         0,

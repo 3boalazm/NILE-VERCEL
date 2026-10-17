@@ -10,6 +10,8 @@ import { Reveal } from "@/components/npf/motion/reveal"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import { articleRepository, localizeArticle } from "@/lib/articles"
 import { localizeProduct, productRepository } from "@/lib/products"
+import { readCms, readCmsList } from "@/lib/cms/read"
+import { CatalogUnavailable } from "@/components/npf/catalog-unavailable"
 import { evidenceTierLabel, TIER_BADGE_CLASS, TIER_ORDER } from "@/lib/articles/evidence-tier"
 import { cn } from "@/lib/utils"
 
@@ -18,7 +20,15 @@ export async function generateMetadata({
 }: PageProps<"/[locale]/blogs/[slug]">): Promise<Metadata> {
   const { locale: localeParam, slug } = await params
   const locale: Locale = isValidLocale(localeParam) ? localeParam : "ar"
-  const article = await articleRepository.getArticleBySlug(slug)
+  const articleRead = await readCms("blogs:metadata", () =>
+    articleRepository.getArticleBySlug(slug),
+  )
+  // A CMS outage is not a missing article: keep the layout's metadata
+  // instead of turning the route into a 404 — but do not let a crawler index
+  // the "unavailable" notice as if it were the article.
+  if (articleRead.status === "unavailable")
+    return { robots: { index: false, follow: true } }
+  const article = articleRead.value
   if (!article) return {}
   const localized = localizeArticle(article, locale)
   return buildPageMetadata({
@@ -43,14 +53,28 @@ export default async function ArticlePage({ params }: PageProps<"/[locale]/blogs
   const base = `/${locale}`
   const copy = dictionary.blogs
 
-  const article = await articleRepository.getArticleBySlug(slug)
+  const articleRead = await readCms("blogs:article", () =>
+    articleRepository.getArticleBySlug(slug),
+  )
+  // The CMS could not be read. The article may well exist, so this is not a
+  // 404 — the page renders the "unavailable" notice instead.
+  if (articleRead.status === "unavailable") {
+    return <CatalogUnavailable locale={locale} className="ca-section-pad" />
+  }
+  const article = articleRead.value
   if (!article) notFound()
   const localized = localizeArticle(article, locale)
 
-  const [products, siblings] = await Promise.all([
-    productRepository.getAllProducts(),
-    articleRepository.getArticlesByProduct(localized.productSlug),
+  const [productRead, siblingRead] = await Promise.all([
+    readCmsList("blogs:related-products", () =>
+      productRepository.getAllProducts(),
+    ),
+    readCmsList("blogs:siblings", () =>
+      articleRepository.getArticlesByProduct(localized.productSlug),
+    ),
   ])
+  const products = productRead.items
+  const siblings = siblingRead.items
   const product = products.find((item) => item.slug === localized.productSlug)
   const localizedProduct = product ? localizeProduct(product, locale) : undefined
   const related = siblings

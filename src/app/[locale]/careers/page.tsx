@@ -10,6 +10,7 @@ import { ctaButtonVariants } from "@/components/ui/button"
 import { Reveal } from "@/components/npf/motion/reveal"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import { jobRepository, localizeJob } from "@/lib/jobs"
+import { readCmsList } from "@/lib/cms/read"
 import { formatJobDate, jobTypeLabel } from "@/lib/jobs/format"
 import { cn } from "@/lib/utils"
 
@@ -19,7 +20,10 @@ export async function generateMetadata({
   const { locale: localeParam } = await params
   const locale: Locale = isValidLocale(localeParam) ? localeParam : "ar"
   const dictionary = getDictionary(locale)
-  const hasOpenJobs = (await jobRepository.getOpenJobs()).length > 0
+  const jobRead = await readCmsList("careers:metadata", () =>
+    jobRepository.getOpenJobs(),
+  )
+  const hasOpenJobs = jobRead.items.length > 0
   return buildPageMetadata({
     locale,
     path: "/careers",
@@ -27,7 +31,9 @@ export async function generateMetadata({
     description: dictionary.careers.pageSubtitle,
     // An empty listing is thin content: keep it reachable and linked, but ask
     // crawlers to skip it until there is at least one real opening (F-015).
-    noIndex: !hasOpenJobs,
+    // A CMS outage is the same situation — the listing is not real content
+    // right now.
+    noIndex: jobRead.unavailable || !hasOpenJobs,
     follow: true,
   })
 }
@@ -46,7 +52,10 @@ export default async function CareersPage({ params }: PageProps<"/[locale]/caree
   const copy = dictionary.careers
   const base = `/${locale}`
 
-  const jobs = (await jobRepository.getOpenJobs()).map((job) => localizeJob(job, locale))
+  const jobRead = await readCmsList("careers:jobs", () =>
+    jobRepository.getOpenJobs(),
+  )
+  const jobs = jobRead.items.map((job) => localizeJob(job, locale))
 
   return (
     <>

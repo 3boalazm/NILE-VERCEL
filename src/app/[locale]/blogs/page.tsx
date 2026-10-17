@@ -10,6 +10,7 @@ import { Reveal } from "@/components/npf/motion/reveal"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import { articleRepository, localizeArticle } from "@/lib/articles"
 import { localizeProduct, productRepository } from "@/lib/products"
+import { readCmsList } from "@/lib/cms/read"
 import { evidenceTierLabel, TIER_BADGE_CLASS, TIER_ORDER } from "@/lib/articles/evidence-tier"
 import { cn } from "@/lib/utils"
 
@@ -19,7 +20,9 @@ export async function generateMetadata({
   const { locale: localeParam } = await params
   const locale: Locale = isValidLocale(localeParam) ? localeParam : "ar"
   const dictionary = getDictionary(locale)
-  const articles = await articleRepository.getPublishedArticles()
+  const articleRead = await readCmsList("blogs:metadata", () =>
+    articleRepository.getPublishedArticles(),
+  )
   return buildPageMetadata({
     locale,
     path: "/blogs",
@@ -27,8 +30,10 @@ export async function generateMetadata({
     description: dictionary.blogs.pageSubtitle,
     // Indexable only once real articles exist; while the listing is still an
     // empty state it stays noindex + out of the sitemap so crawlers don't read
-    // a "coming soon" page as thin content.
-    noIndex: articles.length === 0,
+    // a "coming soon" page as thin content. A CMS outage is treated like the
+    // empty state: the page is not real content right now, so it is not
+    // advertised as such.
+    noIndex: articleRead.unavailable || articleRead.items.length === 0,
   })
 }
 
@@ -45,10 +50,14 @@ export default async function BlogsPage({ params }: PageProps<"/[locale]/blogs">
   const dictionary = getDictionary(locale)
   const base = `/${locale}`
 
-  const [articles, products] = await Promise.all([
-    articleRepository.getPublishedArticles(),
-    productRepository.getAllProducts(),
+  const [articleRead, productRead] = await Promise.all([
+    readCmsList("blogs:articles", () =>
+      articleRepository.getPublishedArticles(),
+    ),
+    readCmsList("blogs:products", () => productRepository.getAllProducts()),
   ])
+  const articles = articleRead.items
+  const products = productRead.items
   const productBySlug = new Map(products.map((product) => [product.slug, localizeProduct(product, locale)]))
 
   // Strongest evidence first, then newest — the ordering the reviews recommend

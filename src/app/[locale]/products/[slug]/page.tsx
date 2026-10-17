@@ -30,6 +30,8 @@ import {
   localizeProduct,
   localizeCategory,
 } from "@/lib/products";
+import { readCms, readCmsList } from "@/lib/cms/read";
+import { CatalogUnavailable } from "@/components/npf/catalog-unavailable";
 import { careAtlasImage } from "@/lib/products/presentation";
 import { getCareAtlasCopy } from "@/lib/i18n/care-atlas";
 import { NPFProductThumbnailGallery } from "@/components/npf/product-thumbnail-gallery";
@@ -55,10 +57,21 @@ export const dynamic = "force-dynamic"
 async function loadProduct(localeParam: string, slug: string) {
   if (!isValidLocale(localeParam)) notFound();
   const locale: Locale = localeParam;
-  const stored = await productRepository.getProductBySlug(slug);
-  if (!stored) notFound();
-  const raw = publicCatalogProduct(stored);
-  return { locale, raw, product: localizeProduct(raw, locale) };
+  const stored = await readCms("pdp:product", () =>
+    productRepository.getProductBySlug(slug),
+  );
+  // The CMS could not be read. The product may well exist — this is NOT a
+  // 404, and answering 404 here would let a database outage deindex a real
+  // product page. The page renders an honest "unavailable" notice instead.
+  if (stored.status === "unavailable") return { status: "unavailable" as const, locale };
+  if (!stored.value) notFound();
+  const raw = publicCatalogProduct(stored.value);
+  return {
+    status: "ok" as const,
+    locale,
+    raw,
+    product: localizeProduct(raw, locale),
+  };
 }
 
 export async function generateMetadata({
@@ -66,10 +79,17 @@ export async function generateMetadata({
 }: PageProps<"/[locale]/products/[slug]">): Promise<Metadata> {
   const { locale: localeParam, slug } = await params;
   if (!isValidLocale(localeParam)) return {};
-  const stored = await productRepository.getProductBySlug(slug);
+  const stored = await readCms("pdp:metadata", () =>
+    productRepository.getProductBySlug(slug),
+  );
+  // The catalog is unavailable: the page itself renders the notice, so the
+  // metadata falls back to the layout's defaults instead of failing the
+  // whole route — but a crawler must not index the notice as the product.
+  if (stored.status === "unavailable")
+    return { robots: { index: false, follow: true } };
   // F-54: decide the 404 as early as possible.
-  if (!stored) notFound();
-  const rawProduct = publicCatalogProduct(stored);
+  if (!stored.value) notFound();
+  const rawProduct = publicCatalogProduct(stored.value);
   const product = localizeProduct(rawProduct, localeParam as Locale);
   return productPageMetadata(product, localeParam as Locale, rawProduct);
 }
@@ -78,15 +98,32 @@ export default async function ProductDetailPage({
   params,
 }: PageProps<"/[locale]/products/[slug]">) {
   const { locale: localeParam, slug } = await params;
-  const { locale, raw, product } = await loadProduct(localeParam, slug);
+  const loaded = await loadProduct(localeParam, slug);
+  if (loaded.status === "unavailable") {
+    return <CatalogUnavailable locale={loaded.locale} className="ca-section-pad" />;
+  }
+  const { locale, raw, product } = loaded;
   const dictionary = getDictionary(locale);
   const base = `/${locale}`;
 
-  const [rawCategory, rawRelated, rawArticles] = await Promise.all([
-    productRepository.getCategoryBySlug(product.categorySlug),
-    productRepository.getProductsByCategory(product.categorySlug),
-    articleRepository.getArticlesByProduct(product.slug),
+  // The three side reads are supplementary (category label, related
+  // products, related write-ups). A CMS hiccup must not delete the product
+  // page itself, so each one degrades to "nothing to show" instead of
+  // throwing.
+  const [categoryRead, relatedRead, articlesRead] = await Promise.all([
+    readCms("pdp:category", () =>
+      productRepository.getCategoryBySlug(product.categorySlug),
+    ),
+    readCmsList("pdp:related", () =>
+      productRepository.getProductsByCategory(product.categorySlug),
+    ),
+    readCmsList("pdp:articles", () =>
+      articleRepository.getArticlesByProduct(product.slug),
+    ),
   ]);
+  const rawCategory = categoryRead.status === "ok" ? categoryRead.value : null;
+  const rawRelated = relatedRead.items;
+  const rawArticles = articlesRead.items;
   const relatedArticles = rawArticles.map((article) =>
     localizeArticle(article, locale),
   );

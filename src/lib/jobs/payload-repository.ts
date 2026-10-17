@@ -1,6 +1,4 @@
-import { getPayload } from "payload"
-
-import config from "@/payload.config"
+import { getPayloadClient } from "@/lib/cms/payload-client"
 import { degradeToMock } from "@/lib/products/mock-fallback"
 import { MockJobRepository } from "./repository"
 import { isJobOpen, type EmploymentType, type Job, type JobRepository, type JobStatus, type WorkMode } from "./types"
@@ -69,7 +67,10 @@ function toJob(doc: any): Job {
 }
 
 async function findJobs(where?: Record<string, unknown>, operation = "findJobs"): Promise<Job[]> {
-  const payload = await getPayload({ config })
+  // The config is imported on demand (not at module scope) so a missing
+  // runtime CMS environment surfaces as a failed *read* — which this
+  // repository already handles — instead of a failed page render.
+  const payload = await getPayloadClient()
   const result = await payload.find({
     collection: "jobs",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Payload's Where type is generic over the collection

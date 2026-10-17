@@ -1,8 +1,6 @@
 "use server"
 
-import { getPayload } from "payload"
-
-import config from "@/payload.config"
+import { getPayloadClient } from "@/lib/cms/payload-client"
 
 import { getActiveCustomer } from "@/lib/auth/active-customer"
 import { isValidSlug } from "@/lib/validation/identifiers"
@@ -44,7 +42,7 @@ function sanitize(slugs: unknown): string[] {
 }
 
 async function upsert(customerId: string, slugs: string[]): Promise<void> {
-  const payload = await getPayload({ config })
+  const payload = await getPayloadClient()
   const { docs } = await payload.find({
     collection: "wishlists",
     where: { customerId: { equals: customerId } },
@@ -81,7 +79,7 @@ export async function pullWishlist(): Promise<{ synced: boolean; slugs: string[]
   try {
     const customer = await getActiveCustomer()
     if (!customer) return { synced: false, slugs: [] }
-    const payload = await getPayload({ config })
+    const payload = await getPayloadClient()
     const { docs } = await payload.find({
       collection: "wishlists",
       where: { customerId: { equals: customer.id } },

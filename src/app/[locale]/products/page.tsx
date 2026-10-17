@@ -18,6 +18,8 @@ import {
   localizeProduct,
   localizeCategory,
 } from "@/lib/products";
+import { readCmsList } from "@/lib/cms/read";
+import { CatalogUnavailable } from "@/components/npf/catalog-unavailable";
 import { NEEDS, findNeed, productsForNeed } from "@/lib/products/positioning";
 import { NPFProductGrid } from "@/components/npf/product-grid";
 import { publicCatalogProduct } from "@/lib/evidence/store";
@@ -50,10 +52,15 @@ export default async function ProductsPage({
   const need = findNeed(typeof sp.need === "string" ? sp.need : undefined);
   const requestedCategory = typeof sp.category === "string" ? sp.category : "";
   const sort = sp.sort === "desc" || sp.sort === "name-desc" ? "desc" : "asc";
-  const [rawCategories, rawProducts] = await Promise.all([
-    productRepository.getAllCategories(),
-    productRepository.getAllProducts(),
+  const [categoryRead, productRead] = await Promise.all([
+    readCmsList("products:categories", () =>
+      productRepository.getAllCategories(),
+    ),
+    readCmsList("products:all", () => productRepository.getAllProducts()),
   ]);
+  const rawCategories = categoryRead.items;
+  const rawProducts = productRead.items;
+  const catalogUnavailable = categoryRead.unavailable || productRead.unavailable;
   const categories = rawCategories
     .map((x) => localizeCategory(x, locale))
     .filter((x) => rawProducts.some((p) => p.categorySlug === x.slug));
@@ -198,7 +205,12 @@ export default async function ProductsPage({
             ))}
           </nav>
         )}
-        {products.length === 0 ? (
+        {catalogUnavailable ? (
+          /* The catalog could not be read. The filters, the search box and
+             the page itself still work — only the grid is replaced by an
+             honest notice. */
+          <CatalogUnavailable locale={locale} />
+        ) : products.length === 0 ? (
           <section
             className="ca-catalog-empty"
             aria-labelledby="catalog-empty-title"
