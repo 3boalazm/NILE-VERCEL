@@ -4,6 +4,10 @@
 import { build } from "esbuild"
 import { pathToFileURL } from "url"
 
+// The seed owns schema creation: production runs with `push: false`, so on an
+// empty database the tables would otherwise not exist (see payload.config.ts).
+process.env.PAYLOAD_DB_PUSH ??= "true"
+
 await build({
   entryPoints: ["scripts/seed.ts"],
   bundle: true,

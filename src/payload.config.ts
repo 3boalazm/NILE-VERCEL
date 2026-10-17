@@ -91,7 +91,9 @@ export default buildConfig({
             : undefined),
     },
     // F-74 — production uses explicit migrations, not push.
-    push: process.env.NODE_ENV === "development",
+    // `npm run seed` sets PAYLOAD_DB_PUSH so it can create the tables on an empty
+    // database (CI, a fresh Neon branch) without running in development mode.
+    push: process.env.NODE_ENV === "development" || process.env.PAYLOAD_DB_PUSH === "true",
     migrationDir: path.resolve(dirname, "../src/migrations"),
   }),
   sharp,
