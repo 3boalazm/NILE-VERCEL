@@ -29,7 +29,7 @@ export async function GET(request: Request) {
     )
   }
 
-  return new Promise((resolve) => {
+  return new Promise<NextResponse>((resolve) => {
     const scriptPath = path.resolve(process.cwd(), "scripts", "run-seed.mjs")
     const child = spawn("node", [scriptPath], {
       env: { ...process.env },
