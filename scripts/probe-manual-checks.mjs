@@ -136,7 +136,22 @@ console.log("=".repeat(78));
 
 // ---------------------------------------------------------------- F-02b render error
 {
-  const page = await browser.newPage({ locale: "ar" });
+  // The service worker is blocked for this probe, and it has to be.
+  //
+  // This check sabotages the network to force the error boundary. The
+  // storefront's service worker claims the page a moment after the first
+  // load (`skipWaiting` + `clientsClaim`), and once it controls the page
+  // the client navigation's RSC request is made *by the worker* — which
+  // Playwright's request interception does not see. The sabotage then
+  // matched nothing, the navigation succeeded, and the probe failed on a
+  // perfectly healthy deployment. Whether the worker had claimed the page
+  // by the time the click happened was a race, so the check was a coin
+  // flip.
+  //
+  // The worker is not what this probe is about — the error boundary is —
+  // so it is switched off here and the check becomes deterministic.
+  const context = await browser.newContext({ locale: "ar", serviceWorkers: "block" });
+  const page = await context.newPage();
   // RECALIBRATED (F-48 precedent). The original vehicle — /admin failing to
   // render because Payload cannot reach Postgres — only exists when the CMS
   // database is down; with the real DB stack healthy, /admin serves the real
@@ -149,7 +164,13 @@ console.log("=".repeat(78));
   // recovery control, and recovery must actually land on the page.
   await page.goto(`${BASE}/ar`, { waitUntil: "load" });
   let sabotaged = 0;
-  await page.route("**/_rsc*", (route) => {
+  // The RSC payload is a *query parameter* (`/ar/products?_rsc=…`), not a
+  // path segment, so the old `**/_rsc*` glob never matched anything. A
+  // RegExp matches the whole URL, query string included — and matching the
+  // RSC request also catches the *prefetch*, which is the request that
+  // would otherwise be served from the browser's cache and leave the
+  // sabotage with nothing to do.
+  await page.route(/\/_rsc=/, (route) => {
     sabotaged += 1;
     return route.abort("failed");
   });
@@ -196,6 +217,7 @@ console.log("=".repeat(78));
   );
   if (!styledBoundary || !recovered) console.log(`         body text was: ${JSON.stringify(text.slice(0, 160))}`);
   await page.close();
+  await context.close();
 }
 
 // ---------------------------------------------------------------- F-64 offline submit
@@ -666,7 +688,16 @@ await offlineSubmitProbe(
         }).observe({ type: "layout-shift", buffered: true });
       } catch {}
     });
+    // Warm the route before measuring it. The first request to a freshly
+    // started `next start` pays the server's cold start (route boot, the
+    // database pool opening, the first render) — that is a measurement of
+    // the runner, not of the page, and it is what made this check flake on
+    // a loaded CI machine. The init script re-initialises `__vitals` on
+    // every navigation, so the reload below is the measured one: what a
+    // returning visitor actually gets.
     await page.goto(`${BASE}${path}`, { waitUntil: "load" });
+    await page.waitForTimeout(500);
+    await page.reload({ waitUntil: "load" });
     await page.waitForTimeout(3000);
     const vitals = await page.evaluate(() => window.__vitals);
     await context.close();
