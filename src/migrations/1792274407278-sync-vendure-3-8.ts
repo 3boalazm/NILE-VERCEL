@@ -3,6 +3,7 @@ import { deduplicateTranslations } from "@vendure/core";
 
 export class SyncVendure381792274407278 implements MigrationInterface {
 
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
    public async up(queryRunner: QueryRunner): Promise<any> {
         // Remove any duplicate (baseId, languageCode) translation rows left over from before the
         // unique constraint existed, keeping the most recently updated row of each pair. This must
@@ -39,6 +40,7 @@ export class SyncVendure381792274407278 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE "seller_translation" ADD CONSTRAINT "FK_f54f9a5767b186b6dc21bbdee0b" FOREIGN KEY ("baseId") REFERENCES "seller"("id") ON DELETE CASCADE ON UPDATE NO ACTION`, undefined);
    }
 
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
    public async down(queryRunner: QueryRunner): Promise<any> {
         await queryRunner.query(`ALTER TABLE "seller_translation" DROP CONSTRAINT "FK_f54f9a5767b186b6dc21bbdee0b"`, undefined);
         await queryRunner.query(`ALTER TABLE "administrator" DROP CONSTRAINT "FK_28780e360e41381e695284b4a03"`, undefined);
