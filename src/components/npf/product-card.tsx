@@ -16,6 +16,7 @@ export function NPFProductCard({
   dictionary: d,
   accentIndex = 0,
   categoryName,
+  headingLevel = "h2",
 }: {
   /** F-40: set on the first card of a grid — its image is the mobile LCP. */
   priority?: boolean;
@@ -24,10 +25,12 @@ export function NPFProductCard({
   dictionary: ClientSafeDictionary;
   accentIndex?: number;
   categoryName?: string;
+  headingLevel?: "h2" | "h3";
 }) {
   const href = `/${locale}/products/${p.slug}`,
     ui = getExperienceCopy(locale),
-    src = careAtlasImage(p);
+    src = careAtlasImage(p),
+    Heading = headingLevel;
   return (
     <Reveal
       as="article"
@@ -57,9 +60,9 @@ export function NPFProductCard({
         </span>
       </Link>
       <div className="ca-card-copy">
-        <h3>
+        <Heading>
           <Link href={href}>{p.name}</Link>
-        </h3>
+        </Heading>
         <p>{p.shortDescription}</p>
         {p.availableForm && <small>{p.availableForm}</small>}
         <div className="ca-card-price">

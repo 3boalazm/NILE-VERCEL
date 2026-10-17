@@ -406,7 +406,7 @@ await offlineSubmitProbe(
   const context = await browser.newContext({ locale: "ar" });
   const page = await context.newPage();
   await page.goto(`${BASE}/ar`, { waitUntil: "domcontentloaded" });
-  const bannerBefore = await page.locator('[role="dialog"][aria-labelledby="consent-title"]').isVisible().catch(() => false);
+  const bannerBefore = await page.locator('[role="region"][aria-labelledby="consent-title"]').isVisible().catch(() => false);
   const gtagBefore = await page.locator('script[src*="googletagmanager"]').count();
   let accepted = false;
   try {
@@ -414,7 +414,7 @@ await offlineSubmitProbe(
     accepted = true;
   } catch { /* asserted below */ }
   await page.waitForTimeout(600);
-  const bannerAfter = await page.locator('[role="dialog"][aria-labelledby="consent-title"]').isVisible().catch(() => false);
+  const bannerAfter = await page.locator('[role="region"][aria-labelledby="consent-title"]').isVisible().catch(() => false);
   const cookie = await context.cookies();
   const consentCookie = cookie.find((c) => c.name === "npf-consent")?.value ?? "(none)";
   const bootstrap = await page.locator("script#ga-bootstrap").count();
@@ -636,7 +636,7 @@ await offlineSubmitProbe(
   // F-16 — hero/guarantees carry real content: the documented hero claim is
   // in the SSR HTML and there is no "01"-style placeholder marker.
   const homeHtml = await (await fetch(`${BASE}/ar`)).text();
-  const realHero = homeHtml.includes("معايير أوروبية");
+  const realHero = homeHtml.includes("خبرة من أوروبا.");
   // String checks (no regex): a literal ">01<" style placeholder marker.
   const noPlaceholder = !homeHtml.includes(">01<") && !homeHtml.includes(">١٢٣<") && !homeHtml.includes("Lorem ipsum");
   record("F-16 hero copy", realHero && noPlaceholder, `real-copy=${realHero} · no-placeholder=${noPlaceholder}`);

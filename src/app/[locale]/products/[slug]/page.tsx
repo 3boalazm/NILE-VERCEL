@@ -445,6 +445,7 @@ export default async function ProductDetailPage({
             products={relatedProducts}
             locale={locale}
             dictionary={d}
+            headingLevel="h3"
             categoryNames={
               category ? { [category.slug]: category.name } : undefined
             }

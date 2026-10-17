@@ -8,12 +8,14 @@ export function NPFProductGrid({
   locale,
   dictionary,
   categoryNames,
+  headingLevel,
 }: {
   products: Product[];
   locale: Locale;
   dictionary: ClientSafeDictionary;
   /** slug → localized category name, used for the card's micro-label fallback. */
   categoryNames?: Record<string, string>;
+  headingLevel?: "h2" | "h3";
 }) {
   if (products.length === 0) {
     return (
@@ -34,6 +36,7 @@ export function NPFProductGrid({
           dictionary={dictionary}
           accentIndex={index}
           categoryName={categoryNames?.[product.categorySlug]}
+          headingLevel={headingLevel}
         />
       ))}
     </div>
