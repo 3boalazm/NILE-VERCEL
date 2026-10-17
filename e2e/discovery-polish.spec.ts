@@ -9,7 +9,7 @@ for (const locale of ["ar", "en"] as const) {
       `/${locale}/products?q=${encodeURIComponent("بُرُوكْسِيد بِلْس")}`,
     );
     await expect(page.locator(".ca-catalog-card")).toHaveCount(1);
-    await expect(page.locator(".ca-catalog-card h3")).toHaveText(
+    await expect(page.locator(".ca-catalog-card h2")).toHaveText(
       "Proxeed Plus",
     );
     await page.goto(`/${locale}`);
