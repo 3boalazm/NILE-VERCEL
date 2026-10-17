@@ -353,10 +353,37 @@ vercel --prod            # or: connect the GitHub repo and let Vercel build on p
 Then check, in this order — each one isolates a different failure:
 
 ```bash
+curl -s https://<host>/api/health | jq      # the deployment's own self-check
 curl -s -o /dev/null -w "%{http_code}\n" https://<host>/en          # 200
 curl -s https://<host>/sitemap.xml | head                            # product URLs present
 curl -s -o /dev/null -w "%{http_code}\n" https://<host>/admin        # 200 or 302 to login
 ```
+
+`/api/health` answers the question the other three only hint at — *is the
+running deployment actually able to use its environment?* It reports booleans
+and coarse kinds, never a secret, a host name or a password:
+
+```json
+{
+  "status": "degraded",
+  "cms": { "secretValid": true, "databaseScheme": "postgresql",
+           "databaseHostKind": "public", "databaseReachable": "ok" },
+  "catalog": { "ok": true, "products": 8 },
+  "problems": ["the database is reachable but the catalog is empty — seed it (npm run seed)"],
+  "notes": ["VENDURE_SHOP_API_URL is not set — …"]
+}
+```
+
+Read it like this:
+
+| Field | Meaning |
+|---|---|
+| `cms.secretValid` | `PAYLOAD_SECRET` is set **and** at least 32 characters (the schema's floor) |
+| `cms.databaseHostKind` | `localhost` / `private` / `public` — a *deployed* function cannot use `localhost` or a private range it has no route to |
+| `cms.databaseReachable` | a real TCP connect test to the database host |
+| `catalog.ok` | the CMS could actually read the catalog (config + connection + tables) |
+| `catalog.products` | `0` means the database is fine but **not seeded** |
+| `problems` | breaks the storefront · `notes` | degrades part of it |
 
 - `/en` returns 500 and the log shows `environment validation failed` → the
   runtime environment variables are missing or scoped to the wrong
@@ -366,6 +393,13 @@ curl -s -o /dev/null -w "%{http_code}\n" https://<host>/admin        # 200 or 30
 - The build log shows `compiled with build-only placeholders` → the *build*
   had no environment variables. That is expected and harmless on its own;
   the runtime values are what matter.
+
+> **Environment variables are read when a deployment starts, not when you set
+> them.** Adding a variable to the Vercel project does not change the
+> deployment that is already running — it changes the *next* one. Redeploy
+> (or promote a new deployment) after adding a variable, and make sure the
+> environment selector in the Vercel UI is the one you deployed
+> (Production / Preview / Development are separate).
 
 ### 10.4 What the browser shows when the CMS cannot be read
 
