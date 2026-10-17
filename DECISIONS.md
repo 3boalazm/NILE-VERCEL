@@ -8,7 +8,8 @@
 | **قاعدةان منفصلتان** | `npf` لـVendure و `npf_payload` لـPayload | اختناق drizzle/prisma لو شاركوا قاعدة واحدة (درس مثبت عملياً) |
 | **الدفع اليدوي** | `PAYMENT_METHOD_CODE = "manual-settlement"` في `src/lib/cart/actions.ts` | بوابات دفع مصرية لم تُدمج بعد (F-03) — التسمية يجب أن تعكس القدرات |
 | **بيانات الكتالوج** | أولاً Vendure حيّ، ثم جسر mock (`MOCK_CATALOG_FALLBACK=1`) | البناء والتطوير يشتغلان بدون Vendure (انظر `src/lib/vendure/pricing.ts`) |
-| **البناء** | `next build --webpack` + `npm run seed` قبل البناء | التوليد الثابت يقرأ بيانات حقيقية وقت البناء (انظر CI: seed→typegen→tsc→lint→build) |
+| **البناء** | `next build --webpack` — **hermetic**: بلا أسرار وبلا قاعدة بيانات (انظر CI: typegen→tsc→lint→build من غير service container) | البناء *يترجم* التطبيق، مش بيخدم طلب — فمش محتاج أسرار الإنتاج ولا قاعدة شغالة وقت البناء. الكتالوج بيُقرأ وقت الطلب |
+| **بناء ≠ طلب (Vercel)** | `src/lib/env.ts`: `isBuildPhase()` (Next بيحط `NEXT_PHASE=phase-production-build` قبل ما يشغّل عمّال التوليد) → `parseEnvForBuild` بيستبدل القيم الناقصة بـ placeholders واضحة ويطبع تحذير؛ `parseEnvOrThrow` زي ما هي للطلب. وصفحة المنتج dynamic صراحةً (من غير `generateStaticParams`)، فتقرأ الكتالوج وقت الطلب، و`/sitemap.xml` بقى `dynamic` | الفحص كان بيتنفّذ وقت الـimport، فأي `next build` على ماشن بلا أسرار (سيرفر بناء Vercel بالظبط) كان بيقع بـ"PAYLOAD_SECRET is required" — يعني التطبيق مش قابل للنشر أصلاً. التحقق وقت الطلب لسه fail-fast زي ما هو، والبناء بقى hermetic |
 | **CI/CD** | `.github/workflows/ci.yml`: build + unit (vitest) + e2e (Playwright) — **الـCD ناقص (F-69)** | جودة مضمونة على كل PR؛ النشر يدوي حالياً |
 | **الحاوية** | `Dockerfile` متعدد المراحل (node:22 → slim) مع أسرار كـbuild ARGs | صورة إنتاج نظيفة بلا devDeps |
 | **الاختبارات** | vitest متداخل `src/lib/**/*.test.ts` + Playwright `e2e/*.spec.ts` | منطق نقي + دخان تجاري |

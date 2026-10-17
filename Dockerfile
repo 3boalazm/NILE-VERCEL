@@ -9,14 +9,20 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-# Build against a reachable, seeded catalog DB. Secrets exist only in this
-# RUN's environment: never ARG/ENV layers or files copied into the runner.
-# docker build --secret id=DATABASE_URI,env=DATABASE_URI \
-#   --secret id=PAYLOAD_SECRET,env=PAYLOAD_SECRET -t npf .
-RUN --mount=type=secret,id=DATABASE_URI,required=true \
-    --mount=type=secret,id=PAYLOAD_SECRET,required=true \
-    DATABASE_URI="$(cat /run/secrets/DATABASE_URI)" \
-    PAYLOAD_SECRET="$(cat /run/secrets/PAYLOAD_SECRET)" npm run build
+# A build compiles the app; it does not serve a request. It therefore needs
+# neither production secrets nor a reachable database — the catalog is read at
+# request time — and the payload config substitutes build-only placeholders
+# for anything missing. The secrets below are still accepted (and worth
+# passing when you build locally, so the same command works in both modes):
+#   docker build --secret id=DATABASE_URI,env=DATABASE_URI \
+#     --secret id=PAYLOAD_SECRET,env=PAYLOAD_SECRET -t npf .
+# When they are passed they exist only in this RUN's environment — never an
+# ARG/ENV layer, never a file copied into the runner. The running container
+# needs them again (see docker-compose.yml).
+RUN --mount=type=secret,id=DATABASE_URI,required=false \
+    --mount=type=secret,id=PAYLOAD_SECRET,required=false \
+    DATABASE_URI="$(cat /run/secrets/DATABASE_URI 2>/dev/null || true)" \
+    PAYLOAD_SECRET="$(cat /run/secrets/PAYLOAD_SECRET 2>/dev/null || true)" npm run build
 RUN npm prune --omit=dev
 
 FROM node:22-bookworm-slim AS runner

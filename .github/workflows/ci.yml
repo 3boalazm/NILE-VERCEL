@@ -2,10 +2,14 @@ name: CI
 
 # build: install, lint, build (build already runs TypeScript
 # type-checking as part of `next build --webpack`, so there's no separate
-# typecheck step). Needs DATABASE_URI/PAYLOAD_SECRET secrets (see
-# src/payload.config.ts — it fails fast if either is missing); a
-# dummy/throwaway Postgres connection string is fine since the build
-# doesn't need real data, just a reachable DB at build time.
+# typecheck step). This job is deliberately HERMETIC — no database, no
+# secrets, no service container: a build compiles the app, it does not
+# serve a request, so it needs neither production secrets nor a reachable
+# Postgres. That is the Vercel case (a build container with no env vars),
+# and it is what a red Vercel build used to look like: "PAYLOAD_SECRET is
+# required" from the payload config's import-time validation. The
+# configured path (real env vars + a real database) is covered by the e2e
+# job below, which seeds and builds against a live Postgres.
 # VENDURE_SHOP_API_URL is deliberately NOT required: catalog pricing
 # prefers live Vendure prices but falls back to the mock bridge when
 # Vendure is unreachable (see src/lib/vendure/pricing.ts).
@@ -33,28 +37,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    # The build prerenders the catalog routes, so `next build` needs a
-    # REACHABLE Postgres at build time (per README "Notes for deploys").
-    # Self-sufficient service container + throwaway credentials — no repo
-    # secrets required, and the payload config's fail-fast env checks get
-    # real values. (MOCK_CATALOG_FALLBACK is deliberately NOT set: builds
-    # should exercise the real repository, not the mock bridge.)
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: npf_build
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-    env:
-      DATABASE_URI: postgresql://postgres:postgres@localhost:5432/npf_build
-      PAYLOAD_SECRET: ci-only-throwaway-secret-not-a-real-credential
+    # No services, no env: the build must work on a machine that has
+    # neither a database nor production secrets — the Vercel build container
+    # is exactly that machine, and this job is the regression test for it.
+    # The catalog is read at request time, so nothing is pre-rendered from
+    # the database any more; the configured path is covered by the e2e job.
     steps:
       - uses: actions/checkout@v4
 
@@ -67,15 +54,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # The storefront build prerenders catalog routes, which read Payload
-      # collections directly; the service container's fresh Postgres has no
-      # schema yet (Payload only creates tables in dev mode), so seed first —
-      # same flow as the e2e job and the README's local build instructions.
-      # The seed is hard-timed (`timeout`) so a hung schema-push prompt fails
-      # loudly instead of stalling the job forever.
-      - name: Seed catalog
-        run: timeout 180 npm run seed
-
       - name: Generate route types
         run: npx next typegen
 
@@ -85,6 +63,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      # MOCK_CATALOG_FALLBACK is deliberately NOT set: a build must never
+      # fall back to the mock catalog — it must render the real one, or
+      # render nothing at all.
       - name: Build
         run: npm run build
 
@@ -159,6 +140,9 @@ jobs:
       - name: Seed catalog
         run: timeout 180 npm run seed
 
+      # The configured path: real env vars and a real database, so the
+      # catalog is read the way production reads it. The build job above
+      # covers the opposite case (no env vars, no database).
       - name: Build
         run: npm run build
 

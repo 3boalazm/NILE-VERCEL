@@ -22,7 +22,6 @@ import { ChevronLeftIcon, CheckIcon, FileDownIcon } from "lucide-react";
 import {
   isValidLocale,
   getDirection,
-  locales,
   type Locale,
 } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -39,12 +38,19 @@ import { NPFProductGrid } from "@/components/npf/product-grid";
 import { ProductAddToCart } from "@/components/npf/product-add-to-cart";
 import { WishlistButton } from "@/components/npf/wishlist-button";
 
-export async function generateStaticParams() {
-  const products = await productRepository.getAllProducts();
-  return locales.flatMap((locale) =>
-    products.map((product) => ({ locale, slug: product.slug })),
-  );
-}
+/**
+ * A product page is rendered from the live Payload catalog and the root
+ * layout reads request cookies for the cart/customer session. This is a
+ * request-time route by design — it is not a build-time snapshot. Making the
+ * choice explicit is important when the build has no database: an empty
+ * `generateStaticParams()` result makes Next classify this as an empty static
+ * route, whose generated shell cannot use the session cookies at runtime.
+ *
+ * The catalog is read by loadProduct() from the actual request. Missing or
+ * invalid runtime DATABASE_URI / PAYLOAD_SECRET still fails closed; build
+ * environments do not need to enumerate product slugs at all.
+ */
+export const dynamic = "force-dynamic"
 
 async function loadProduct(localeParam: string, slug: string) {
   if (!isValidLocale(localeParam)) notFound();

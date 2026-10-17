@@ -57,7 +57,8 @@ Key architecture notes:
 ## Prerequisites
 
 - Node.js 22+
-- Postgres (local or hosted)
+- Postgres (local or hosted) — needed to *run* the app (and to seed it),
+  **not** to build it
 - Vendure backend running (for cart/checkout/account at runtime;
   **not** required for `npm run build`)
 
@@ -83,8 +84,8 @@ Open `http://localhost:3000/ar` (or `/en`). Payload admin lives at
 
 ```bash
 npm run dev     # dev server
-npm run build   # production build (needs DATABASE_URI + PAYLOAD_SECRET; Vendure optional)
-npm run start   # serve the production build
+npm run build   # production build (no secrets, no database needed; Vendure optional)
+npm run start   # serve the production build (needs DATABASE_URI + PAYLOAD_SECRET)
 npm run lint    # eslint
 npm run test    # vitest unit suites (no infrastructure needed)
 npm run test:e2e  # playwright suite (needs Postgres; Vendure optional, see below)
@@ -124,9 +125,28 @@ E2E at a throwaway database, never production.
 
 ## Notes for deploys
 
-- The build reads catalog-backed routes/sitemap from Payload, so `DATABASE_URI`
-  must point at a **reachable** database at build time (CI uses a
-  throwaway Postgres for this).
+**The build and the running app need different things.** A build compiles the
+app; it does not serve a request, so it does not need production secrets and
+it does not need a reachable database. `npm run build` therefore works on a
+machine with no `.env` at all — it substitutes clearly-marked build-only
+placeholders for `PAYLOAD_SECRET` / `DATABASE_URI` and says so in the build
+log. The **running** app is strict: when its CMS routes load, they validate
+the real runtime environment (not the build placeholders) and refuse to
+serve (500, with the variable names in the log) if `PAYLOAD_SECRET` or
+`DATABASE_URI` is missing.
+
+That split is what makes a Vercel deploy possible without a build-time
+database: the catalog is read at request time, and the routes that depend on
+it (`/products`, product pages, `/sitemap.xml`) are rendered on demand.
+
+- **Deploying to Vercel** — required environment variables, the database, the
+  seed step and the verification checklist: [docs/OPS.md § 10](docs/OPS.md).
+- The catalog routes are server-rendered on demand (the root layout reads the
+  cart/customer session cookie), so the build produces no product HTML — the
+  pages are generated per request from Payload.
+- `/sitemap.xml` is generated per request for the same reason: a sitemap
+  built from a catalog the build machine could not read would ship without
+  the product URLs, which is the part crawlers need.
 - Live catalog pricing degrades gracefully: if Vendure is down, pages
   render with fallback prices and checkout surfaces the error instead of
   charging a wrong amount.

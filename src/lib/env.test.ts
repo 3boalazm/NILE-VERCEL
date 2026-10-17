@@ -9,6 +9,8 @@
 import { describe, expect, it, vi, afterEach } from "vitest"
 
 import {
+  isBuildPhase,
+  parseEnvForBuild,
   parseEnvOrThrow,
   payloadEnvSchema,
   payloadEnvWarnings,
@@ -171,6 +173,58 @@ describe("vendureEnvSchema", () => {
         SUPERADMIN_PASSWORD: "Str0ng!Passw0rd",
       }).SUPERADMIN_PASSWORD
     ).toBe("Str0ng!Passw0rd")
+  })
+})
+
+describe("the build phase is not a request", () => {
+  it("recognises the build phase and leaves every other phase alone", () => {
+    const previous = process.env.NEXT_PHASE
+    try {
+      process.env.NEXT_PHASE = "phase-production-build"
+      expect(isBuildPhase()).toBe(true)
+      process.env.NEXT_PHASE = "phase-development-server"
+      expect(isBuildPhase()).toBe(false)
+      delete process.env.NEXT_PHASE
+      expect(isBuildPhase()).toBe(false)
+    } finally {
+      if (previous === undefined) delete process.env.NEXT_PHASE
+      else process.env.NEXT_PHASE = previous
+    }
+  })
+
+  it("compiles without secrets instead of refusing to build", () => {
+    // A build machine (CI runner, Vercel build container) frequently has no
+    // production secrets yet. The app still has to compile there — the
+    // validation that must not be skipped is the one a *request* runs.
+    const env = parseEnvForBuild(payloadEnvSchema, "payload", {})
+    expect(env.PAYLOAD_SECRET.length).toBeGreaterThanOrEqual(32)
+    expect(env.DATABASE_URI).toMatch(/^postgres(ql)?:\/\//)
+  })
+
+  it("keeps the real values when the environment has them", () => {
+    const env = parseEnvForBuild(payloadEnvSchema, "payload", goodPayload)
+    expect(env.PAYLOAD_SECRET).toBe(SECRET)
+    expect(env.DATABASE_URI).toBe(goodPayload.DATABASE_URI)
+  })
+
+  it("still rejects a value that is present but wrong", () => {
+    // A placeholder covers a *missing* variable. It must never paper over a
+    // typo — a mysql:// URI in DATABASE_URI is a real mistake, and hiding it
+    // behind a placeholder would move the failure to a deploy nobody can see.
+    expect(() =>
+      parseEnvForBuild(payloadEnvSchema, "payload", { ...goodPayload, DATABASE_URI: "mysql://npf@localhost/npf" })
+    ).toThrowError(/DATABASE_URI must be a postgres/)
+    expect(() => parseEnvForBuild(payloadEnvSchema, "payload", { ...goodPayload, PAYLOAD_SECRET: "" })).toThrowError(
+      /PAYLOAD_SECRET must be at least 32 characters/
+    )
+  })
+
+  it("says out loud which values it had to stand in for", () => {
+    const spy = vi.spyOn(console, "warn").mockImplementation(() => {})
+    parseEnvForBuild(payloadEnvSchema, "payload", {})
+    const message = spy.mock.calls.map((call) => String(call[0])).join("|")
+    expect(message).toMatch(/PAYLOAD_SECRET/)
+    expect(message).toMatch(/DATABASE_URI/)
   })
 })
 
