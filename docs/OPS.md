@@ -367,7 +367,50 @@ curl -s -o /dev/null -w "%{http_code}\n" https://<host>/admin        # 200 or 30
   had no environment variables. That is expected and harmless on its own;
   the runtime values are what matter.
 
-### 10.4 What is still missing (F-69)
+### 10.4 What the browser shows when the CMS cannot be read
+
+A missing `DATABASE_URI` / `PAYLOAD_SECRET`, or a database the runtime cannot
+reach, used to take the **whole site** down: the Payload config validates the
+environment when it is imported, the module failed to load, and every page
+that reads the catalog threw while it was server-rendering. In the browser
+that looks like this:
+
+```
+Error: Minified React error #441   (an error occurred in the Server Components render)
+[report-error:error-boundary] Error Minified React error #441
+```
+
+React error **#441** is *not* a hydration bug and *not* a client-side crash:
+it is Next telling the browser that a Server Component threw. The route error
+boundary (`src/app/[locale]/error.tsx`) catches it and renders the "something
+went wrong" page. The reason is in the **server** log, not in the console:
+
+```bash
+vercel logs <deployment> --since 1h     # look for:
+# [payload] environment validation failed: PAYLOAD_SECRET, DATABASE_URI
+# [cms:read] cms:read failed (...)        # the degraded read, once the site degrades
+```
+
+Two things changed so that this failure is visible and *local*:
+
+- The storefront loads the Payload config **on demand**
+  (`src/lib/cms/payload-client.ts`), so a CMS misconfiguration is a failed
+  *read* instead of a failed page render. The CMS routes under
+  `src/app/(payload)` still fail fast — an admin panel without a database
+  cannot work.
+- Pages read the CMS through `readCms` / `readCmsList`
+  (`src/lib/cms/read.ts`). A failed read is reported through the F-65
+  pipeline and the page renders everything it can, with an honest
+  "the catalog is not available right now" notice where the products would
+  have been. The repositories still fail closed: **no mock product or mock
+  price ever reaches a customer** (`MOCK_CATALOG_FALLBACK` stays unset).
+
+So the storefront now answers **200 with a degraded catalog section** instead
+of a 500 page, and the operator still gets the loud log line. If you want
+the old, louder behaviour while debugging a deployment, watch the log — do
+not "fix" it by enabling the mock fallback.
+
+### 10.5 What is still missing (F-69)
 
 This runbook is a manual procedure, not a pipeline. There is still no
 automated deploy, no staging promotion, no rollback button and no alerting.

@@ -449,7 +449,10 @@ describe("source regressions", () => {
     ]) {
       expect(readFileSync(file, "utf8")).not.toContain("/blogs")
     }
-    expect(readFileSync("src/app/[locale]/careers/page.tsx", "utf8")).toContain("noIndex: !hasOpenJobs")
+    // The careers listing stays noindex while it is empty — and also while
+    // the CMS cannot be read (an outage is not a listing a crawler should
+    // index either).
+    expect(readFileSync("src/app/[locale]/careers/page.tsx", "utf8")).toContain("noIndex: jobRead.unavailable || !hasOpenJobs")
     const proxy = readFileSync("src/proxy.ts", "utf8")
     expect(proxy).toContain("resolveLegacyPath")
     expect(proxy).toContain('url.search = ""')

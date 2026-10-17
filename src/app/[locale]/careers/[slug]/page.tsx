@@ -9,6 +9,8 @@ import { Reveal } from "@/components/npf/motion/reveal"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import { NPFJobApplicationForm } from "@/components/npf/job-application-form"
 import { jobRepository, localizeJob } from "@/lib/jobs"
+import { readCms } from "@/lib/cms/read"
+import { CatalogUnavailable } from "@/components/npf/catalog-unavailable"
 import { formatJobDate, jobTypeLabel } from "@/lib/jobs/format"
 
 export async function generateMetadata({
@@ -16,7 +18,15 @@ export async function generateMetadata({
 }: PageProps<"/[locale]/careers/[slug]">): Promise<Metadata> {
   const { locale: localeParam, slug } = await params
   const locale: Locale = isValidLocale(localeParam) ? localeParam : "ar"
-  const job = await jobRepository.getJobBySlug(slug)
+  const jobRead = await readCms("careers:metadata", () =>
+    jobRepository.getJobBySlug(slug),
+  )
+  // A CMS outage is not a missing posting: keep the layout's metadata
+  // instead of turning the route into a 404 — but do not let a crawler index
+  // the "unavailable" notice as if it were the posting.
+  if (jobRead.status === "unavailable")
+    return { robots: { index: false, follow: true } }
+  const job = jobRead.value
   if (!job) return {}
   const localized = localizeJob(job, locale)
   return buildPageMetadata({
@@ -41,7 +51,15 @@ export default async function JobPage({ params }: PageProps<"/[locale]/careers/[
   const copy = dictionary.careers
   const base = `/${locale}`
 
-  const job = await jobRepository.getJobBySlug(slug)
+  const jobRead = await readCms("careers:job", () =>
+    jobRepository.getJobBySlug(slug),
+  )
+  // The CMS could not be read. The posting may well exist — this is not a
+  // 404 — so the page renders the "unavailable" notice instead.
+  if (jobRead.status === "unavailable") {
+    return <CatalogUnavailable locale={locale} className="ca-section-pad" />
+  }
+  const job = jobRead.value
   if (!job) notFound()
   const localized = localizeJob(job, locale)
 

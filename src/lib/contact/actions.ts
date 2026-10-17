@@ -1,8 +1,6 @@
 "use server"
 
-import { getPayload } from "payload"
-
-import config from "@/payload.config"
+import { getPayloadClient } from "@/lib/cms/payload-client"
 import { getClientIp, isRateLimited } from "@/lib/security/rate-limit"
 import { logError } from "@/lib/observability/log"
 import { FIELD_LIMITS } from "@/lib/forms/field-limits"
@@ -68,7 +66,7 @@ export async function submitContactInquiry(
   }
 
   try {
-    const payload = await getPayload({ config })
+    const payload = await getPayloadClient()
     await payload.create({
       collection: "inquiries",
       data: {

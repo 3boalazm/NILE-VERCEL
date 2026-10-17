@@ -108,3 +108,13 @@
 - **النتيجة:** `npm run build` بقى **hermetic** — من غير `.env` ومن غير قاعدة بيانات (اتحقّق محلياً: exit 0، والكتالوج وقت الطلب شغّال عادي). مسار runtime *لسه fail-fast*: من غير `PAYLOAD_SECRET`/`DATABASE_URI` الطلب بيرمي 500 والرسالة بتسمّي المتغيّر.
 - **الـCI:** job الـbuild بقى من غير service container ومن غير seed (بيثبّت إن البناء hermetic)؛ job الـe2e فاضل بيغطّي المسار المهيّأ (أسرار + قاعدة حقيقية).
 - **الrunbook:** `docs/OPS.md` § 10 — المتغيّرات، القاعدة، الـseed، التحقق بعد النشر، والـrollback. باقي **F-69** (نشر تلقائي + ترقية staging + rollback + تنبيهات) لسه مفتوح.
+
+## 🛟 فشل القراءة مايقتلش الموقع (2026-10-17)
+
+- **العلامة في المتصفح:** `Minified React error #441` + `[report-error:error-boundary]` على كل صفحة. ده **مش** هيدراتيسن ومش كراش في الكلاينت — ده Next بيقول للBrowser إن Server Component رما استثناء. السبب الحقيقي في لوج السيرفر: `[payload] environment validation failed: PAYLOAD_SECRET / DATABASE_URI` (إعداد ناقص في Vercel) أو قاعدة بيانات مش موصولة.
+- **السبب الجذري:** `src/payload.config.ts` بيتقيّم وقت الـimport، فأي ريبو بيستورد `@/payload.config` في أعلى الملف كان بيعمل import-error وقت رندر الصفحة → 500 على الموقع كله، مش على الـCMS بس.
+- **الحل (٣ قطع):**
+  1. `src/lib/cms/payload-client.ts` — إعدادات Payload بتتحمّل **وقت الطلب**، فخطأ الإعداد بقى فشل *قراءة* مش فشل *render*. مسارات `(payload)` (الأدمن) لسه fail-fast.
+  2. `src/lib/cms/read.ts` (`readCms` / `readCmsList`) — القراءة الفاشلة بتترجع `unavailable` + بتتبلّغ لخط F-65، والصفحة بتكمّل: تنبيه صريح مكان المنتجات (`src/components/npf/catalog-unavailable.tsx`) بدل ما الصفحة كلها تموت. **الـrepositories لسه fail-closed** — مفيش منتج/سعر تجريبي بيوصل لعميل.
+  3. `src/app/sw.ts` — القاعدة الأخيرة بقت **same-origin بس** (الـSW مبقاش يمرّر طلبات Google/الخارجية، فمبقاش فيه `no-response` ولا unhandled rejection)، و`setCatchHandler` بيحوّل أي طلب فاشل لـResponse حقيقية (صفحة `/offline` precached للمستندات، 504 للباقي). و`next.config.ts` سماح `fonts.googleapis.com`/`fonts.gstatic.com` في `style-src`/`font-src`.
+- **النتيجة:** خطأ إعداد الـCMS بقى *محلي*: الموقع بيرجع 200 والقسم المتأثر بس بيقول "الكتالوج مش متاح دلوقتي"، واللوج بيقول السبب بالظبط. التشغيل والإجراءات: `docs/OPS.md` § 10.4.

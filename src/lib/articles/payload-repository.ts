@@ -1,6 +1,4 @@
-import { getPayload } from "payload"
-
-import config from "@/payload.config"
+import { getPayloadClient } from "@/lib/cms/payload-client"
 import { degradeToMock } from "@/lib/products/mock-fallback"
 import { MockArticleRepository } from "./repository"
 import type { Article, ArticleRepository, ArticleStatus, EvidenceTier } from "./types"
@@ -67,7 +65,10 @@ function toArticle(doc: any): Article {
 }
 
 async function findArticles(where?: Record<string, unknown>): Promise<Article[]> {
-  const payload = await getPayload({ config })
+  // The config is imported on demand (not at module scope) so a missing
+  // runtime CMS environment surfaces as a failed *read* — which this
+  // repository already handles — instead of a failed page render.
+  const payload = await getPayloadClient()
   const result = await payload.find({
     collection: "articles",
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Payload's Where type is generic over the collection

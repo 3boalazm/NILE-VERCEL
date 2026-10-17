@@ -58,12 +58,28 @@ function cspValue(surface: "storefront" | "admin"): string {
     ]
       .filter(Boolean)
       .join(" "),
-    "style-src 'self' 'unsafe-inline'",
+    // Google Fonts is allow-listed explicitly, and deliberately.
+    //
+    // The storefront self-hosts its own fonts (`src/app/fonts`, loaded with
+    // `next/font/local`), so nothing in this codebase needs a remote
+    // stylesheet. But the *deployed* document can still be asked for one — a
+    // browser extension, a third-party embed, or a document served from a
+    // build that predates the self-hosted fonts. Blocking it had two visible
+    // consequences: the browser refused the stylesheet (so the page fell back
+    // to the system font stack) and the service worker, which used to proxy
+    // that request, logged a failed fetch for it on every page.
+    //
+    // A remote stylesheet cannot execute script, so the exposure is limited
+    // to "somebody can load a font from Google" — while the cost of blocking
+    // it was broken typography plus console noise. If the deployment is ever
+    // confirmed to request no remote fonts at all, delete these two origins
+    // and nothing else has to change.
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
     // `https:` for images is deliberate: product imagery can legitimately be
     // served from an asset host or CDN, and a blocked product photo is a
     // visible, revenue-affecting regression. Images are not script-executable.
     "img-src 'self' data: blob: https:",
-    "font-src 'self' data:",
+    "font-src 'self' data: https://fonts.gstatic.com",
     [
       "connect-src 'self'",
       // Next's dev/HMR websocket and Payload admin's live reload.

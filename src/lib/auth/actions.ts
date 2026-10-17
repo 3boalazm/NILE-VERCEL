@@ -1,8 +1,6 @@
 "use server"
 
-import { getPayload } from "payload"
-
-import config from "@/payload.config"
+import { getPayloadClient } from "@/lib/cms/payload-client"
 import { vendureRequest } from "@/lib/vendure/client"
 import { withToken } from "@/lib/vendure/with-token"
 import { getActiveCustomer } from "@/lib/auth/active-customer"
@@ -182,7 +180,10 @@ export async function requestAccountDeletion(input: {
   try {
     const customer = await getActiveCustomer()
     if (!customer) return { ok: false, error: "not_authenticated" }
-    const payload = await getPayload({ config })
+    // Loaded on demand: a missing runtime CMS environment must fail *inside*
+    // this try/catch (a clean "server_error" for the form) instead of
+    // rejecting the whole action when the module is loaded.
+    const payload = await getPayloadClient()
     await payload.create({
       collection: "erasure-requests",
       data: {
