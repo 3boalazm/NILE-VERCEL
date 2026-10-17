@@ -444,7 +444,46 @@ of a 500 page, and the operator still gets the loud log line. If you want
 the old, louder behaviour while debugging a deployment, watch the log — do
 not "fix" it by enabling the mock fallback.
 
-### 10.5 What is still missing (F-69)
+### 10.5 Hosted Postgres: Neon / Vercel Postgres (F-73)
+
+Both providers use serverless/pooled connection strings that **require TLS**.
+The repo now handles this explicitly (not silently failing on `sslmode`):
+
+- `.env.example` documents `DATABASE_SSL` (`require`/`prefer`/`disable`) and `PGSSLMODE`.
+- `src/lib/env.ts` validates both as optional strings.
+- `src/payload.config.ts` passes `ssl` to `postgresAdapter` (and sets `push: false`, `migrationDir` for production).
+- `src/vendure-config.ts` passes `ssl` to TypeORM `dbConnectionOptions` (both `ssl` and `extra.ssl`).
+
+Connection string for hosted providers (add `?sslmode=require`):
+
+```bash
+DATABASE_URI="postgresql://user:pass@ep-...us-east-1.aws.neon.tech/db?sslmode=require"
+DATABASE_SSL=require
+PGSSLMODE=require
+```
+
+For Vercel Postgres specifically (pooled endpoint), use the `POSTGRES_URL` or `DATABASE_URL` Vercel gives you; it already includes `?sslmode=require` in most cases. Just set `DATABASE_SSL=require` (or leave it empty if the connection string already carries it) and make sure `DATABASE_URI` matches it exactly.
+
+The `db:migrate` script (`npm run db:migrate`) reports the current settings but does **not** run migrations automatically — running them against a live hosted database should always be an explicit operator decision (`RUN_MIGRATIONS=true npm run start:server`).
+
+### 10.6 Online seed (F-77) — no local terminal required
+
+After the first deploy (when `RUN_MIGRATIONS=true` has created tables), seed
+the live database online with the protected endpoint:
+
+```bash
+# Set SEED_KEY in Vercel Environment Variables (same value as the header).
+# Then trigger from any browser / terminal / CI:
+curl -H "x-seed-key: $(echo $SEED_KEY)" https://<your-host>/api/seed
+```
+
+`src/app/api/seed/route.ts` checks the `x-seed-key` header against the
+`SEED_KEY` environment variable and runs `scripts/run-seed.mjs` inside the
+running Vercel function. It does **not** modify anything if called without the
+correct key (returns 403). After seeding once, disable or rotate `SEED_KEY` to
+prevent accidental re-runs.
+
+### 10.7 What is still missing (F-69)
 
 This runbook is a manual procedure, not a pipeline. There is still no
 automated deploy, no staging promotion, no rollback button and no alerting.

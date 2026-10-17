@@ -73,6 +73,9 @@ const boolFromText = z
 const poolSchema = z.object({
   /** pg pool `max`. Sized per process; see scripts/backup-db.sh notes and .env.example. */
   DATABASE_POOL_MAX: intVar("DATABASE_POOL_MAX", { max: 200 }).default(10),
+  /** SSL mode for hosted Postgres (Neon / Vercel Postgres / Supabase). */
+  DATABASE_SSL: z.enum(["require", "prefer", "disable", "false", ""]).optional(),
+  PGSSLMODE: z.string().optional(),
 })
 
 const smtpSchema = z.object({
@@ -122,6 +125,7 @@ export const vendureEnvSchema = poolSchema
     APP_ENV: z.enum(["dev", "staging", "production"]).optional(),
     PORT: intVar("PORT").default(3000),
     VENDURE_SERVER_PORT: intVar("VENDURE_SERVER_PORT").default(3001),
+    RUN_MIGRATIONS: boolFromText,
   })
   // F-57 — the 8-char floor above is what stops the published
   // superadmin/superadmin pair; a real deployment needs more. Outside dev the

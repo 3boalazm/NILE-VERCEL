@@ -28,6 +28,8 @@
     "payments:pending": "node scripts/probe-pending-payments.cjs",
     "crawl": "bash scripts/crawl-audit.sh",
     "db:backup": "bash scripts/backup-db.sh backup",
+    "db:migrate": "node scripts/db-migrate.mjs",
+    "verify:live": "node scripts/verify-production-data.mjs",
     "db:verify": "bash scripts/backup-db.sh verify",
     "db:restore": "bash scripts/backup-db.sh restore"
   },
