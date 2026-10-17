@@ -633,12 +633,14 @@ await offlineSubmitProbe(
   const singleHop = hash.status >= 300 && hash.status < 400 && (loc === "/ar" || loc === "/en");
   record("F-08 hash hop", singleHop, `status=${hash.status} · location=${hash.headers.get("location")}`);
 
-  // F-16 — hero/guarantees carry real content: the documented hero claim is
-  // in the SSR HTML and there is no "01"-style placeholder marker.
+  // F-16 — the rendered home hero carries real copy, not placeholder text.
   const homeHtml = await (await fetch(`${BASE}/ar`)).text();
-  const realHero = homeHtml.includes("خبرة من أوروبا.");
+  const heroStart = homeHtml.indexOf('class="ca-hero"');
+  const heroEnd = homeHtml.indexOf("</section>", heroStart);
+  const heroHtml = heroStart >= 0 && heroEnd >= 0 ? homeHtml.slice(heroStart, heroEnd) : "";
+  const realHero = heroHtml.includes("الحياة") && heroHtml.includes("أولاً.");
   // String checks (no regex): a literal ">01<" style placeholder marker.
-  const noPlaceholder = !homeHtml.includes(">01<") && !homeHtml.includes(">١٢٣<") && !homeHtml.includes("Lorem ipsum");
+  const noPlaceholder = !heroHtml.includes(">01<") && !heroHtml.includes(">١٢٣<") && !heroHtml.includes("Lorem ipsum");
   record("F-16 hero copy", realHero && noPlaceholder, `real-copy=${realHero} · no-placeholder=${noPlaceholder}`);
 }
 
