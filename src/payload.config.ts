@@ -77,12 +77,22 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: env.DATABASE_URI,
-      // F-71 — explicit pool ceiling (pg's own default is max: 10 *per
-      // process*). Shared with Vendure's `extra.max` via the same validated
-      // DATABASE_POOL_MAX so both sides of the one physical database agree,
-      // instead of each driver silently picking its own default.
+      // F-71 — explicit pool ceiling.
       max: env.DATABASE_POOL_MAX,
+      // F-73 — hosted Postgres (Neon / Vercel Postgres / Supabase) requires TLS.
+      ssl: env.DATABASE_SSL === "false" || env.DATABASE_SSL === "disable"
+        ? false
+        : env.DATABASE_SSL === "require" || env.DATABASE_SSL === "prefer"
+        ? { rejectUnauthorized: false }
+        : (env.PGSSLMODE === "require" || env.PGSSLMODE === "prefer"
+            ? { rejectUnauthorized: false }
+            : env.PGSSLMODE === "disable"
+            ? false
+            : undefined),
     },
+    // F-74 — production uses explicit migrations, not push.
+    push: process.env.NODE_ENV === "development",
+    migrationDir: path.resolve(dirname, "../src/migrations"),
   }),
   sharp,
 })

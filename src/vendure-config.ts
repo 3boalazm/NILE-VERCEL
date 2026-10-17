@@ -142,6 +142,7 @@ export const config: VendureConfig = {
         // See the README.md "Migrations" section for an explanation of
         // the `synchronize` and `migrations` options.
         synchronize: false,
+        migrationsRun: process.env.RUN_MIGRATIONS === 'true',
         migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
         logging: false,
         database: env.DB_NAME,
@@ -150,6 +151,16 @@ export const config: VendureConfig = {
         port: env.DB_PORT,
         username: env.DB_USERNAME,
         password: env.DB_PASSWORD,
+        // F-73 — hosted Postgres (Neon / Vercel Postgres / Supabase) requires TLS.
+        ssl: env.DATABASE_SSL === "false" || env.DATABASE_SSL === "disable"
+          ? false
+          : env.DATABASE_SSL === "require" || env.DATABASE_SSL === "prefer"
+          ? { rejectUnauthorized: false }
+          : env.PGSSLMODE === "require" || env.PGSSLMODE === "prefer"
+          ? { rejectUnauthorized: false }
+          : env.PGSSLMODE === "disable"
+          ? false
+          : undefined,
         // F-71 — explicit pool sizing. TypeORM forwards `extra` to the node-pg
         // pool, whose default is `max: 10` *per process*: with the storefront
         // and a Vendure worker sharing one database host that silently becomes
@@ -159,6 +170,15 @@ export const config: VendureConfig = {
         // database agree.
         extra: {
             max: env.DATABASE_POOL_MAX,
+            ssl: env.DATABASE_SSL === "false" || env.DATABASE_SSL === "disable"
+              ? false
+              : env.DATABASE_SSL === "require" || env.DATABASE_SSL === "prefer"
+              ? { rejectUnauthorized: false }
+              : env.PGSSLMODE === "require" || env.PGSSLMODE === "prefer"
+              ? { rejectUnauthorized: false }
+              : env.PGSSLMODE === "disable"
+              ? false
+              : undefined,
         },
     },
     paymentOptions: {
