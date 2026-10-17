@@ -1,8 +1,31 @@
+import { existsSync, readdirSync } from "node:fs";
+import path from "node:path";
 import type { NextConfig } from "next";
 import { withPayload } from "@payloadcms/next/withPayload";
 import { withSerwist } from "@serwist/turbopack";
 
 const IS_PROD = process.env.NODE_ENV === "production";
+
+/**
+ * Catalog artwork lives in `public/products` and `public/categories`; the seed
+ * also registers each file as a Payload `media` row, and Payload reports that
+ * row's URL as `/api/media/file/<name>`, served from a local `media/` folder.
+ * A serverless deploy (Vercel) has no such folder, so those URLs would 404.
+ * Rewriting each seeded filename to the identical static copy makes the same
+ * image URL work on every host without storing the files twice. Names that are
+ * not in `public/` (future admin uploads) are left to Payload as before.
+ */
+function seededMediaRewrites() {
+  const rewrites: { source: string; destination: string }[] = [];
+  for (const dir of ["products", "categories"]) {
+    const abs = path.join(process.cwd(), "public", dir);
+    if (!existsSync(abs)) continue;
+    for (const name of readdirSync(abs)) {
+      rewrites.push({ source: `/api/media/file/${name}`, destination: `/${dir}/${name}` });
+    }
+  }
+  return rewrites;
+}
 
 /**
  * F-11 — Content-Security-Policy, scoped per surface.
@@ -116,6 +139,9 @@ const nextConfig: NextConfig = {
   // Stop advertising the exact framework/version via X-Powered-By — minor
   // fingerprinting hardening, zero functional impact.
   poweredByHeader: false,
+  async rewrites() {
+    return { beforeFiles: seededMediaRewrites() };
+  },
   images: {
     // F-67: AVIF was never enabled, so the optimizer only ever emitted WebP.
     // AVIF is typically 20-30% smaller again at equal quality on the product
