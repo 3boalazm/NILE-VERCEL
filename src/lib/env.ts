@@ -156,7 +156,96 @@ function formatIssues(scope: string, issues: z.core.$ZodIssue[]): string {
       return `  • ${name} — ${issue.message}`
     })
     .join("\n")
-  return `[${scope}] environment validation failed:\n${lines}\n\nCopy .env.example to .env and set the values above.`
+  // The remedy differs by where the failure happened: a developer gets a
+  // `.env` file, a deployed app gets host environment variables. A message
+  // that only names the local workflow sends a Vercel deploy nowhere — so it
+  // names both.
+  return (
+    `[${scope}] environment validation failed:\n${lines}\n\n` +
+    "Set them in .env for local work (copy .env.example), or as environment variables on your host " +
+    "(Vercel: Project Settings → Environment Variables)."
+  )
+}
+
+/**
+ * True while `next build` is running.
+ *
+ * Next sets NEXT_PHASE=phase-production-build in the build process *before* it
+ * spawns the static-generation workers, and jest-worker forks those workers
+ * with {...process.env}, so every module the build evaluates sees the same
+ * value. `next dev` sets phase-development-server and `next start` sets
+ * nothing at all — so this is true for a compile and false for every request.
+ *
+ * This is the difference the F-11 validation needs: the same module is
+ * imported by a build (which must not need production secrets) and by a
+ * request (which must not run without them).
+ */
+export function isBuildPhase(): boolean {
+  return process.env.NEXT_PHASE === "phase-production-build"
+}
+
+/**
+ * Values a *request* needs but a *compile* does not.
+ *
+ * The Payload config is part of the app (the `(payload)` route group), so the
+ * build imports it and the F-11 validation used to run inside `next build`.
+ * On a machine that has no secrets — a fresh CI runner, or a Vercel build of
+ * a project whose environment variables have not been set yet — that made the
+ * app uncompilable, and the error it printed ("Copy .env.example to .env")
+ * was advice for a local clone, not for a deploy.
+ *
+ * The placeholders are deliberately obvious and deliberately not secrets:
+ * they are only used when Next is compiling/collecting build data. When the
+ * deployed server loads the CMS route, the real runtime environment is
+ * validated instead, and a missing value still throws exactly as before.
+ */
+const BUILD_PLACEHOLDERS: Record<string, Record<string, string>> = {
+  payload: {
+    // 40 chars, so it clears the same 32-char floor a real secret must meet.
+    PAYLOAD_SECRET: "build-only-placeholder-not-a-real-secret",
+    // Pointed at a local socket with credentials that cannot exist: the build
+    // must not depend on a database being reachable (see the build-time
+    // catalog notes in src/app/sitemap.ts). If something *is* listening on
+    // 5432, the build gets "role build does not exist" and carries on.
+    DATABASE_URI: "postgresql://build:build@127.0.0.1:5432/build",
+  },
+}
+
+/**
+ * Build-time variant of {@link parseEnvOrThrow}: missing *required* values
+ * are replaced with the scope's build-only placeholders so the compile can
+ * finish, and the substitution is reported loudly.
+ *
+ * A value that is present but invalid is still an error: a typo in
+ * DATABASE_URI is a real mistake and must not be papered over by a
+ * placeholder.
+ */
+export function parseEnvForBuild<T extends z.ZodType>(
+  schema: T,
+  scope: string,
+  source: Record<string, string | undefined> = process.env
+): z.output<T> {
+  const placeholders = BUILD_PLACEHOLDERS[scope] ?? {}
+  const patched: Record<string, string | undefined> = { ...source }
+  const substituted: string[] = []
+  for (const [name, value] of Object.entries(placeholders)) {
+    if (patched[name] === undefined) {
+      patched[name] = value
+      substituted.push(name)
+    }
+  }
+  const result = schema.safeParse(patched)
+  if (!result.success) {
+    throw new Error(formatIssues(scope, result.error.issues))
+  }
+  if (substituted.length > 0) {
+    console.warn(
+      `[${scope}] no ${substituted.join("/")} in this build's environment — compiled with build-only placeholders. ` +
+        `Set the real values as environment variables on the host (Vercel: Project Settings → Environment Variables); ` +
+        `the deployed app validates the real runtime values when its CMS routes load and fails loudly if they are missing.`
+    )
+  }
+  return result.data
 }
 
 /**

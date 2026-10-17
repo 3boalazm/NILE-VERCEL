@@ -7,7 +7,14 @@ import sharp from "sharp"
 import { buildConfig } from "payload"
 
 import { npfEmailAdapter } from "./lib/email/payload-adapter"
-import { parseEnvOrThrow, payloadEnvSchema, payloadEnvWarnings, warnEnvIssues } from "./lib/env"
+import {
+  isBuildPhase,
+  parseEnvForBuild,
+  parseEnvOrThrow,
+  payloadEnvSchema,
+  payloadEnvWarnings,
+  warnEnvIssues,
+} from "./lib/env"
 import { Categories } from "./collections/Categories"
 import { Inquiries } from "./collections/Inquiries"
 import { ErasureRequests } from "./collections/ErasureRequests"
@@ -32,8 +39,23 @@ const dirname = path.dirname(filename)
 // Optional-but-consequential gaps (no SMTP host, no STOREFRONT_URL) warn
 // instead of throwing, because offline/mock development is supported on
 // purpose (MOCK_CATALOG_FALLBACK=1).
-const env = parseEnvOrThrow(payloadEnvSchema, "payload")
-warnEnvIssues("payload", payloadEnvWarnings(env))
+//
+// A *request* must have these values, and still fails fast without them. A
+// *build* must not: this file is imported by the `(payload)` route group, so
+// `next build` evaluates it, and a build machine (CI runner, Vercel build
+// container) frequently has no production secrets yet. Validating at import
+// time therefore made the app uncompilable without them — a red build whose
+// error ("Copy .env.example to .env") described a local clone rather than the
+// deploy that was actually running. During the build the values are
+// substituted with obvious placeholders and reported as a warning; the
+// deployed app validates the real environment when its CMS route bundle loads.
+const buildPhase = isBuildPhase()
+const env = buildPhase
+  ? parseEnvForBuild(payloadEnvSchema, "payload")
+  : parseEnvOrThrow(payloadEnvSchema, "payload")
+// Optional production readiness warnings only matter to the running app; a
+// build container is not sending CMS email or generating absolute mail links.
+if (!buildPhase) warnEnvIssues("payload", payloadEnvWarnings(env))
 
 export default buildConfig({
   admin: {

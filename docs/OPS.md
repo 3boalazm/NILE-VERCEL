@@ -17,7 +17,7 @@ are the way they are).
 
 | Layer | File | Job |
 |---|---|---|
-| Values | `src/lib/env.ts` | zod schemas, parsed at boot. Missing/invalid → **every** problem printed at once, pointing at `.env.example`. |
+| Values | `src/lib/env.ts` | zod schemas. At runtime, missing/invalid → **every** problem printed at once; during `next build`, missing Payload values get build-only placeholders and an explicit warning. |
 | Documentation | `scripts/check-env.mjs` | CI guard: every variable read in `src/` (plus `next.config.ts`) must appear in `.env.example`, and everything documented must still be consumed. |
 
 ```bash
@@ -37,9 +37,13 @@ version typed `DB_PORT` as `number` — a lie, since every environment variable
 is a string at runtime, and the reason `+process.env.DB_PORT` could hand the pg
 driver `NaN` while looking type-safe.
 
-**Required** (boot fails without them): `PAYLOAD_SECRET`, `DATABASE_URI`,
-`DB_HOST`, `DB_NAME`, `DB_USERNAME`, `DB_PASSWORD`, `COOKIE_SECRET`,
-`SUPERADMIN_USERNAME`, `SUPERADMIN_PASSWORD`.
+**Required at runtime** (the app/worker fails to start serving without them):
+`PAYLOAD_SECRET`, `DATABASE_URI`, `DB_HOST`, `DB_NAME`, `DB_USERNAME`,
+`DB_PASSWORD`, `COOKIE_SECRET`, `SUPERADMIN_USERNAME`,
+`SUPERADMIN_PASSWORD`. The Next.js production *build* is not a runtime and may
+omit `PAYLOAD_SECRET` / `DATABASE_URI`; it substitutes temporary placeholders
+for those two Payload values only. The real values must still be present in
+the deployed runtime.
 
 `SUPERADMIN_*` are required rather than warned about on purpose: Vendure's
 `superadminCredentials` is optional in its type but **defaults to
@@ -286,3 +290,88 @@ erased within 30 days at most") — never claim instant deletion.
 - **F-44** — production TLS/HTTPS URLs are a deploy-time responsibility; nothing
   in the repo asserts them. `upgrade-insecure-requests` assumes the edge
   terminates TLS.
+
+---
+
+## 10. Deploying to Vercel
+
+**The build and the running app need different things.** This is the single
+most important thing to know before a deploy, because it decides which of the
+two halves of a failure you are looking at:
+
+| | Needs | If missing |
+|---|---|---|
+| **Build** (`vercel build` / `npm run build`) | nothing but the source | build-only placeholders are substituted and the build log says so — the build still succeeds |
+| **Runtime** (the deployed functions) | `PAYLOAD_SECRET`, `DATABASE_URI` (and a reachable Postgres) | CMS routes fail fast with `[payload] environment validation failed` and the variable names in the log |
+
+The build does not need a database because the catalog is read at request
+time: the storefront routes are server-rendered on demand (the root layout
+reads the cart/customer session cookie) and `/sitemap.xml` is generated per
+request. There is no build-time snapshot of the catalog to go stale.
+
+### 10.1 Required environment variables
+
+Set them in the Vercel project (**Project Settings → Environment
+Variables**) for *all* environments the app serves — Preview and Production —
+or with the CLI:
+
+```bash
+# PAYLOAD_SECRET signs Payload JWTs and encrypts fields. 32+ characters.
+vercel env add PAYLOAD_SECRET production   # paste the value
+openssl rand -base64 32                    # generate one
+
+# DATABASE_URI points at a Postgres the Vercel functions can reach.
+vercel env add DATABASE_URI production     # paste the connection string
+```
+
+`DATABASE_URI` must be reachable **from Vercel's runtime** (a pooled/public
+endpoint — Vercel Postgres, Neon, Supabase — not `localhost`). No build-time
+reachability is required.
+
+Do **not** put secrets in `vercel.json`: that file is committed, and a
+`PAYLOAD_SECRET` in it is a published secret. Use the dashboard or the CLI.
+
+### 10.2 The database and the first seed
+
+A fresh database has no tables — Payload only creates them in dev mode — so
+seed it once, from a machine that can reach it:
+
+```bash
+DATABASE_URI=postgresql://... PAYLOAD_SECRET=... npm run seed
+```
+
+The seed is idempotent (existing slugs are skipped; `-- --update` overwrites
+them). It also creates the first Payload admin user when `SEED_ADMIN_EMAIL`
+and `SEED_ADMIN_PASSWORD` are set.
+
+### 10.3 Deploy and verify
+
+```bash
+vercel --prod            # or: connect the GitHub repo and let Vercel build on push
+```
+
+Then check, in this order — each one isolates a different failure:
+
+```bash
+curl -s -o /dev/null -w "%{http_code}\n" https://<host>/en          # 200
+curl -s https://<host>/sitemap.xml | head                            # product URLs present
+curl -s -o /dev/null -w "%{http_code}\n" https://<host>/admin        # 200 or 302 to login
+```
+
+- `/en` returns 500 and the log shows `environment validation failed` → the
+  runtime environment variables are missing or scoped to the wrong
+  environment (§10.1).
+- `/en` returns 200 but the catalog is empty → the database is reachable but
+  not seeded (§10.2).
+- The build log shows `compiled with build-only placeholders` → the *build*
+  had no environment variables. That is expected and harmless on its own;
+  the runtime values are what matter.
+
+### 10.4 What is still missing (F-69)
+
+This runbook is a manual procedure, not a pipeline. There is still no
+automated deploy, no staging promotion, no rollback button and no alerting.
+Rollback today means redeploying the previous commit; keep the previous
+`vercel` deployment id at hand before promoting a new one.
+
+---

@@ -17,6 +17,23 @@ function localizedEntry(path: string) {
   return locales.map((locale) => ({ url: absoluteUrl(`/${locale}${path}`), alternates: { languages } }))
 }
 
+/**
+ * The sitemap is generated per request, not baked into the build.
+ *
+ * It is built from the live catalog (Payload/Postgres), and the catalog is
+ * the one thing the *build* cannot always see: a build container may have no
+ * DATABASE_URI, or a database it cannot reach. Pre-rendering the sitemap made
+ * the build depend on that reachability — and, worse, a sitemap built from a
+ * catalog the build machine could not read would ship without the product
+ * URLs, which is exactly the part crawlers need.
+ *
+ * Generating it per request costs one function invocation per crawler fetch
+ * (a few per day) and removes the whole class of failure: the sitemap always
+ * lists the products that are actually published, and the build needs no
+ * database at all.
+ */
+export const dynamic = "force-dynamic"
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let products: Product[]
   try {

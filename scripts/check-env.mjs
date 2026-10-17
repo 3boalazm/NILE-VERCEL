@@ -31,7 +31,20 @@ const AS_JSON = process.argv.includes("--json");
 const rootConfigs = [];
 
 /** Provided by the framework/runtime, not by this project's .env. */
-const FRAMEWORK_PROVIDED = new Set(["NODE_ENV", "CI", "PORT", "PWD", "HOME", "SHELL", "TMPDIR"]);
+const FRAMEWORK_PROVIDED = new Set([
+  "NODE_ENV",
+  "CI",
+  "PORT",
+  "PWD",
+  "HOME",
+  "SHELL",
+  "TMPDIR",
+  // Next.js sets NEXT_PHASE itself: "phase-production-build" while `next
+  // build` runs, "phase-development-server" under `next dev`. The app reads
+  // it to tell a compile from a request (src/lib/env.ts) — it is not a
+  // project variable and has no value to put in .env.
+  "NEXT_PHASE",
+]);
 /** Read dynamically or injected by hosting platforms; not documentable by name. */
 const IGNORE_PATTERNS = [/^npm_/, /^VERCEL/, /^NEXT_RUNTIME$/, /^__NEXT/];
 

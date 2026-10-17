@@ -32,12 +32,15 @@ Keep the public name `nilepharmafood.com`. Do not replace it and do not redirect
 1. Sign in to the Bluehost account that serves `173.254.104.205`. Read the suspension reason.
 2. Unsuspend only if that plan can run Node.js 22, a long-lived Next.js process, and PostgreSQL. A typical shared PHP account cannot. If it cannot, leave that account and move the origin. The domain stays the same.
 3. If the origin moves, change the A/AAAA records for the apex and for `www` from `173.254.104.205` to the new host. Do not change the registrable domain.
-4. Provision PostgreSQL. It must be reachable during `npm run build` and during `npm run start`.
-5. Set these on the host for both build and start. Do not commit them.
+4. Provision PostgreSQL. It must be reachable from the running app. (Updated
+   2026-10-17: it no longer has to be reachable during `npm run build` — a
+   build compiles the app and reads no catalog, so the build works without
+   secrets or a database. The *running* app still needs both.)
+5. Set these for the running app. Do not commit them.
    - `DATABASE_URI`
    - `PAYLOAD_SECRET` (`openssl rand -base64 32`)
 6. Set `VENDURE_SHOP_API_URL` at runtime if cart and checkout must work. Leave `MOCK_CATALOG_FALLBACK` unset. Leave `ALLOW_LAB_ROUTES` unset.
-7. On Node 22: `npm ci`, `npm run seed` on the empty database, `npm run build`, `npm run start`. The Docker image, if used, must receive the same variables at build and again at run. It listens on `0.0.0.0:3000`.
+7. On Node 22: `npm ci`, `npm run seed` on the empty database, `npm run build`, `npm run start`. The Docker image, if used, must receive the same variables at run (the build no longer needs them). It listens on `0.0.0.0:3000`.
 8. Install a certificate for `nilepharmafood.com` and `www.nilepharmafood.com`.
 9. One hop, path preserved:
    - `http://nilepharmafood.com` → `https://nilepharmafood.com`

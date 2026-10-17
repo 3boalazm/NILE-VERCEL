@@ -2,6 +2,12 @@
 
 Date: 2026-09-24.
 
+> **Build-process update (2026-10-17):** the build-time requirements below are
+> superseded. `npm run build` is now hermetic and needs neither `DATABASE_URI`
+> nor `PAYLOAD_SECRET` nor a reachable Postgres; the running app still requires
+> both real values and a reachable database. See the current deployment steps
+> in [`docs/OPS.md` § 10](./OPS.md).
+
 This is the external hosting handoff. It does not re-probe DNS, TLS, or Bluehost. It uses the closed observation in `docs/production-cutover-final-seo-gate.md` and `docs/production-hosting-cutover-handoff.md` (2026-09-23). This repository cannot unsuspend the account or change DNS.
 
 ## Current hosting state

@@ -5,6 +5,13 @@
 **Result:** the gate does not pass. SEO is not fixed.  
 **Repository changes this pass:** none. No content, hubs, comparisons, backlinks, redirects, schema, cache, DNS, or domain changes.
 
+> **Build-process update (2026-10-17):** this dated report's build/secret
+> requirements below are historical and superseded. `npm run build` now works
+> without `DATABASE_URI`, `PAYLOAD_SECRET`, or a reachable Postgres; the
+> *running app* still needs all three. See the current deployment procedure in
+> [`docs/OPS.md` § 10](./OPS.md). This does not change the report's observation
+> about Bluehost, DNS, TLS, or whether the domain serves the app.
+
 The public host is still not this application. Part B cannot pass until Part A is done outside the repository.
 
 ---
