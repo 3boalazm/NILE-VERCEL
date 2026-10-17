@@ -18,9 +18,9 @@ name: CI
 
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 # Cancel any previous run for the same PR/branch instead of letting pushes
 # stack up competing for the same runner slots (each push can otherwise leave
