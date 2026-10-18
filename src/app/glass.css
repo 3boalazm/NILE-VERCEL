@@ -20,6 +20,8 @@
    ========================================================================== */
 
 :root {
+  --ng-header-h: 76px; /* 12px inset + 64px floating bar */
+  --ng-header-bar-h: 64px;
   /* colour — ink, brand, pastels sampled from the pack photography */
   --ng-ink: #0a1a2b;
   --ng-ink-2: #2c4258;
@@ -462,7 +464,7 @@ html[lang="en"] .ng-eyebrow {
   pointer-events: auto;
   max-inline-size: var(--ng-max);
   margin-inline: auto;
-  min-block-size: var(--ng-header-h);
+  min-block-size: var(--ng-header-bar-h);
   display: flex;
   align-items: center;
   gap: var(--ng-s-4);
@@ -488,6 +490,8 @@ html[lang="en"] .ng-eyebrow {
   font-family: var(--ng-font-display);
   font-weight: 700;
   min-block-size: 44px;
+  min-inline-size: 44px;
+  justify-content: center;
 }
 .ng-brand img {
   block-size: 34px;
@@ -747,7 +751,7 @@ html[lang="en"] .ng-eyebrow {
   gap: 8px;
 }
 .ng-stage-dots button {
-  inline-size: 28px;
+  inline-size: 44px;
   block-size: 44px;
   border: 0;
   background: transparent;
@@ -1110,7 +1114,8 @@ html[lang="en"] .ng-footer h2 {
 }
 .ng-footer li a {
   display: inline-flex;
-  min-block-size: 40px;
+  min-block-size: 44px;
+  min-inline-size: 44px;
   align-items: center;
   color: var(--ng-ink);
   text-decoration: none;
@@ -1200,6 +1205,12 @@ html.js .ng-reveal[data-in="true"] {
 
 /* ---------- reduced motion ------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
+  .ng-btn:hover,
+  .ng-card:hover,
+  .ng-icon-btn:hover,
+  .ng-glass:hover {
+    transform: none !important;
+  }
   *,
   *::before,
   *::after {
@@ -1369,3 +1380,6 @@ html.js .ng-reveal[data-in="true"] {
   border: 1px solid var(--ng-glass-edge);
   box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
 }
+
+/* Brand mark is navy; flip it to white on the dark theme. */
+.dark :where(.ng-brand img, .ng-menu-logo, .ng-footer-logo) { filter: brightness(0) invert(1); }

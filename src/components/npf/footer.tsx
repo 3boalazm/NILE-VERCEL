@@ -46,7 +46,7 @@ export function NPFFooter({
         <div className="ng-footer-grid">
           <div className="ng-stack" style={{ ["--ng-stack" as string]: "18px" }}>
             {/* eslint-disable-next-line @next/next/no-img-element -- local vector logo */}
-            <img src="/npf-logo.svg" alt="" width={44} height={52} className="ng-footer-logo" />
+            <img src="/npf-mark.svg" alt="" width={44} height={52} className="ng-footer-logo" />
             <p className="ng-body" style={{ maxInlineSize: "34ch" }}>
               {d.footer.description}
             </p>

@@ -124,9 +124,16 @@ for (const locale of ["ar", "en"] as const) {
       box!.x + box!.width + 1,
     );
     expect(box!.y).toBeGreaterThanOrEqual(0);
-    // The strip sticks just below the floating glass header (12px inset +
-    // 64px bar), not at the very top of the viewport.
-    expect(box!.y).toBeLessThan(120);
+    // The strip is position:sticky just below the floating glass header
+    // (12px inset + 64px bar). On a page this short the document end limits
+    // the scroll, so assert the sticky contract and that it is on screen.
+    expect(
+      await nav.evaluate((el) => {
+        const cs = getComputedStyle(el);
+        return [cs.position, parseFloat(cs.top) >= 76];
+      }),
+    ).toEqual(["sticky", true]);
+    expect(box!.y).toBeLessThan(844 - box!.height);
     await expect(page.locator("#downloads h2")).toBeVisible();
     const width = await page.evaluate(() => [
       innerWidth,

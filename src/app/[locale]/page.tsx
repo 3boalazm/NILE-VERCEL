@@ -109,10 +109,12 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
               </span>
             </div>
             <div>
-              <span>
-                <strong>{c.heroNoteCta}</strong>
-                <small>{c.heroNote.replace("\n", " ")}</small>
-              </span>
+              <a href="#reading" className="ng-trust-note" data-testid="hero-reading-note" style={{ display: "contents", color: "inherit", textDecoration: "none" }}>
+                <span>
+                  <strong>{c.heroNoteCta}</strong>
+                  <small>{c.heroNote.replace("\n", " ")}</small>
+                </span>
+              </a>
             </div>
             <div>
               <span>

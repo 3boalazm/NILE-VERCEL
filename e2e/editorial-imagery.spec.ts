@@ -5,22 +5,22 @@ for (const locale of ["ar", "en"]) {
     page,
   }) => {
     await page.goto(`/${locale}`);
-    const brand = page.locator("header .ca-brand");
+    const brand = page.locator("header .ng-brand");
     await expect(brand).toHaveText("");
     await expect(brand).toHaveAttribute("aria-label", /.+/);
     await expect(brand).toHaveAttribute("href", `/${locale}`);
     await expect(brand.locator("img")).toHaveAttribute(
       "src",
-      "/npf-mark-white.svg",
+      "/npf-mark.svg",
     );
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.locator("header .ca-menu-button").click();
+    await page.locator("header button.ng-icon-btn.ng-mobile-only").click();
     const dialog = page.getByRole("dialog");
     await expect(
       dialog.locator('[data-slot="sheet-title"] img'),
-    ).toHaveAttribute("src", "/npf-mark-white.svg");
+    ).toHaveAttribute("src", "/npf-mark.svg");
     await expect(
-      dialog.locator('[data-slot="sheet-title"] .sr-only'),
+      dialog.locator('[data-slot="sheet-title"] .ng-sr'),
     ).toHaveText(/.+/);
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();

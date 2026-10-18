@@ -58,7 +58,7 @@ export function GlassHeader({ locale, links, account, labels }: GlassHeaderProps
       <div className="ng-header-bar">
         <Link href={base} className="ng-brand" aria-label={labels.site}>
           {/* eslint-disable-next-line @next/next/no-img-element -- local vector logo */}
-          <img src="/npf-logo.svg" alt="" width={29} height={34} />
+          <img src="/npf-mark.svg" alt="" width={28} height={33} />
         </Link>
 
         <nav className="ng-nav" aria-label={labels.site}>
@@ -98,7 +98,7 @@ export function GlassHeader({ locale, links, account, labels }: GlassHeaderProps
                 <SheetTitle>
                   <span className="ng-sr">{labels.site}</span>
                   {/* eslint-disable-next-line @next/next/no-img-element -- local vector logo */}
-                  <img src="/npf-logo.svg" alt="" width={36} height={42} aria-hidden="true" className="ng-menu-logo" />
+                  <img src="/npf-mark.svg" alt="" width={36} height={42} aria-hidden="true" className="ng-menu-logo" />
                 </SheetTitle>
               </SheetHeader>
               <nav className="ng-menu-links" aria-label={labels.menu}>

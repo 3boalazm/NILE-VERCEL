@@ -1,28 +1,39 @@
 import { expect, test } from "@playwright/test";
 
+// Motion / glass contracts of the Nile Glass shell (src/app/glass.css,
+// components/glass/{header,hero-stage}.tsx).
+
 for (const locale of ["ar", "en"]) {
   for (const width of [320, 390, 1440]) {
-    test(`${locale}/${width}: one navigation docks after the hero and restores at the top`, async ({
+    test(`${locale}/${width}: one floating navigation, flagged when scrolled and restored at the top`, async ({
       page,
     }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(`/${locale}`);
-      await expect(page.locator("header")).not.toHaveClass(/ca-header-float/);
+      const header = page.locator("header.ng-header");
+      await expect(header).toHaveCount(1);
+      await expect(header).toHaveAttribute("data-scrolled", "false");
       await page.locator("#atlas-title").scrollIntoViewIfNeeded();
-      await expect(page.locator("header")).toHaveClass(/ca-header-float/);
-      await expect(page.locator("header")).toHaveCount(1);
-      const rect = await page.locator("header").boundingBox();
+      await expect(header).toHaveAttribute("data-scrolled", "true");
+      const rect = await header.locator(".ng-header-bar").boundingBox();
       expect(rect?.y).toBeGreaterThanOrEqual(0);
+      expect(rect?.x).toBeGreaterThanOrEqual(0);
       expect((rect?.x ?? 0) + (rect?.width ?? 0)).toBeLessThanOrEqual(width);
-      const outside = await page.locator("header").evaluate((header) => {
-        const bounds = header.getBoundingClientRect();
-        return [...header.querySelectorAll<HTMLElement>("a,button")]
+      // The header stays pinned while the page scrolls.
+      expect(
+        await header.evaluate((el) => el.getBoundingClientRect().top),
+      ).toBeLessThanOrEqual(1);
+      const outside = await header.evaluate((el) => {
+        const bounds = el
+          .querySelector(".ng-header-bar")!
+          .getBoundingClientRect();
+        return [...el.querySelectorAll<HTMLElement>("a,button")]
           .filter((element) => {
             const r = element.getBoundingClientRect();
             return (
               r.width > 0 &&
               r.height > 0 &&
-              (r.left < bounds.left || r.right > bounds.right)
+              (r.left < bounds.left - 0.5 || r.right > bounds.right + 0.5)
             );
           })
           .map(
@@ -35,48 +46,43 @@ for (const locale of ["ar", "en"]) {
       await page.evaluate(() =>
         window.scrollTo({ top: 0, behavior: "instant" }),
       );
-      await expect(page.locator("header")).not.toHaveClass(/ca-header-float/);
+      await expect(header).toHaveAttribute("data-scrolled", "false");
     });
   }
 }
 
-test("atlas animates an actual product change without a hidden initial stage", async ({
+test("hero stage animates an actual product change without a hidden initial slide", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/en");
-  const image = page.locator(".ca-stage-art img");
-  await expect(image).toHaveCSS("opacity", "1");
-  const row = page
-    .locator(".ca-product-row")
-    .filter({ has: page.getByText("Proxeed Women", { exact: true }) });
-  await row.click();
+  const slides = page.locator(".ng-stage-slide");
+  await expect(slides.first()).toHaveAttribute("data-active", "true");
+  await expect(slides.first()).toHaveCSS("opacity", "1");
+  const dot = page.getByRole("button", { name: "Proxeed Women", exact: true });
+  await dot.click();
+  await expect(dot).toHaveAttribute("aria-current", "true");
   await expect
-    .poll(() => image.evaluate((el) => Number(getComputedStyle(el).opacity)))
+    .poll(() =>
+      slides.first().evaluate((el) => Number(getComputedStyle(el).opacity)),
+    )
     .toBeLessThan(1);
-  await expect(image).toHaveCSS("opacity", "1");
-  await expect(row).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".ca-product-overview h3")).toHaveText(
-    "Proxeed Women",
-  );
+  const incoming = slides.filter({ has: page.locator('img[alt="Proxeed Women"]') });
+  await expect(incoming).toHaveAttribute("data-active", "true");
+  await expect(incoming).toHaveCSS("opacity", "1");
+  await expect(page.locator(".ng-stage-caption")).toContainText("Proxeed Women");
 });
 
-test("desktop magnetic link is bounded, resets, and remains a real link", async ({
+test("desktop primary action stays bounded on hover and remains a real link", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/en");
-  const link = page.locator("[data-ca-magnetic]");
+  const link = page.locator("#contact a.ng-btn-primary");
   await link.scrollIntoViewIfNeeded();
   await expect(link).toHaveAttribute("href", "/en/contact");
-  // Test inside the circular hit area, not its transparent square corners.
-  const bounds = await link.boundingBox();
-  await link.hover({
-    position: { x: bounds!.width * 0.3, y: bounds!.height * 0.3 },
-  });
-  await expect
-    .poll(() => link.evaluate((el) => getComputedStyle(el).transform))
-    .not.toBe("none");
+  await link.hover();
+  await page.waitForTimeout(450);
   const translation = await link.evaluate((el) => {
     const m = new DOMMatrix(getComputedStyle(el).transform);
     return [m.m41, m.m42];
@@ -86,7 +92,7 @@ test("desktop magnetic link is bounded, resets, and remains a real link", async 
   await expect
     .poll(() =>
       link.evaluate((el) =>
-        Math.abs(new DOMMatrix(getComputedStyle(el).transform).m41),
+        Math.abs(new DOMMatrix(getComputedStyle(el).transform).m42),
       ),
     )
     .toBeLessThan(0.1);
@@ -94,31 +100,32 @@ test("desktop magnetic link is bounded, resets, and remains a real link", async 
   await expect(page).toHaveURL(/\/en\/contact$/);
 });
 
-test("reduced motion turns off entrances, magnetic movement and product-change animation", async ({
+test("reduced motion turns off entrances, stage rotation and hover movement", async ({
   page,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/en");
-  await page
-    .locator(".ca-product-row")
-    .filter({ has: page.getByText("Proxeed Women", { exact: true }) })
-    .click();
-  await expect(page.locator(".ca-stage-art img")).toHaveCSS("opacity", "1");
-  await expect(page.locator(".ca-stage-art img")).toHaveCSS(
-    "transform",
-    "none",
-  );
-  const link = page.locator("[data-ca-magnetic]");
-  // Test inside the circular hit area, not its transparent square corners.
-  const bounds = await link.boundingBox();
-  await link.hover({
-    position: { x: bounds!.width * 0.3, y: bounds!.height * 0.3 },
-  });
-  await expect(link).toHaveCSS("transform", "none");
-  await expect(page.locator(".ca-hero-copy h1")).toHaveCSS(
+  await expect(page.locator(".ng-hero-copy h1")).toHaveCSS(
     "animation-name",
     "none",
   );
+  const caption = page.locator(".ng-stage-caption");
+  const before = await caption.innerText();
+  await page.waitForTimeout(6000); // longer than the 5.2s rotation interval
+  expect(await caption.innerText()).toBe(before);
+  await page
+    .getByRole("button", { name: "Proxeed Women", exact: true })
+    .click();
+  const incoming = page
+    .locator(".ng-stage-slide")
+    .filter({ has: page.locator('img[alt="Proxeed Women"]') });
+  await expect(incoming).toHaveCSS("opacity", "1");
+  await expect(incoming).toHaveCSS("transform", "none");
+  const link = page.locator("#contact a.ng-btn-primary");
+  await link.scrollIntoViewIfNeeded();
+  await link.hover();
+  await page.waitForTimeout(100);
+  await expect(link).toHaveCSS("transform", "none");
 });
 
 test("reduced transparency supplies opaque glass fallbacks", async ({
@@ -130,14 +137,21 @@ test("reduced transparency supplies opaque glass fallbacks", async ({
     features: [{ name: "prefers-reduced-transparency", value: "reduce" }],
   });
   await page.goto("/en");
-  await expect(page.locator(".ca-desktop-nav")).toHaveCSS(
+  await expect(page.locator(".ng-header-bar")).toHaveCSS(
     "backdrop-filter",
     "none",
   );
-  await expect(page.locator(".ca-hero-field-note")).toHaveCSS(
-    "background-color",
-    "rgb(24, 51, 68)",
+  await expect(page.locator(".ng-chip-float").first()).toHaveCSS(
+    "backdrop-filter",
+    "none",
   );
+  const alpha = await page
+    .locator(".ng-header-bar")
+    .evaluate((el) => getComputedStyle(el).backgroundColor);
+  // Opaque (rgb(...)) or ≥ 0.95 alpha — never a see-through surface.
+  expect(
+    /^rgb\(/.test(alpha) || Number(alpha.match(/,\s*([\d.]+)\)$/)?.[1]) >= 0.95,
+  ).toBe(true);
 });
 
 test("touch devices keep the call-to-action stationary", async ({
@@ -153,7 +167,7 @@ test("touch devices keep the call-to-action stationary", async ({
   });
   const page = await context.newPage();
   await page.goto("/en");
-  const link = page.locator("[data-ca-magnetic]");
+  const link = page.locator("#contact a.ng-btn-primary");
   await link.scrollIntoViewIfNeeded();
   await expect(link).toHaveCSS("transform", "none");
   await link.tap();
