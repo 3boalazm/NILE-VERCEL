@@ -657,7 +657,7 @@ await offlineSubmitProbe(
 
   // F-16 — the rendered home hero carries real copy, not placeholder text.
   const homeHtml = await (await fetch(`${BASE}/ar`)).text();
-  const heroStart = homeHtml.indexOf('class="ca-hero"');
+  const heroStart = homeHtml.indexOf('class="ng-wrap ng-hero"');
   const heroEnd = homeHtml.indexOf("</section>", heroStart);
   const heroHtml = heroStart >= 0 && heroEnd >= 0 ? homeHtml.slice(heroStart, heroEnd) : "";
   const realHero = heroHtml.includes("الحياة") && heroHtml.includes("أولاً.");
