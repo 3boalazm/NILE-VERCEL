@@ -17,6 +17,9 @@
 //   3. Role "Order Operations" — day-to-day order handling (verify transfers,
 //      settle payments, fulfil) without catalog/settings/admin powers. No admin
 //      account is created: assign it to a person in /admin → Administrators.
+
+// CommonJS script: require() is the module system here.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const path = require("node:path")
 
 const METHODS = [
