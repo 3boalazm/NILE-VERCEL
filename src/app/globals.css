@@ -58,34 +58,35 @@
 }
 
 :root {
-  /* shadcn token layer — remapped onto the Nile Glass palette (glass.css) so
-     every Tailwind-built page inherits the new look. */
-  --background: #edf3f8;
-  --foreground: #0a1a2b;
-  --card: rgba(255, 255, 255, 0.72);
-  --card-foreground: #0a1a2b;
-  --popover: #ffffff;
-  --popover-foreground: #0a1a2b;
-  --primary: #00426e;
+  /* Bridge legacy shadcn/Tailwind surfaces to the Nile Glass tokens. Keeping
+     these as aliases lets dark mode and reduced-transparency preferences
+     update both design systems from the same source of truth. */
+  --background: var(--ng-bg);
+  --foreground: var(--ng-ink);
+  --card: var(--ng-glass);
+  --card-foreground: var(--ng-ink);
+  --popover: var(--ng-glass-strong);
+  --popover-foreground: var(--ng-ink);
+  --primary: var(--ng-brand);
   --primary-foreground: #ffffff;
-  --secondary: rgba(255, 255, 255, 0.7);
-  --secondary-foreground: #0a1a2b;
-  --muted: rgba(10, 26, 43, 0.06);
-  --muted-foreground: #4f6579;
-  --accent: #cdeefb;
-  --accent-foreground: #0a1a2b;
-  --destructive: #b42318;
-  --border: rgba(10, 26, 43, 0.13);
-  --input: rgba(10, 26, 43, 0.24);
-  --ring: #27b3e6;
-  --anti-flash-white: #edf3f8;
-  --anti-flash-navy: #0a1a2b;
-  --radius: 1rem;
-  --chart-1: #00426e;
-  --chart-2: #27b3e6;
-  --chart-3: #f4a3c2;
-  --chart-4: #b6ead9;
-  --chart-5: #0a1a2b;
+  --secondary: var(--ng-glass);
+  --secondary-foreground: var(--ng-ink);
+  --muted: color-mix(in srgb, var(--ng-ink) 6%, transparent);
+  --muted-foreground: var(--ng-ink-3);
+  --accent: var(--ng-aqua-soft);
+  --accent-foreground: var(--ng-ink);
+  --destructive: var(--ng-danger);
+  --border: var(--ng-hairline);
+  --input: var(--ng-hairline-strong);
+  --ring: var(--ng-aqua);
+  --anti-flash-white: var(--ng-bg);
+  --anti-flash-navy: var(--ng-ink);
+  --radius: var(--ng-r-2);
+  --chart-1: var(--ng-brand);
+  --chart-2: var(--ng-aqua);
+  --chart-3: var(--ng-rose);
+  --chart-4: var(--ng-mint);
+  --chart-5: var(--ng-ink);
   --sidebar: var(--background);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
@@ -96,24 +97,20 @@
   --sidebar-ring: var(--ring);
 }
 .dark {
-  --background: #06121f;
-  --foreground: #eaf3fb;
-  --card: rgba(17, 40, 62, 0.62);
-  --card-foreground: #eaf3fb;
-  --popover: #0e2134;
-  --popover-foreground: #eaf3fb;
-  --primary: #7cc8f5;
-  --primary-foreground: #04121f;
-  --secondary: rgba(255, 255, 255, 0.08);
-  --secondary-foreground: #eaf3fb;
-  --muted: rgba(255, 255, 255, 0.07);
-  --muted-foreground: #9db3c6;
-  --accent: #11405d;
-  --accent-foreground: #eaf3fb;
-  --border: rgba(255, 255, 255, 0.14);
-  --input: rgba(255, 255, 255, 0.28);
-  --ring: #a6dcff;
-  --destructive: #ff9b92;
+  --primary-foreground: var(--ng-bg);
+  --accent-foreground: var(--ng-ink);
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --muted: color-mix(in srgb, var(--ng-bg) 94%, var(--ng-ink));
+  }
+  .dark {
+    --muted: color-mix(in srgb, var(--ng-bg-2) 88%, var(--ng-ink));
+  }
+  body.ng-site :where(*, *::before, *::after) {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
 }
 @layer base {
   * {
