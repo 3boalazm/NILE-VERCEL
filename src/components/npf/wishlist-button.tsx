@@ -33,17 +33,10 @@ export function WishlistButton({
       aria-label={title}
       aria-pressed={active}
       title={title}
-      className={cn(
-        // 36px visual on desktop, 44px tap target on touch screens (mobile audit).
-        "inline-flex size-9 shrink-0 items-center justify-center rounded-full transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 max-lg:size-11",
-        variant === "overlay"
-          ? "border border-white/30 text-white hover:bg-white/15"
-          : "border border-border text-muted-foreground hover:bg-muted hover:text-foreground",
-        active && (variant === "overlay" ? "border-destructive bg-destructive/80" : "border-destructive/30 text-destructive"),
-        className
-      )}
+      data-variant={variant}
+      className={cn("ngc-wish", className)}
     >
-      <HeartIcon className={cn("size-4", active && "fill-current")} />
+      <HeartIcon aria-hidden="true" />
     </button>
   )
 }

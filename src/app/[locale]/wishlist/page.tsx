@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import { isValidLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary, toClientSafeDictionary } from "@/lib/i18n/dictionaries";
-import { PageIntro } from "@/components/care-atlas/sections";
+import { PageIntro } from "@/components/glass/sections";
 import { WishlistContent } from "@/components/npf/wishlist-content";
 
 export async function generateMetadata({
@@ -30,10 +30,7 @@ export default async function WishlistPage({
 
   return (
     <>
-      <PageIntro
-        index="NPF / SAVED FILES"
-        title={dictionary.wishlist.pageTitle}
-      />
+      <PageIntro eyebrow={dictionary.siteName} title={dictionary.wishlist.pageTitle} />
       <WishlistContent
         locale={locale}
         dictionary={toClientSafeDictionary(dictionary)}

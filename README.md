@@ -11,6 +11,7 @@ into the **actual Next application**, not an iframe or redirect to the study.
 This is an implementation for review, **not final visual acceptance or a live
 commerce release**.
 
+- [**Latest (2026-10-18): Nile Glass redesign handoff**](docs/upgrade-2026-10-18/02-redesign-handoff.md) · [UI audit](docs/upgrade-2026-10-18/01-ui-audit.md) · [Vendure audit](docs/upgrade-2026-10-18/03-vendure-audit.md) · [progress log](docs/upgrade-2026-10-18/PROGRESS.md)
 - [Latest discovery / reading polish and final validation](docs/upgrade-2026-10-15/13-discovery-and-reading-polish.md)
 - [Editorial images and mark-only header](docs/upgrade-2026-10-15/12-editorial-imagery-and-mark.md)
 - [Motion/glass refinement and its validation](docs/upgrade-2026-10-15/11-motion-glass-refinement.md)

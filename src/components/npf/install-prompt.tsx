@@ -57,19 +57,17 @@ export function InstallPrompt({ dictionary }: { dictionary: InstallPromptDiction
   if (!visible) return null
 
   return (
-    <div
-      role="status"
-      className="fixed inset-x-4 bottom-20 z-50 flex items-center justify-between gap-3 rounded-2xl border border-border bg-anti-flash-white px-4 py-3 text-sm shadow-lg lg:bottom-4 dark:bg-card"
-    >
-      <p className="text-foreground">{dictionary.body}</p>
+    <div role="status" className="ngc-float ngc-float-row">
+      <p>{dictionary.body}</p>
       <button
         type="button"
         onClick={dismiss}
         aria-label={dictionary.dismiss}
         title={dictionary.dismiss}
-        className="-m-3.5 inline-flex size-11 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        className="ng-icon-btn"
+        style={{ flex: "none" }}
       >
-        <XIcon className="size-4" />
+        <XIcon className="size-4" aria-hidden="true" />
       </button>
     </div>
   )

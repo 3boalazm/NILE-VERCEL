@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 import { isValidLocale, type Locale } from "@/lib/i18n/config"
 import { getDictionary } from "@/lib/i18n/dictionaries"
 import { NPFVerifyTokenForm } from "@/components/npf/verify-token-form"
-import { Reveal } from "@/components/npf/motion/reveal"
+import { AccessPanel } from "@/components/glass/access-panel"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 
 export async function generateMetadata({
@@ -40,12 +40,8 @@ export default async function VerifyAccountPage({
   const token = Array.isArray(rawToken) ? (rawToken[0] ?? "") : (rawToken ?? "")
 
   return (
-    <section className="bg-anti-flash-white dark:bg-card">
-      <Reveal className="mx-auto flex max-w-md flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="rounded-2xl border border-border bg-background p-6">
-          <NPFVerifyTokenForm locale={locale} dictionary={dictionary.auth} token={token} mode="account" />
-        </div>
-      </Reveal>
-    </section>
+    <AccessPanel>
+      <NPFVerifyTokenForm locale={locale} dictionary={dictionary.auth} token={token} mode="account" />
+    </AccessPanel>
   )
 }

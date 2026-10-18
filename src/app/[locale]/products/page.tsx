@@ -1,3 +1,4 @@
+import { FIELD_LIMITS } from "@/lib/forms/field-limits"
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -7,16 +8,16 @@ import {
   matchesCatalogSearch,
   type CatalogContext,
 } from "@/lib/products/catalog-discovery";
-import { SearchIcon } from "lucide-react";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { PageIntro, CareContact } from "@/components/care-atlas/sections";
 import { getCareAtlasCopy } from "@/lib/i18n/care-atlas";
+import { getCatalogGlassCopy } from "@/lib/i18n/catalog-glass";
 import { getExperienceCopy } from "@/lib/i18n/experience";
 import {
   productRepository,
   localizeProduct,
   localizeCategory,
+  type Product,
 } from "@/lib/products";
 import { readCmsList } from "@/lib/cms/read";
 import { CatalogUnavailable } from "@/components/npf/catalog-unavailable";
@@ -24,6 +25,12 @@ import { NEEDS, findNeed, productsForNeed } from "@/lib/products/positioning";
 import { NPFProductGrid } from "@/components/npf/product-grid";
 import { publicCatalogProduct } from "@/lib/evidence/store";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
+import { commercialSections } from "@/lib/products/commercial-profile";
+import { canExposeStatement, publicFieldText } from "@/lib/seo/sku-evidence";
+import { careAtlasImage, productTone, sortForListing } from "@/lib/products/presentation";
+import { PageIntro, ContactBand, SectionHead } from "@/components/glass/sections";
+import { ProductAtlas, type AtlasProduct } from "@/components/glass/product-atlas";
+import "../../glass-catalog.css";
 
 export async function generateMetadata({
   params,
@@ -38,6 +45,37 @@ export async function generateMetadata({
     description: d.products.pageSubtitle,
   });
 }
+
+/** Evidence-gated projection for the client-side atlas: a field that the
+ * product page may not show is never serialised to the browser. */
+function atlasProduct(raw: Product, localized: Product): AtlasProduct {
+  const sections = commercialSections(raw);
+  return {
+    id: localized.id,
+    slug: localized.slug,
+    name: localized.name,
+    nameArabic: localized.nameArabic,
+    categorySlug: localized.categorySlug,
+    downloadUrl: localized.downloadUrl,
+    image: careAtlasImage(localized) ?? null,
+    tone: productTone(localized),
+    form: publicFieldText(raw, "form", "PRODUCT_PAGE")
+      ? (localized.availableForm?.trim() ?? null)
+      : null,
+    description: publicFieldText(raw, "shortDescription", "PRODUCT_PAGE")
+      ? localized.shortDescription.trim() || null
+      : null,
+    composition:
+      sections.composition && localized.composition?.length
+        ? localized.composition.map(({ label, value }) => ({ label, value }))
+        : null,
+    compositionNote: canExposeStatement(raw, localized.compositionNote, "PRODUCT_PAGE")
+      ? (localized.compositionNote ?? null)
+      : null,
+    usage: sections.usage ? localized.usage?.trim() || null : null,
+  };
+}
+
 export default async function ProductsPage({
   params,
   searchParams,
@@ -46,6 +84,8 @@ export default async function ProductsPage({
   if (!isValidLocale(locale)) notFound();
   const d = getDictionary(locale),
     c = getExperienceCopy(locale),
+    g = getCatalogGlassCopy(locale),
+    atlas = getCareAtlasCopy(locale),
     base = `/${locale}`;
   const sp = await searchParams;
   const query = typeof sp.q === "string" ? sp.q.trim().slice(0, 200) : "";
@@ -66,7 +106,8 @@ export default async function ProductsPage({
     .filter((x) => rawProducts.some((p) => p.categorySlug === x.slug));
   const category =
     categories.find((item) => item.slug === requestedCategory)?.slug ?? "";
-  const all = rawProducts.map((x) => localizeProduct(publicCatalogProduct(x), locale));
+  const publicRaw = rawProducts.map((x) => publicCatalogProduct(x));
+  const all = sortForListing(publicRaw.map((x) => localizeProduct(x, locale)));
   let products = need ? productsForNeed(all, need) : all;
   if (category) products = products.filter((p) => p.categorySlug === category);
   if (query)
@@ -107,104 +148,134 @@ export default async function ProductsPage({
       : []),
     ...(sort === "desc" ? [{ key: "sort" as const, label: c.descending }] : []),
   ];
-  const atlas = getCareAtlasCopy(locale);
+  const filtered = Boolean(need || category || query);
+  const categoryNames = Object.fromEntries(
+    categories.map((x) => [x.slug, x.name]),
+  );
   return (
     <>
       <PageIntro
-        index="02 / THE PRODUCT ATLAS"
+        eyebrow={`${g.catalogEyebrow} · ${d.products.resultsCount(all.length)}`}
         title={atlas.navAtlas}
-        body={atlas.atlasBody}
+        body={d.products.pageSubtitle}
       />
-      <section className="ca-catalog-shell ca-section-pad">
-        <div className="ca-catalog-ledger">
-          <span className="ca-mono">NPF / PRODUCT INDEX</span>
-          <span>
-            {copy.entire} · {d.products.resultsCount(all.length)}
-          </span>
-        </div>
-        <form
-          action={`${base}/products`}
-          className="ca-store-search"
-          role="search"
-        >
-          <SearchIcon size={22} aria-hidden="true" />
-          <input
-            type="search"
-            name="q"
-            aria-label={c.searchLabel}
-            placeholder={c.search}
-            defaultValue={query}
-            maxLength={200}
-          />
-          {need && <input type="hidden" name="need" value={need.param} />}
-          {category && <input type="hidden" name="category" value={category} />}
-          <select name="sort" defaultValue={sort} aria-label={c.sort}>
-            <option value="asc">{c.ascending}</option>
-            <option value="desc">{c.descending}</option>
-          </select>
-          <button type="submit" className="ca-solid-link">
-            {d.products.heroSearchCta} ↗
-          </button>
-        </form>
-        <div className="ca-catalog-filters">
-          <nav aria-label={d.products.categoriesFilterLabel}>
-            <Link
-              href={href({ need: need?.param })}
-              aria-current={!category ? "true" : undefined}
-            >
-              {d.products.allCategories}
-            </Link>
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                href={href({ need: need?.param, category: cat.slug })}
-                aria-current={category === cat.slug ? "true" : undefined}
-              >
-                {cat.name}
-              </Link>
-            ))}
-          </nav>
-          <details open={Boolean(need)}>
-            <summary>{d.products.needsFilterLabel}</summary>
-            <nav aria-label={d.products.needsFilterLabel}>
-              <Link
-                href={href({ category })}
-                aria-current={!need ? "true" : undefined}
-              >
-                {c.all}
-              </Link>
-              {NEEDS.filter((n) => !n.comingSoon).map((n) => (
+      <section className="ng-wrap ng-cat" aria-label={d.products.pageTitle}>
+        <div className="ng-cat-bar ng-glass">
+          <form action={`${base}/products`} className="ng-cat-search" role="search">
+            <label className="ng-cat-query">
+              <span className="ng-sr">{c.searchLabel}</span>
+              <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
+                <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" strokeWidth="2" />
+                <path d="m20 20-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              <input
+                type="search"
+                name="q"
+                aria-label={c.searchLabel}
+                placeholder={c.search}
+                defaultValue={query}
+                maxLength={FIELD_LIMITS.searchQuery}
+                dir="auto"
+              />
+            </label>
+            {need && <input type="hidden" name="need" value={need.param} />}
+            {category && <input type="hidden" name="category" value={category} />}
+            <label className="ng-cat-sort">
+              <span className="ng-sr">{c.sort}</span>
+              <select name="sort" defaultValue={sort} aria-label={c.sort}>
+                <option value="asc">{c.ascending}</option>
+                <option value="desc">{c.descending}</option>
+              </select>
+            </label>
+            <button type="submit" className="ng-btn ng-btn-primary">
+              {d.products.heroSearchCta}
+            </button>
+          </form>
+          <div className="ng-cat-filters">
+            <div className="ng-cat-filter-row">
+              <span className="ng-cat-filter-label" aria-hidden="true">
+                {g.categoryHeading}
+              </span>
+              <nav aria-label={d.products.categoriesFilterLabel} className="ng-cat-chips">
                 <Link
-                  key={n.id}
-                  href={href({ need: n.param, category })}
-                  aria-current={need?.id === n.id ? "true" : undefined}
+                  className="ng-chip"
+                  href={href({ need: need?.param })}
+                  aria-current={!category ? "true" : undefined}
                 >
-                  {d.home.needs[n.id].title}
+                  {d.products.allCategories}
+                </Link>
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    className="ng-chip"
+                    href={href({ need: need?.param, category: cat.slug })}
+                    aria-current={category === cat.slug ? "true" : undefined}
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+            <details className="ng-cat-needs" open={Boolean(need)}>
+              <summary>
+                <span>{d.products.needsFilterLabel}</span>
+                {need && (
+                  <span className="ng-pill ng-pill-soft">
+                    {d.home.needs[need.id].title}
+                  </span>
+                )}
+              </summary>
+              <nav aria-label={d.products.needsFilterLabel} className="ng-cat-chips">
+                <Link
+                  className="ng-chip"
+                  href={href({ category })}
+                  aria-current={!need ? "true" : undefined}
+                >
+                  {c.all}
+                </Link>
+                {NEEDS.filter((n) => !n.comingSoon).map((n) => (
+                  <Link
+                    key={n.id}
+                    className="ng-chip"
+                    href={href({ need: n.param, category })}
+                    aria-current={need?.id === n.id ? "true" : undefined}
+                  >
+                    {d.home.needs[n.id].title}
+                  </Link>
+                ))}
+              </nav>
+            </details>
+          </div>
+        </div>
+        <div className="ng-cat-results">
+          <p aria-live="polite" className="ng-num">
+            {d.products.resultsCount(products.length)}
+          </p>
+          {applied.length > 0 && (
+            <nav
+              className="ng-cat-applied"
+              aria-label={copy.applied}
+              data-testid="applied-filters"
+            >
+              {applied.map((filter) => (
+                <Link
+                  key={filter.key}
+                  className="ng-chip"
+                  href={catalogHref(locale, state, filter.key)}
+                  aria-label={`${copy.remove}: ${filter.label}`}
+                >
+                  <span dir="auto">{filter.label}</span>
+                  <span aria-hidden="true">×</span>
                 </Link>
               ))}
             </nav>
-          </details>
-        </div>
-        <div className="ca-results">
-          <p aria-live="polite">{d.products.resultsCount(products.length)}</p>
-          {(need || category || query) && (
-            <Link href={`${base}/products`}>{c.reset} ×</Link>
+          )}
+          {filtered && (
+            <Link href={`${base}/products`} className="ng-link ng-cat-reset">
+              {c.reset}
+            </Link>
           )}
         </div>
-        {applied.length > 0 && (
-          <nav className="ca-applied-filters" aria-label={copy.applied}>
-            {applied.map((filter) => (
-              <Link
-                key={filter.key}
-                href={catalogHref(locale, state, filter.key)}
-                aria-label={`${copy.remove}: ${filter.label}`}
-              >
-                <span>{filter.label}</span>
-                <span aria-hidden="true">×</span>
-              </Link>
-            ))}
-          </nav>
-        )}
         {catalogUnavailable ? (
           /* The catalog could not be read. The filters, the search box and
              the page itself still work — only the grid is replaced by an
@@ -212,28 +283,30 @@ export default async function ProductsPage({
           <CatalogUnavailable locale={locale} />
         ) : products.length === 0 ? (
           <section
-            className="ca-catalog-empty"
+            className="ng-cat-empty ng-glass"
             aria-labelledby="catalog-empty-title"
+            data-testid="catalog-empty"
           >
-            <span className="ca-empty-symbol" aria-hidden="true">
+            <span className="ng-cat-empty-mark" aria-hidden="true">
               ∅
             </span>
-            <div>
-              <h2 id="catalog-empty-title">{copy.emptyTitle}</h2>
+            <div className="ng-stack" style={{ ["--ng-stack" as string]: "12px" }}>
+              <h2 id="catalog-empty-title" className="ng-h3">
+                {copy.emptyTitle}
+              </h2>
               {query && (
-                <p className="ca-empty-query" dir="auto">
+                <p className="ng-cat-empty-query" dir="auto">
                   “{query}”
                 </p>
               )}
-              <p>{copy.emptyBody}</p>
-              <div className="ca-empty-links">
-                <Link href={`${base}/products`} className="ca-solid-link">
+              <p className="ng-body">{copy.emptyBody}</p>
+              <div className="ng-hero-cta">
+                <Link href={`${base}/products`} className="ng-btn ng-btn-primary">
                   {copy.browse}
-                  <span aria-hidden="true">↗</span>
+                  <span className="ng-arrow" aria-hidden="true">↗</span>
                 </Link>
-                <Link href={`${base}/contact`} className="ca-line-link">
+                <Link href={`${base}/contact`} className="ng-btn ng-btn-ghost">
                   {copy.contact}
-                  <span aria-hidden="true">↗</span>
                 </Link>
               </div>
             </div>
@@ -243,13 +316,29 @@ export default async function ProductsPage({
             products={products}
             locale={locale}
             dictionary={d}
-            categoryNames={Object.fromEntries(
-              categories.map((x) => [x.slug, x.name]),
-            )}
+            categoryNames={categoryNames}
           />
         )}
       </section>
-      <CareContact locale={locale} />
+      {!catalogUnavailable && !filtered && all.length > 1 && (
+        <section
+          className="ng-wrap ng-section"
+          aria-labelledby="atlas-title"
+          id="atlas"
+        >
+          <SectionHead
+            eyebrow={g.atlasEyebrow}
+            title={g.atlasTitle}
+            body={g.atlasBody}
+            id="atlas-title"
+          />
+          <ProductAtlas
+            locale={locale}
+            products={publicRaw.map((raw, i) => atlasProduct(raw, all[i]))}
+          />
+        </section>
+      )}
+      <ContactBand locale={locale} />
     </>
   );
 }

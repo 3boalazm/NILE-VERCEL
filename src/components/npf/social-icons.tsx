@@ -1,3 +1,5 @@
+import { SOCIAL_LINKS } from "@/lib/site-config"
+
 /**
  * F-23 — brand glyphs for the company's social profiles.
  *
@@ -49,3 +51,32 @@ export const SOCIAL_GLYPHS = {
   instagram: InstagramGlyph,
   linkedin: LinkedinGlyph,
 } as const
+
+const SOCIAL_LABELS: Record<string, string> = {
+  facebook: "Facebook",
+  instagram: "Instagram",
+  linkedin: "LinkedIn",
+}
+
+/** Footer row of the company's verified social profiles (F-23). */
+export function SocialIcons() {
+  return (
+    <div className="ng-social">
+      {SOCIAL_LINKS.map(({ platform, href }) => {
+        const Glyph = SOCIAL_GLYPHS[platform]
+        return (
+          <a
+            key={platform}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={SOCIAL_LABELS[platform]}
+            title={SOCIAL_LABELS[platform]}
+          >
+            <Glyph className="size-5" />
+          </a>
+        )
+      })}
+    </div>
+  )
+}

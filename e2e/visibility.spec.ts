@@ -55,13 +55,13 @@ async function expectPainted(page: Page, target: Target, index = 0) {
 const CORE: Record<string, Target> = {
   heroHeading: (page) => page.locator("h1"),
   atlasHeading: (page) => page.locator("#atlas-title"),
-  selectedProduct: (page) => page.locator(".ca-product-overview h3"),
+  selectedProduct: (page) => page.locator('[data-testid="product-card"] h2, [data-testid="product-card"] h3'),
   perspectiveHeading: (page) => page.locator("#perspective-title"),
-  source: (page) => page.locator(".ca-partner span"),
-  readingHeading: (page) => page.locator("#care-reading-title"),
-  readingQuestion: (page) => page.locator(".ca-reading summary"),
-  ctaHeading: (page) => page.locator("#care-contact-title"),
-  ctaLink: (page) => page.locator(".ca-contact-orbit"),
+  source: (page) => page.locator(".ng-trust strong"),
+  readingHeading: (page) => page.locator("#reading-title"),
+  readingQuestion: (page) => page.locator("#reading summary"),
+  ctaHeading: (page) => page.locator("#contact-title"),
+  ctaLink: (page) => page.locator("#contact a.ng-btn-primary"),
 };
 
 async function scrollThrough(page: Page) {
@@ -133,7 +133,7 @@ test.describe("homepage content is visible", () => {
     page,
   }) => {
     await page.goto("/ar");
-    await page.locator(".ca-hero-field-note").click();
+    await page.locator('[data-testid="hero-reading-note"]').click();
     await expect(page).toHaveURL(/#reading$/);
     await expectPainted(page, CORE.readingHeading);
     await expectPainted(page, CORE.readingQuestion, 2);
@@ -149,10 +149,11 @@ test.describe("degraded environments", () => {
     for (const target of Object.values(CORE)) {
       await expectPainted(page, target);
     }
-    // Real counter values are server-rendered, never "0" placeholders.
-    await expect(page.locator("[data-count-target]").first()).not.toHaveText(
-      /^0$/,
-    );
+    // Real values are server-rendered, never "0" placeholders (the old
+    // animated counters are gone; prices are the numbers that must be real).
+    await expect(
+      page.locator('[data-testid="product-card"]').first(),
+    ).not.toContainText(/(^|\s)[0٠]\s*(EGP|ج\.م)/);
     await context.close();
   });
 
@@ -288,6 +289,9 @@ test.describe("layout integrity", () => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/ar");
     await scrollThrough(page);
+    // Let in-flight reveal transforms (scale .98 → 1) settle: a mid-animation
+    // card reports its children at 43.9px.
+    await page.waitForTimeout(900);
     const small = await page.evaluate(() => {
       const selectors = [
         "header button",

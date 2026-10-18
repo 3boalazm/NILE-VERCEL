@@ -5,7 +5,6 @@ import Link from "next/link"
 
 import { getConsent, onConsentChange, setConsent } from "@/lib/analytics/consent"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { cn } from "@/lib/utils"
 
 /**
  * F-18 — the cookie-consent banner the privacy policy always promised but
@@ -42,35 +41,19 @@ export function CookieConsentBanner({
   }
 
   return (
-    <div
-      role="region"
-      aria-labelledby="consent-title"
-      className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-xl rounded-2xl border border-border bg-background p-5 shadow-xl sm:inset-x-6"
-    >
-      <h2 id="consent-title" className="font-heading text-base font-semibold">
-        {dictionary.title}
-      </h2>
-      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{dictionary.body}</p>
-      <p className="mt-2 text-sm">
-        <Link href={`${base}/privacy-policy`} className="font-medium text-primary underline underline-offset-2">
+    <div role="region" aria-labelledby="consent-title" className="ngc-float">
+      <h2 id="consent-title">{dictionary.title}</h2>
+      <p>
+        {dictionary.body}{" "}
+        <Link href={`${base}/privacy-policy`} className="ngc-inline-link">
           {dictionary.more}
         </Link>
       </p>
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => decide("granted")}
-          className={cn(
-            "inline-flex min-h-11 flex-1 items-center justify-center rounded-full bg-primary px-5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:ring-3 focus-visible:ring-ring/50"
-          )}
-        >
+      <div className="ngc-float-actions">
+        <button type="button" onClick={() => decide("granted")} className="ng-btn ng-btn-primary">
           {dictionary.accept}
         </button>
-        <button
-          type="button"
-          onClick={() => decide("denied")}
-          className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full border border-border bg-card px-5 text-sm font-medium transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
-        >
+        <button type="button" onClick={() => decide("denied")} className="ng-btn">
           {dictionary.reject}
         </button>
       </div>

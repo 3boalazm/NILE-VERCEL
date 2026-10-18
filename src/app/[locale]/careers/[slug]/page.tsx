@@ -57,7 +57,11 @@ export default async function JobPage({ params }: PageProps<"/[locale]/careers/[
   // The CMS could not be read. The posting may well exist — this is not a
   // 404 — so the page renders the "unavailable" notice instead.
   if (jobRead.status === "unavailable") {
-    return <CatalogUnavailable locale={locale} className="ca-section-pad" />
+    return (
+      <div className="ng-wrap ng-notice-wrap">
+        <CatalogUnavailable locale={locale} />
+      </div>
+    )
   }
   const job = jobRead.value
   if (!job) notFound()
@@ -74,100 +78,98 @@ export default async function JobPage({ params }: PageProps<"/[locale]/careers/[
   ].filter((item) => item.value)
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-      <Reveal className="flex flex-col gap-5">
-        <Link
-          href={`${base}/careers`}
-          className="inline-flex w-fit items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeftIcon className="size-3.5 rotate-180 rtl:rotate-0" aria-hidden="true" />
+    <div className="ng-content ng-wrap" style={{ paddingBlock: "clamp(24px, 4vw, 56px) clamp(56px, 8vw, 112px)" }}>
+      <Reveal className="ng-stack" style={{ ["--ng-stack" as string]: "18px", maxInlineSize: "76ch" }}>
+        <Link href={`${base}/careers`} className="ng-back">
+          <ArrowLeftIcon className="size-4" aria-hidden="true" />
           {copy.backToCareers}
         </Link>
-        <h1 className="font-heading text-3xl font-semibold leading-tight text-balance sm:text-4xl">
+        <h1 className="ng-h1" style={{ fontSize: "var(--ng-t-2xl)" }}>
           {localized.title}
         </h1>
-        <p className="text-lg leading-relaxed text-muted-foreground">{localized.summary}</p>
+        <p className="ng-lead">{localized.summary}</p>
+      </Reveal>
 
-        <dl className="grid grid-cols-1 gap-3 rounded-2xl border bg-card p-5 sm:grid-cols-2">
+      <Reveal as="div" delay={0.04} className="ng-glass" style={{ marginBlockStart: "clamp(24px, 4vw, 40px)" }}>
+        <dl className="ng-facts">
           {meta.map(({ icon: Icon, label, value }) => (
-            <div key={label} className="flex items-start gap-3">
-              <Icon className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-              <div className="flex flex-col">
-                <dt className="text-xs text-muted-foreground">{label}</dt>
-                <dd className="text-sm font-medium">{value}</dd>
-              </div>
+            <div key={label}>
+              <dt>
+                <span className="ng-facts-icon">
+                  <Icon className="size-4" aria-hidden="true" />
+                </span>
+                <span>{label}</span>
+              </dt>
+              <dd>{value}</dd>
             </div>
           ))}
           {localized.closingDate && (
-            <div className="flex items-start gap-3">
-              <CalendarClockIcon className="mt-0.5 size-4 shrink-0 text-chart-3" aria-hidden="true" />
-              <div className="flex flex-col">
-                <dt className="text-xs text-muted-foreground">{copy.closingLabel}</dt>
-                <dd className="text-sm font-medium">{formatJobDate(localized.closingDate, locale)}</dd>
-              </div>
+            <div>
+              <dt>
+                <span className="ng-facts-icon">
+                  <CalendarClockIcon className="size-4" aria-hidden="true" />
+                </span>
+                <span>{copy.closingLabel}</span>
+              </dt>
+              <dd>{formatJobDate(localized.closingDate, locale)}</dd>
             </div>
           )}
         </dl>
       </Reveal>
 
-      <Reveal as="section" delay={0.06} className="mt-10 flex flex-col gap-4">
-        <h2 className="font-heading text-xl font-semibold">{copy.responsibilitiesTitle}</h2>
-        <ul className="flex flex-col gap-3">
-          {localized.responsibilities.map((item) => (
-            <li key={item} className="flex gap-3 text-pretty leading-relaxed">
-              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+      <div className="ng-split" style={{ marginBlockStart: "clamp(32px, 5vw, 64px)" }}>
+        <div className="ng-stack" style={{ ["--ng-stack" as string]: "clamp(28px, 4vw, 40px)" }}>
+          <Reveal as="section" className="ng-stack" style={{ ["--ng-stack" as string]: "14px" }}>
+            <h2 className="ng-h3">{copy.responsibilitiesTitle}</h2>
+            <ul className="ng-bullets">
+              {localized.responsibilities.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </Reveal>
 
-      <Reveal as="section" delay={0.08} className="mt-10 flex flex-col gap-4">
-        <h2 className="font-heading text-xl font-semibold">{copy.requirementsTitle}</h2>
-        <ul className="flex flex-col gap-3">
-          {localized.requirements.map((item) => (
-            <li key={item} className="flex gap-3 text-pretty leading-relaxed">
-              <span className="mt-2 size-1.5 shrink-0 rounded-full bg-ring" aria-hidden="true" />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
+          <Reveal as="section" delay={0.06} className="ng-stack" style={{ ["--ng-stack" as string]: "14px" }}>
+            <h2 className="ng-h3">{copy.requirementsTitle}</h2>
+            <ul className="ng-bullets">
+              {localized.requirements.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </Reveal>
 
-      {localized.niceToHave && localized.niceToHave.length > 0 && (
-        <Reveal as="section" delay={0.1} className="mt-10 rounded-2xl border border-dashed p-5">
-          <h2 className="font-heading text-base font-semibold">{copy.niceToHaveTitle}</h2>
-          <ul className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
-            {localized.niceToHave.map((item) => (
-              <li key={item} className="flex gap-3">
-                <span className="mt-2 size-1 shrink-0 rounded-full bg-muted-foreground/60" aria-hidden="true" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-      )}
+          {localized.niceToHave && localized.niceToHave.length > 0 && (
+            <Reveal as="section" delay={0.08} className="ng-empty" style={{ textAlign: "start" }}>
+              <h2 className="ng-h4">{copy.niceToHaveTitle}</h2>
+              <ul className="ng-bullets ng-bullets-quiet ng-small" style={{ marginBlockStart: 12 }}>
+                {localized.niceToHave.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </Reveal>
+          )}
+        </div>
 
-      <section className="mt-14 border-t pt-10">
-        <Reveal>
-          <h2 className="font-heading text-xl font-semibold">{copy.applyTitle}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{copy.applyBody}</p>
-        </Reveal>
-        <Reveal delay={0.06} className="mt-6">
+        <section className="ng-glass ng-form-panel" aria-labelledby="job-apply">
+          <div className="ng-stack" style={{ ["--ng-stack" as string]: "8px" }}>
+            <h2 id="job-apply" className="ng-h3">
+              {copy.applyTitle}
+            </h2>
+            <p className="ng-body ng-small">{copy.applyBody}</p>
+          </div>
           <NPFJobApplicationForm
             locale={locale}
             dictionary={{ ...copy, ...dictionary.contact }}
             jobTitle={localized.title}
           />
-        </Reveal>
-        {/* Fallback channel — some applicants prefer plain email over a form. */}
-        <p className="mt-6 text-xs text-muted-foreground">
-          {copy.orEmailUs}{" "}
-          <a href={`mailto:${dictionary.contact.email}`} className="text-primary hover:underline">
-            {dictionary.contact.email}
-          </a>
-        </p>
-      </section>
+          {/* Fallback channel — some applicants prefer plain email over a form. */}
+          <p className="ng-muted ng-small">
+            {copy.orEmailUs}{" "}
+            <a href={`mailto:${dictionary.contact.email}`} className="ng-link" dir="ltr">
+              {dictionary.contact.email}
+            </a>
+          </p>
+        </section>
+      </div>
     </div>
   )
 }

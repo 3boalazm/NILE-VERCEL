@@ -59,7 +59,7 @@ test("arabic homepage renders RTL with hero actions", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: getCareAtlasCopy("ar").heroCta }),
   ).toBeVisible();
-  await expect(page.locator(".ca-hero-field-note")).toBeVisible();
+  await expect(page.locator('[data-testid="hero-reading-note"]')).toBeVisible();
 });
 
 test("english homepage renders LTR", async ({ page }) => {

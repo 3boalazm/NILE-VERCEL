@@ -470,7 +470,7 @@ await offlineSubmitProbe(
   // can take seconds, so retry until the URL reflects the choice.
   await page.goto(`${BASE}/ar/products`, { waitUntil: "load" });
   await page.waitForTimeout(2500);
-  const firstName = async () => (await page.locator(".ca-catalog-card h2").first().textContent())?.trim() ?? "";
+  const firstName = async () => (await page.locator('[data-testid="product-card"] h2').first().textContent())?.trim() ?? "";
   const before = await firstName();
   for (let attempt = 0; attempt < 4 && !page.url().includes("sort=desc"); attempt++) {
     await page.selectOption("form[role=search] select[name=sort]", "desc");
@@ -657,7 +657,7 @@ await offlineSubmitProbe(
 
   // F-16 — the rendered home hero carries real copy, not placeholder text.
   const homeHtml = await (await fetch(`${BASE}/ar`)).text();
-  const heroStart = homeHtml.indexOf('class="ca-hero"');
+  const heroStart = homeHtml.indexOf('class="ng-wrap ng-hero"');
   const heroEnd = homeHtml.indexOf("</section>", heroStart);
   const heroHtml = heroStart >= 0 && heroEnd >= 0 ? homeHtml.slice(heroStart, heroEnd) : "";
   const realHero = heroHtml.includes("الحياة") && heroHtml.includes("أولاً.");

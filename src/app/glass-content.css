@@ -1,0 +1,1319 @@
+/* ==========================================================================
+   NILE GLASS — content pages (about, story, quality, contact, careers, blog,
+   legal, notices). Builds only on the --ng-* tokens of glass.css; every class
+   here is new (no glass.css selector is overridden).
+
+   - Logical properties throughout (RTL primary).
+   - No backdrop-filter at all: these surfaces sit over the static aurora,
+     where a blur is invisible and only costs paint. Plain translucency.
+   - Numerals tabular; Arabic headings never tracked.
+   - Every grid collapses to one column well before 320px can overflow, and
+     wide tables scroll inside their own frame.
+   ========================================================================== */
+
+/* ---------- shared rhythm ------------------------------------------------- */
+.ng-band {
+  padding-block: clamp(40px, 6vw, 88px);
+}
+.ng-band-tight {
+  padding-block: clamp(24px, 4vw, 56px);
+}
+/* Consecutive bands share one gap instead of stacking two paddings. */
+:is(.ng-band, .ng-band-tight) + .ng-band,
+.ng-band + .ng-band-tight {
+  padding-block-start: 0;
+}
+.ng-bento > .ng-acc {
+  align-self: start;
+}
+.ng-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--ng-t-xs);
+  font-weight: 600;
+  color: var(--ng-ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.ng-index {
+  font-family: var(--ng-font-display);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--ng-brand);
+}
+.ng-h4 {
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-lg);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ng-ink);
+  margin: 0;
+  text-wrap: balance;
+}
+.ng-statement {
+  font-family: var(--ng-font-display);
+  font-size: clamp(1.2rem, 1.05rem + 0.8vw, 1.6rem);
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--ng-ink);
+  text-wrap: balance;
+}
+html[lang="en"] .ng-statement {
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+.ng-muted {
+  color: var(--ng-ink-3);
+}
+.ng-small {
+  font-size: var(--ng-t-sm);
+  line-height: 1.75;
+}
+/* zero-specificity resets so every component rule below wins */
+:where(.ng-content) :where(p, ul, ol, dl, h2, h3, figure) {
+  margin: 0;
+}
+:where(.ng-content) :where(ul, ol) {
+  padding: 0;
+  list-style: none;
+}
+.ng-pre {
+  white-space: pre-line;
+}
+.ng-split {
+  display: grid;
+  gap: clamp(20px, 3vw, 40px);
+}
+@media (min-width: 900px) {
+  .ng-split {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: start;
+  }
+  .ng-split-even {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.ng-cards {
+  display: grid;
+  gap: var(--ng-s-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+.ng-tile {
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+  border-radius: var(--ng-r-3);
+  padding: clamp(18px, 2.6vw, 30px);
+  min-inline-size: 0;
+}
+.ng-tile > * + * {
+  margin-block-start: var(--ng-s-3);
+}
+.ng-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  align-items: center;
+}
+a.ng-tile {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform var(--ng-dur-2) var(--ng-ease),
+    box-shadow var(--ng-dur-2) var(--ng-ease);
+}
+a.ng-tile:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--ng-shadow-2), 0 0 0 1px var(--ng-hairline-strong);
+}
+
+/* ---------- editorial figure ---------------------------------------------- */
+.ng-editorial {
+  margin: 0;
+  display: grid;
+  gap: var(--ng-s-3);
+}
+.ng-editorial-media {
+  border-radius: var(--ng-r-4);
+  overflow: hidden;
+  box-shadow: var(--ng-shadow-2);
+  background: var(--ng-aqua-soft);
+  aspect-ratio: 1264 / 848;
+}
+.ng-editorial-media img {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+.ng-editorial-wide .ng-editorial-media {
+  aspect-ratio: 21 / 9;
+}
+@media (max-width: 640px) {
+  .ng-editorial-wide .ng-editorial-media {
+    aspect-ratio: 4 / 3;
+  }
+}
+.ng-editorial figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  font-size: var(--ng-t-xs);
+  line-height: 1.6;
+  color: var(--ng-ink-3);
+  padding-inline: 6px;
+}
+.ng-editorial figcaption .ng-editorial-index {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  letter-spacing: 0.04em;
+  color: var(--ng-ink-2);
+}
+
+/* ---------- facts strip (year / origin) ------------------------------------ */
+.ng-fact {
+  display: grid;
+  gap: var(--ng-s-2);
+  align-content: start;
+}
+.ng-fact-value {
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-3xl);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ng-ink);
+}
+.ng-prose-stack > * + * {
+  margin-block-start: 1em;
+}
+.ng-prose-stack p {
+  color: var(--ng-ink-2);
+  max-inline-size: 66ch;
+  text-wrap: pretty;
+}
+.ng-prose-stack p:first-child {
+  font-size: var(--ng-t-lg);
+  color: var(--ng-ink);
+  line-height: 1.8;
+}
+
+/* ---------- numbered principle / chapter list ------------------------------ */
+.ng-numbered {
+  display: grid;
+  gap: var(--ng-s-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+.ng-numbered > li {
+  display: grid;
+  gap: var(--ng-s-3);
+  align-content: start;
+}
+.ng-numbered .ng-index {
+  font-size: clamp(2rem, 1.4rem + 2vw, 3rem);
+  background: linear-gradient(140deg, var(--ng-brand), var(--ng-aqua));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .ng-numbered .ng-index {
+  background: linear-gradient(140deg, #8fd3ff, #ffb3d1);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* chapters (story): full-width rows, number + heading + body */
+.ng-chapters {
+  display: grid;
+  gap: var(--ng-s-4);
+}
+.ng-chapter {
+  display: grid;
+  gap: var(--ng-s-4);
+}
+@media (min-width: 900px) {
+  .ng-chapter {
+    grid-template-columns: 96px minmax(0, 5fr) minmax(0, 6fr);
+    align-items: start;
+    gap: var(--ng-s-6);
+  }
+}
+.ng-chapter .ng-index {
+  font-size: clamp(2.2rem, 1.6rem + 2vw, 3.4rem);
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ng-brand);
+}
+.ng-chapter > div > * + * {
+  margin-block-start: var(--ng-s-3);
+}
+
+/* ---------- timeline (story) / journey steps (quality) ------------------- */
+.ng-timeline {
+  display: grid;
+  gap: 0;
+  position: relative;
+}
+.ng-timeline > li {
+  position: relative;
+  display: grid;
+  gap: var(--ng-s-2) var(--ng-s-5);
+  padding-block-end: var(--ng-s-6);
+  padding-inline-start: 44px;
+}
+.ng-timeline > li:last-child {
+  padding-block-end: 0;
+}
+.ng-timeline > li::before {
+  /* marker */
+  content: "";
+  position: absolute;
+  inset-inline-start: 6px;
+  inset-block-start: 0.55em;
+  inline-size: 16px;
+  block-size: 16px;
+  border-radius: 50%;
+  background: var(--ng-bg-2);
+  border: 3px solid var(--ng-aqua);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ng-aqua) 18%, transparent);
+}
+.ng-timeline > li:not(:last-child)::after {
+  /* rail */
+  content: "";
+  position: absolute;
+  inset-inline-start: 13px;
+  inset-block: calc(0.55em + 22px) 4px;
+  inline-size: 2px;
+  border-radius: 2px;
+  background: linear-gradient(var(--ng-aqua), color-mix(in srgb, var(--ng-rose) 60%, transparent));
+}
+@media (min-width: 760px) {
+  .ng-timeline > li {
+    grid-template-columns: 140px minmax(0, 1fr);
+  }
+}
+.ng-timeline-year {
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-2xl);
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ng-brand);
+}
+.ng-timeline > li > div > * + * {
+  margin-block-start: var(--ng-s-2);
+}
+
+.ng-steps {
+  counter-reset: ng-step;
+  display: grid;
+  gap: var(--ng-s-3);
+}
+.ng-steps > li {
+  counter-increment: ng-step;
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: var(--ng-s-4);
+  align-items: start;
+}
+.ng-steps > li::before {
+  content: counter(ng-step);
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 50%;
+  background: var(--ng-brand);
+  color: #fff;
+  font: 700 var(--ng-t-sm) / 1 var(--ng-font-display);
+  font-variant-numeric: tabular-nums;
+  box-shadow: var(--ng-shadow-1);
+  position: relative;
+  z-index: 1;
+}
+.dark .ng-steps > li::before {
+  color: #04121f;
+}
+.ng-steps > li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 21px;
+  inset-block: 48px calc(-1 * var(--ng-s-3) - 4px);
+  inline-size: 2px;
+  background: var(--ng-hairline-strong);
+}
+.ng-steps > li > div {
+  padding-block: 8px var(--ng-s-4);
+}
+.ng-steps > li > div > * + * {
+  margin-block-start: 6px;
+}
+
+/* ---------- source route (quality) ---------------------------------------- */
+.ng-route {
+  display: grid;
+  gap: var(--ng-s-3);
+  align-items: stretch;
+}
+@media (min-width: 900px) {
+  .ng-route {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+  }
+}
+.ng-route > .ng-tile {
+  display: grid;
+  gap: var(--ng-s-2);
+  align-content: start;
+  block-size: 100%;
+}
+.ng-route > .ng-tile > * + * {
+  margin-block-start: 0;
+}
+.ng-route-arrow {
+  display: grid;
+  place-items: center;
+  color: var(--ng-aqua);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.ng-route-arrow::before {
+  content: "↓";
+}
+@media (min-width: 900px) {
+  .ng-route-arrow::before {
+    content: "←";
+  }
+  [dir="ltr"] .ng-route-arrow::before {
+    content: "→";
+  }
+}
+.ng-route strong {
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-lg);
+  line-height: 1.3;
+  color: var(--ng-ink);
+}
+
+/* ---------- callouts ------------------------------------------------------ */
+.ng-callout {
+  border-radius: var(--ng-r-3);
+  padding: clamp(18px, 3vw, 32px);
+  border: 1px solid color-mix(in srgb, var(--ng-peach) 70%, var(--ng-hairline));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--ng-sun) 30%, transparent), color-mix(in srgb, var(--ng-peach) 22%, transparent)),
+    var(--ng-glass-strong);
+}
+.dark .ng-callout {
+  border-color: rgba(255, 196, 173, 0.28);
+  background:
+    linear-gradient(135deg, rgba(255, 225, 161, 0.08), rgba(255, 196, 173, 0.06)),
+    var(--ng-glass-strong);
+}
+.ng-callout > * + * {
+  margin-block-start: var(--ng-s-3);
+}
+.ng-callout-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ng-callout-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--ng-peach) 55%, transparent);
+  color: #7a3412;
+}
+.dark .ng-callout-icon {
+  background: rgba(255, 196, 173, 0.16);
+  color: var(--ng-peach);
+}
+.ng-callout-info {
+  border-color: color-mix(in srgb, var(--ng-aqua) 45%, var(--ng-hairline));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--ng-aqua-soft) 70%, transparent), transparent),
+    var(--ng-glass-strong);
+}
+.dark .ng-callout-info {
+  border-color: rgba(39, 179, 230, 0.3);
+  background: var(--ng-glass-strong);
+}
+.ng-checks {
+  display: grid;
+  gap: 10px;
+}
+.ng-checks > li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  line-height: 1.75;
+}
+.ng-checks svg {
+  margin-block-start: 0.35em;
+  color: var(--ng-ok);
+}
+
+/* bullets with a gradient dot */
+.ng-bullets {
+  display: grid;
+  gap: 12px;
+}
+.ng-bullets > li {
+  position: relative;
+  padding-inline-start: 26px;
+  line-height: 1.85;
+  text-wrap: pretty;
+}
+.ng-bullets > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 4px;
+  inset-block-start: 0.72em;
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ng-aqua), var(--ng-rose));
+}
+.ng-bullets-quiet > li::before {
+  background: var(--ng-ink-3);
+  inline-size: 6px;
+  block-size: 6px;
+  inset-inline-start: 6px;
+  inset-block-start: 0.8em;
+}
+
+/* ---------- tables -------------------------------------------------------- */
+.ng-table-frame {
+  overflow-x: auto;
+  border-radius: var(--ng-r-3);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: 0 0 0 1px var(--ng-hairline);
+  background: var(--ng-glass-strong);
+  -webkit-overflow-scrolling: touch;
+}
+.ng-table-frame:focus-visible {
+  outline: 3px solid var(--ng-aqua);
+  outline-offset: 3px;
+}
+.ng-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--ng-t-sm);
+  line-height: 1.7;
+}
+.ng-table th,
+.ng-table td {
+  text-align: start;
+  vertical-align: top;
+  padding: 14px 18px;
+}
+.ng-table thead th {
+  font-weight: 600;
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+  background: color-mix(in srgb, var(--ng-aqua-soft) 55%, transparent);
+  white-space: nowrap;
+}
+.dark .ng-table thead th {
+  background: rgba(255, 255, 255, 0.04);
+}
+.ng-table tbody tr + tr td,
+.ng-table tbody tr + tr th {
+  border-block-start: 1px solid var(--ng-hairline);
+}
+.ng-table .ng-nowrap {
+  white-space: nowrap;
+}
+.ng-table-wide {
+  min-inline-size: 520px;
+}
+/* Shipping zones: stack into cards on small screens rather than scrolling. */
+@media (max-width: 640px) {
+  .ng-table-stack thead {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .ng-table-stack tbody,
+  .ng-table-stack tr,
+  .ng-table-stack td,
+  .ng-table-stack tbody th {
+    display: block;
+  }
+  .ng-table-stack tr {
+    padding: 14px 18px;
+  }
+  .ng-table-stack td,
+  .ng-table-stack tbody th {
+    padding: 2px 0;
+  }
+  .ng-table-stack :is(td, th)[data-label]::before {
+    content: attr(data-label) " · ";
+    color: var(--ng-ink-3);
+    font-size: var(--ng-t-xs);
+    font-weight: 600;
+  }
+  .ng-table-stack td.ng-nowrap {
+    display: inline-block;
+    margin-block-start: 6px;
+    margin-inline-end: 18px;
+  }
+  .ng-table-stack tbody tr + tr :is(td, th) {
+    border-block-start: 0;
+  }
+  .ng-table-stack tbody tr + tr {
+    border-block-start: 1px solid var(--ng-hairline);
+  }
+}
+
+/* ---------- documents / downloads ---------------------------------------- */
+.ng-docs {
+  display: grid;
+  gap: var(--ng-s-3);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+}
+.ng-doc {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-block-size: 64px;
+  padding: 12px 18px;
+  border-radius: var(--ng-r-2);
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-hairline);
+  color: var(--ng-ink);
+  text-decoration: none;
+  transition:
+    transform var(--ng-dur-2) var(--ng-ease),
+    border-color var(--ng-dur-1) linear;
+}
+.ng-doc:hover {
+  transform: translateY(-2px);
+  border-color: var(--ng-hairline-strong);
+}
+.ng-doc-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  inline-size: 38px;
+  block-size: 38px;
+  border-radius: 12px;
+  background: var(--ng-aqua-soft);
+  color: var(--ng-brand);
+}
+.ng-doc strong {
+  font-weight: 600;
+  line-height: 1.4;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.ng-doc small {
+  margin-inline-start: auto;
+  color: var(--ng-ink-3);
+  font-size: var(--ng-t-xs);
+  white-space: nowrap;
+}
+
+/* ---------- FAQ (native details, no JS) ----------------------------------- */
+/* .ng-acc from glass.css styles the details; this only spaces the list. */
+.ng-faq {
+  display: grid;
+  gap: 10px;
+}
+
+/* ---------- contact page -------------------------------------------------- */
+.ng-contact-grid {
+  display: grid;
+  gap: clamp(20px, 3vw, 32px);
+}
+@media (min-width: 1000px) {
+  .ng-contact-grid {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+}
+.ng-form-panel {
+  padding: clamp(20px, 3.4vw, 44px);
+}
+.ng-form-panel > * + * {
+  margin-block-start: var(--ng-s-5);
+}
+.ng-contact-list {
+  display: grid;
+  gap: 10px;
+}
+.ng-contact-list > li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-block-size: 56px;
+  padding: 6px 14px 6px 6px;
+  padding-inline: 6px 14px;
+  border-radius: var(--ng-r-2);
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-hairline);
+}
+.ng-contact-list .ng-contact-icon {
+  display: grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border-radius: 12px;
+  background: var(--ng-aqua-soft);
+  color: var(--ng-brand);
+}
+.ng-contact-list a,
+.ng-contact-list span:last-child {
+  color: var(--ng-ink);
+  font-weight: 600;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.ng-contact-list a:hover {
+  color: var(--ng-brand);
+}
+[dir="rtl"] .ng-contact-list a[dir="ltr"] {
+  text-align: end;
+  justify-self: start;
+}
+.ng-sticky {
+  display: grid;
+  gap: var(--ng-s-4);
+}
+@media (min-width: 1000px) {
+  .ng-sticky {
+    position: sticky;
+    inset-block-start: calc(var(--ng-header-h) + 32px);
+  }
+}
+
+/* ---------- careers / jobs ------------------------------------------------ */
+.ng-jobs {
+  display: grid;
+  gap: var(--ng-s-3);
+}
+.ng-job {
+  display: grid;
+  gap: var(--ng-s-3);
+}
+.ng-job > * + *,
+.ng-tile.ng-chapter > * + *,
+.ng-tile.ng-fact > * + * {
+  margin-block-start: 0;
+}
+.ng-job-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.ng-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+}
+.ng-meta-row > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ng-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: var(--ng-t-sm);
+  color: var(--ng-brand);
+}
+.ng-more svg {
+  transition: transform var(--ng-dur-2) var(--ng-ease);
+}
+[dir="ltr"] .ng-more svg {
+  transform: scaleX(-1);
+}
+a:hover .ng-more svg {
+  transform: translateX(-4px);
+}
+[dir="ltr"] a:hover .ng-more svg {
+  transform: scaleX(-1) translateX(-4px);
+}
+.ng-empty {
+  border: 1.5px dashed var(--ng-hairline-strong);
+  border-radius: var(--ng-r-3);
+  padding: clamp(20px, 4vw, 40px);
+  text-align: center;
+  color: var(--ng-ink-2);
+  background: var(--ng-glass-faint);
+}
+.ng-facts {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  padding: 8px;
+}
+.ng-facts > div {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 0 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: var(--ng-r-2);
+}
+.ng-facts dt {
+  display: contents;
+}
+.ng-facts .ng-facts-icon {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 10px;
+  background: var(--ng-aqua-soft);
+  color: var(--ng-brand);
+}
+.ng-facts dt > span:last-child {
+  align-self: end;
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+  line-height: 1.5;
+}
+.ng-facts dd {
+  grid-column: 2;
+  align-self: start;
+  margin: 0;
+  font-weight: 600;
+  color: var(--ng-ink);
+  line-height: 1.5;
+}
+.ng-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-block-size: 44px;
+  font-size: var(--ng-t-sm);
+  font-weight: 600;
+  color: var(--ng-ink-2);
+  text-decoration: none;
+}
+.ng-back:hover {
+  color: var(--ng-brand);
+}
+.ng-back svg {
+  transform: scaleX(-1);
+}
+[dir="ltr"] .ng-back svg {
+  transform: none;
+}
+
+/* ---------- reading column + table of contents (article, legal) ---------- */
+.ng-reader {
+  display: grid;
+  gap: clamp(24px, 4vw, 48px);
+}
+@media (min-width: 1040px) {
+  .ng-reader {
+    grid-template-columns: minmax(0, 76ch) 280px;
+    column-gap: clamp(48px, 6vw, 96px);
+    justify-content: start;
+    align-items: start;
+  }
+  .ng-reader > .ng-toc {
+    grid-column: 2;
+    grid-row: 1;
+    position: sticky;
+    inset-block-start: calc(var(--ng-header-h) + 32px);
+  }
+  .ng-reader > .ng-reader-main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+.ng-reader-main {
+  min-inline-size: 0;
+  max-inline-size: 76ch;
+}
+.ng-reader-main > * + * {
+  margin-block-start: clamp(28px, 4vw, 44px);
+}
+.ng-reader-main [id] {
+  scroll-margin-block-start: calc(var(--ng-header-h) + 32px);
+}
+.ng-toc {
+  padding: 20px;
+  border-radius: var(--ng-r-3);
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+}
+.ng-toc h2 {
+  margin: 0 0 10px;
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-sm);
+  font-weight: 700;
+  color: var(--ng-ink);
+}
+.ng-toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: ng-toc;
+  display: grid;
+  gap: 2px;
+}
+.ng-toc li {
+  counter-increment: ng-toc;
+}
+.ng-toc a {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 6px;
+  align-items: baseline;
+  padding: 8px 10px;
+  min-block-size: 40px;
+  border-radius: 12px;
+  color: var(--ng-ink-2);
+  font-size: var(--ng-t-sm);
+  line-height: 1.55;
+  text-decoration: none;
+}
+.ng-toc a::before {
+  content: counter(ng-toc, decimal-leading-zero);
+  font-size: var(--ng-t-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--ng-ink-3);
+}
+.ng-toc-plain a {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ng-toc-plain a::before {
+  content: none;
+}
+.ng-toc a:hover {
+  background: var(--ng-glass-strong);
+  color: var(--ng-ink);
+}
+@media (max-width: 1039px) {
+  /* On phones the TOC is a compact native disclosure above the text. */
+  .ng-toc-details > summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: 32px;
+  }
+  .ng-toc-details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .ng-toc-details > summary::after {
+    content: "+";
+    font-size: 1.3rem;
+    line-height: 1;
+    color: var(--ng-brand);
+  }
+  .ng-toc-details[open] > summary::after {
+    content: "–";
+  }
+  .ng-toc-details > summary h2 {
+    margin: 0;
+  }
+  .ng-toc-details[open] > summary {
+    margin-block-end: 8px;
+  }
+}
+@media (min-width: 1040px) {
+  .ng-toc-details > summary {
+    pointer-events: none;
+    list-style: none;
+  }
+  .ng-toc-details > summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+/* article header */
+.ng-tier {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  inline-size: fit-content;
+  min-block-size: 30px;
+  padding: 4px 14px;
+  border-radius: var(--ng-r-pill);
+  font-size: var(--ng-t-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  border: 1px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-strong);
+  color: var(--ng-ink-2);
+}
+.ng-tier::before {
+  content: "";
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--ng-ink-3);
+}
+.ng-tier[data-tier="direct-rct"] {
+  color: var(--ng-brand);
+  border-color: color-mix(in srgb, var(--ng-brand) 35%, transparent);
+  background: color-mix(in srgb, var(--ng-aqua-soft) 70%, var(--ng-glass-strong));
+}
+.ng-tier[data-tier="direct-rct"]::before {
+  background: var(--ng-brand);
+}
+.ng-tier[data-tier="direct-other"]::before {
+  background: #c2620f;
+}
+.ng-tier[data-tier="systematic-review"]::before {
+  background: var(--ng-aqua);
+}
+.ng-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ng-section-title svg {
+  color: var(--ng-brand);
+  flex: none;
+}
+.ng-cite {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+.ng-cite p {
+  margin: 0;
+  color: var(--ng-ink-3);
+  font-size: var(--ng-t-sm);
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.ng-cite p:first-child {
+  color: var(--ng-ink);
+  font-weight: 600;
+  font-size: var(--ng-t-md);
+}
+
+/* blog listing card */
+.ng-posts {
+  display: grid;
+  gap: var(--ng-s-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+.ng-post {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ng-s-3);
+  block-size: 100%;
+  transition:
+    transform var(--ng-dur-2) var(--ng-ease),
+    box-shadow var(--ng-dur-2) var(--ng-ease);
+}
+.ng-post > * + * {
+  margin-block-start: 0;
+}
+.ng-post:hover,
+.ng-post:focus-within {
+  transform: translateY(-3px);
+  box-shadow: var(--ng-shadow-2), 0 0 0 1px var(--ng-hairline-strong);
+}
+.ng-post :is(h2, h3) a {
+  color: inherit;
+  text-decoration: none;
+}
+.ng-post :is(h2, h3) a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.ng-post-sum {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.ng-post-foot {
+  margin-block-start: auto !important;
+  padding-block-start: var(--ng-s-3);
+  border-block-start: 1px solid var(--ng-hairline);
+  display: grid;
+  gap: 2px;
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+  line-height: 1.6;
+}
+.ng-post-foot strong {
+  color: var(--ng-ink);
+  font-weight: 600;
+}
+.ng-post-foot .ng-post-product {
+  color: var(--ng-brand);
+  font-weight: 600;
+}
+
+/* legal sections */
+.ng-legal-intro {
+  border-radius: var(--ng-r-3);
+  padding: clamp(18px, 3vw, 28px);
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: 0 0 0 1px var(--ng-hairline);
+}
+.ng-legal-intro > * + * {
+  margin-block-start: 0.8em;
+}
+.ng-legal-intro p {
+  color: var(--ng-ink-2);
+}
+.ng-legal-sections {
+  display: grid;
+  gap: 0;
+}
+.ng-legal-sections > section {
+  padding-block: clamp(20px, 3vw, 30px);
+  border-block-start: 1px solid var(--ng-hairline);
+}
+.ng-legal-sections > section:first-child {
+  border-block-start: 0;
+  padding-block-start: 0;
+}
+.ng-legal-sections h2 {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-lg);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ng-ink);
+  text-wrap: balance;
+}
+
+.ng-legal-sections p {
+  margin-block-start: 10px;
+  color: var(--ng-ink-2);
+  line-height: 1.95;
+  text-wrap: pretty;
+}
+
+/* ---------- shipping branches ------------------------------------------- */
+@media (min-width: 900px) {
+  .ng-branch-acc {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+.ng-branch-acc summary::after {
+  margin-inline-start: 0;
+}
+.ng-branch-acc summary {
+  gap: 12px;
+}
+.ng-branch-sum {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  margin-inline-end: auto;
+}
+.ng-branch-sum small {
+  font-family: var(--ng-font-text);
+  font-size: var(--ng-t-xs);
+  font-weight: 500;
+  color: var(--ng-ink-3);
+}
+.ng-branch-acc details > .ng-branches {
+  padding: 0 clamp(12px, 2vw, 22px) clamp(12px, 2vw, 22px);
+}
+.ng-branch-acc .ng-branches > li {
+  background: var(--ng-glass-strong);
+  box-shadow: none;
+}
+.ng-branch-group + .ng-branch-group {
+  margin-block-start: var(--ng-s-6);
+}
+.ng-branch-group > h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-block-end: var(--ng-s-3);
+}
+.ng-branch-group > h3 small {
+  font-family: var(--ng-font-text);
+  font-size: var(--ng-t-xs);
+  font-weight: 500;
+  color: var(--ng-ink-3);
+}
+.ng-branches {
+  display: grid;
+  gap: var(--ng-s-3);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+}
+.ng-branches > li {
+  padding: 16px 18px;
+}
+.ng-branches > li > * + * {
+  margin-block-start: 6px;
+}
+.ng-phones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-block-start: 4px;
+}
+.ng-phones a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 40px;
+  padding: 0 14px;
+  border-radius: var(--ng-r-pill);
+  border: 1px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-strong);
+  color: var(--ng-ink);
+  font-size: var(--ng-t-xs);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+.ng-phones a:hover {
+  border-color: var(--ng-brand);
+  color: var(--ng-brand);
+}
+
+/* ---------- notices (catalog unavailable, 404, error) --------------------- */
+.ng-notice {
+  display: grid;
+  gap: var(--ng-s-4);
+  justify-items: center;
+  text-align: center;
+  max-inline-size: 720px;
+  margin-inline: auto;
+  padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 56px);
+  position: relative;
+  overflow: hidden;
+}
+.ng-notice::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -40%;
+  inset-inline: 20%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ng-aqua) 26%, transparent), transparent 64%);
+  pointer-events: none;
+}
+.ng-notice > * {
+  position: relative;
+  margin: 0;
+}
+.ng-notice .ng-lead {
+  margin-inline: auto;
+}
+.ng-notice-mark {
+  display: grid;
+  place-items: center;
+  inline-size: 64px;
+  block-size: 64px;
+  border-radius: 20px;
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-1);
+  color: var(--ng-brand);
+}
+.ng-notice-mark[data-tone="danger"] {
+  color: var(--ng-danger);
+}
+.ng-notice-code {
+  font-family: var(--ng-font-display);
+  font-weight: 700;
+  font-size: clamp(4.5rem, 3rem + 8vw, 9rem);
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(140deg, var(--ng-brand) 10%, var(--ng-aqua) 55%, #d4609b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.02em;
+}
+.dark .ng-notice-code {
+  background: linear-gradient(140deg, #8fd3ff, #c9ecff 50%, #ffb3d1);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.ng-notice .ng-hero-cta {
+  justify-content: center;
+}
+.ng-notice-ref {
+  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+}
+.ng-notice-wrap {
+  padding-block: clamp(32px, 7vw, 96px);
+}
+
+/* ---------- small-screen safety ------------------------------------------ */
+@media (max-width: 420px) {
+  .ng-content .ng-btn {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+    padding-block: 10px;
+  }
+  .ng-content .ng-hero-cta > .ng-btn {
+    flex: 1 1 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  a.ng-tile,
+  .ng-post,
+  .ng-doc,
+  .ng-more svg {
+    transition: none;
+  }
+  a.ng-tile:hover,
+  .ng-post:hover,
+  .ng-post:focus-within,
+  .ng-doc:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .ng-tile,
+  .ng-toc,
+  .ng-legal-intro,
+  .ng-empty {
+    background: var(--ng-glass-strong);
+  }
+}
+
+@media (forced-colors: active) {
+  .ng-numbered .ng-index,
+  .ng-chapter .ng-index,
+  .ng-notice-code {
+    color: CanvasText;
+    -webkit-text-stroke: 0;
+    background: none;
+  }
+}

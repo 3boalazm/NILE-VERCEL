@@ -1,4 +1,7 @@
-import { DossierNav } from "@/components/care-atlas/dossier-nav";
+import { ProductChapters } from "@/components/glass/product-chapters";
+import { SectionHead } from "@/components/glass/sections";
+import { getCatalogGlassCopy } from "@/lib/i18n/catalog-glass";
+import "../../../glass-catalog.css";
 import { getDiscoveryCopy } from "@/lib/i18n/discovery";
 import { getExperienceCopy } from "@/lib/i18n/experience";
 import { safeJsonLd } from "@/lib/products/structured-data";
@@ -17,7 +20,7 @@ import { buildBreadcrumbJsonLd, buildProductJsonLd } from "@/lib/seo/product-sch
 import { TrackViewItem } from "@/components/npf/analytics-events";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ChevronLeftIcon, CheckIcon, FileDownIcon } from "lucide-react";
+import { CheckIcon, FileDownIcon } from "lucide-react";
 
 import {
   isValidLocale,
@@ -32,10 +35,9 @@ import {
 } from "@/lib/products";
 import { readCms, readCmsList } from "@/lib/cms/read";
 import { CatalogUnavailable } from "@/components/npf/catalog-unavailable";
-import { careAtlasImage } from "@/lib/products/presentation";
+import { careAtlasImage, productTone } from "@/lib/products/presentation";
 import { getCareAtlasCopy } from "@/lib/i18n/care-atlas";
 import { NPFProductThumbnailGallery } from "@/components/npf/product-thumbnail-gallery";
-import { ProductStatusBadge } from "@/components/npf/product-status-badge";
 import { NPFProductGrid } from "@/components/npf/product-grid";
 import { ProductAddToCart } from "@/components/npf/product-add-to-cart";
 import { WishlistButton } from "@/components/npf/wishlist-button";
@@ -100,7 +102,7 @@ export default async function ProductDetailPage({
   const { locale: localeParam, slug } = await params;
   const loaded = await loadProduct(localeParam, slug);
   if (loaded.status === "unavailable") {
-    return <CatalogUnavailable locale={loaded.locale} className="ca-section-pad" />;
+    return <div className="ng-wrap ng-section"><CatalogUnavailable locale={loaded.locale} /></div>;
   }
   const { locale, raw, product } = loaded;
   const dictionary = getDictionary(locale);
@@ -168,29 +170,32 @@ export default async function ProductDetailPage({
   });
 
   const c = getCareAtlasCopy(locale),
+    g = getCatalogGlassCopy(locale),
     d = dictionary;
+  const showReferences = Boolean(
+    canExposeField(raw, "clinicalReferences", "PRODUCT_PAGE") &&
+      product.clinicalReferences?.length,
+  );
+  const compositionLabel =
+    product.categorySlug === "medical-devices" ? c.specifications : c.composition;
   const anchors = [
     ...(sections.benefits ? [{ id: "overview", label: d.product.keyBenefits }] : []),
     ...(sections.composition && product.composition?.length
-      ? [
-          {
-            id: "composition",
-            label:
-              product.categorySlug === "medical-devices"
-                ? c.specifications
-                : c.composition,
-          },
-        ]
+      ? [{ id: "composition", label: compositionLabel }]
       : []),
     ...(sections.usage ? [{ id: "usage", label: c.usage }] : []),
-    ...(sections.science ||
-    (canExposeField(raw, "clinicalReferences", "PRODUCT_PAGE") && product.clinicalReferences?.length)
+    ...(sections.science || showReferences
       ? [{ id: "evidence", label: d.product.scientificInfo }]
       : []),
     ...(product.downloadUrl ? [{ id: "downloads", label: c.leaflet }] : []),
+    ...(sections.existingFaq && product.faq?.length
+      ? [{ id: "faq", label: d.product.faqTitle }]
+      : []),
   ];
+  const inquiryHref = `${base}/contact?product=${encodeURIComponent(product.slug)}`;
+  const priced = typeof product.price === "number";
   return (
-    <article className="ca-pdp ca-section-pad">
+    <article className="ng-pdp">
       {/* F-70: GA4 view_item beacon (queues pre-consent, transmits post). */}
       <TrackViewItem
         slug={product.slug}
@@ -213,152 +218,158 @@ export default async function ProductDetailPage({
           dangerouslySetInnerHTML={{ __html: safeJsonLd(faqJsonLd) }}
         />
       ) : null}
-      <nav aria-label="Breadcrumb" className="ca-breadcrumb">
-        <Link href={base}>{d.nav.home}</Link>
-        <ChevronLeftIcon
-          size={14}
-          className="rtl:rotate-180"
-          aria-hidden="true"
-        />
-        <Link href={`${base}/products`}>{d.products.pageTitle}</Link>
-        {category && (
-          <>
-            <ChevronLeftIcon
-              size={14}
-              className="rtl:rotate-180"
-              aria-hidden="true"
-            />
-            {/* Text only. A category filter is not a canonical parent. */}
-            <span>{category.name}</span>
-          </>
-        )}
-        <span aria-current="page">{heading}</span>
-      </nav>
-      <div className="ca-pdp-cover">
-        <div className="ca-pdp-gallery">
-          <div className="ca-section-index">
-            <span className="ca-mono">NPF / PRODUCT FILE</span>
-            <ProductStatusBadge status={product.status} dictionary={d} />
-          </div>
-          <NPFProductThumbnailGallery
-            images={[
-              careAtlasImage(product),
-              product.image,
-              ...(product.gallery ?? []),
-            ].filter((src, i, all) => all.indexOf(src) === i)}
-            alt={imageAlt}
-            dir={getDirection(locale)}
-          />
-        </div>
-        <div className="ca-pdp-summary">
-          {category && (
-            <Link
-              className="ca-eyebrow"
-              href={`${base}/products?category=${category.slug}`}
-            >
-              {category.name}
-            </Link>
-          )}
-          <h1 dir={locale === "ar" ? "rtl" : "ltr"}>{heading}</h1>
-          {locale === "ar" && latinName && latinName !== heading && (
-            <p className="ca-pdp-note" lang="en" dir="ltr">
-              {latinName}
-            </p>
-          )}
-          {locale === "en" && product.nameArabic && product.nameArabic !== heading && (
-            <p className="ca-pdp-note" lang="ar" dir="rtl">
-              {product.nameArabic}
-            </p>
-          )}
-          {intro && <p className="ca-pdp-lead">{intro}</p>}
-          <div className="ca-pdp-price">
-            {typeof product.price === "number" ? (
-              <>
-                <strong>
-                  {product.price} {locale === "en" ? "EGP" : "ج.م"}
-                </strong>
-                <span>
-                  {product.priceSource === "demo" ? ui.priceDemo : ui.priceLive}
-                </span>
-              </>
-            ) : (
-              <p>{ui.priceUnavailable}</p>
+      <div className="ng-wrap">
+        <nav aria-label="Breadcrumb" className="ng-crumbs">
+          <ol>
+            <li>
+              <Link href={base}>{d.nav.home}</Link>
+            </li>
+            <li>
+              <Link href={`${base}/products`}>{d.products.pageTitle}</Link>
+            </li>
+            {category && (
+              <li>
+                {/* Text only. A category filter is not a canonical parent. */}
+                <span>{category.name}</span>
+              </li>
             )}
-          </div>
-          <div className="ca-pdp-actions">
-            <Link
-              href={`${base}/contact?product=${encodeURIComponent(product.slug)}`}
-              className="ca-solid-link"
-            >
-              {d.product.requestInfoCta} ↗
-            </Link>
-            <ProductAddToCart
-              product={{
-                id: product.id,
-                slug: product.slug,
-                name: product.name,
-                image: product.image,
-                price: product.price,
-                priceSource: product.priceSource,
-                currency: product.currency,
-                sku: product.sku,
-                status: product.status,
-              }}
-              labels={{
-                add: d.product.addToCart,
-                added: d.product.addedToCart,
-                unavailable: d.product.unavailableForOrder,
-                error: d.product.addToCartError,
-                quantity: d.product.quantity,
-              }}
-            />
-            <WishlistButton
-              slug={product.slug}
-              variant="inline"
-              addLabel={d.product.addToWishlist}
-              removeLabel={d.product.removeFromWishlist}
+            <li>
+              <span aria-current="page">{heading}</span>
+            </li>
+          </ol>
+        </nav>
+        <div className="ng-pdp-cover">
+          <div className="ng-pdp-gallery" data-tone={productTone(product)}>
+            {product.status !== "active" && (
+              <span className="ng-pill ng-pdp-status">{d.status[product.status]}</span>
+            )}
+            <NPFProductThumbnailGallery
+              images={[
+                careAtlasImage(product),
+                product.image,
+                ...(product.gallery ?? []),
+              ].filter((src, i, all) => all.indexOf(src) === i)}
+              alt={imageAlt}
+              dir={getDirection(locale)}
             />
           </div>
-          <ProductCommercialFacts
-            facts={facts}
-            dictionary={d.product}
-            productsHref={`${base}/products`}
-          />
-          <p className="ca-pdp-note">{c.medicalNote}</p>
+          <div className="ng-pdp-summary ng-glass">
+            {category && (
+              <Link
+                className="ng-eyebrow ng-pdp-cat"
+                href={`${base}/products?category=${category.slug}`}
+              >
+                {category.name}
+              </Link>
+            )}
+            <h1 className="ng-pdp-title" dir={locale === "ar" ? "rtl" : "ltr"}>
+              {heading}
+            </h1>
+            {locale === "ar" && latinName && latinName !== heading && (
+              <p className="ng-pdp-alt" lang="en" dir="ltr">
+                {latinName}
+              </p>
+            )}
+            {locale === "en" && product.nameArabic && product.nameArabic !== heading && (
+              <p className="ng-pdp-alt" lang="ar" dir="rtl">
+                {product.nameArabic}
+              </p>
+            )}
+            {intro && <p className="ng-pdp-lead">{intro}</p>}
+            <div className="ng-pdp-price" data-priced={priced || undefined}>
+              {priced ? (
+                <>
+                  <p className="ng-price ng-num">
+                    {product.price!.toLocaleString("en-US")}
+                    <small>{locale === "en" ? "EGP" : "ج.م"}</small>
+                  </p>
+                  <p className="ng-pdp-price-note">
+                    {product.priceSource === "demo" ? ui.priceDemo : ui.priceLive}
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="ng-pdp-price-na">{ui.priceUnavailable}</p>
+                  <p className="ng-pdp-price-note">{g.priceOnRequestBody}</p>
+                </>
+              )}
+            </div>
+            <div className="ng-pdp-actions">
+              <div className="ng-pdp-buy">
+                <ProductAddToCart
+                  product={{
+                    id: product.id,
+                    slug: product.slug,
+                    name: product.name,
+                    image: product.image,
+                    price: product.price,
+                    priceSource: product.priceSource,
+                    currency: product.currency,
+                    sku: product.sku,
+                    status: product.status,
+                  }}
+                  labels={{
+                    add: d.product.addToCart,
+                    added: d.product.addedToCart,
+                    unavailable: d.product.unavailableForOrder,
+                    error: d.product.addToCartError,
+                    quantity: d.product.quantity,
+                  }}
+                />
+                <WishlistButton
+                  slug={product.slug}
+                  variant="inline"
+                  className="ng-pdp-wish"
+                  addLabel={d.product.addToWishlist}
+                  removeLabel={d.product.removeFromWishlist}
+                />
+              </div>
+              <Link
+                href={inquiryHref}
+                className={`ng-btn ${priced ? "ng-btn-ghost" : "ng-btn-primary"} ng-pdp-inquiry`}
+              >
+                {d.product.requestInfoCta}
+                <span className="ng-arrow" aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="ng-pdp-facts">
+              <ProductCommercialFacts
+                facts={facts}
+                dictionary={d.product}
+                productsHref={`${base}/products`}
+              />
+            </div>
+            <p className="ng-pdp-medical">{c.medicalNote}</p>
+          </div>
         </div>
       </div>
-      <div className="ca-product-dossier">
-        <DossierNav
+      <div className="ng-wrap ng-pdp-dossier" data-dossier data-has-index={anchors.length > 0 || undefined}>
+        <ProductChapters
           anchors={anchors}
           label={getDiscoveryCopy(locale).reading}
+          title={g.chaptersTitle}
         />
-        <div className="ca-dossier-content">
+        <div className="ng-pdp-chapters">
           {sections.benefits && (
-          <section id="overview" className="ca-dossier-section">
-            <h2>{d.product.keyBenefits}</h2>
-            <ul className="ca-benefit-list">
-              {product.keyBenefits.map((benefit) => (
-                <li key={benefit}>
-                  <CheckIcon size={18} aria-hidden="true" />
-                  <span>{benefit}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
+            <section id="overview" className="ng-pdp-section ng-glass">
+              <h2 className="ng-h3">{d.product.keyBenefits}</h2>
+              <ul className="ng-pdp-benefits">
+                {product.keyBenefits.map((benefit) => (
+                  <li key={benefit}>
+                    <CheckIcon size={18} aria-hidden="true" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
           {sections.composition && product.composition?.length ? (
-            <section id="composition" className="ca-dossier-section">
-              <h2>
-                {product.categorySlug === "medical-devices"
-                  ? c.specifications
-                  : c.composition}
-              </h2>
+            <section id="composition" className="ng-pdp-section ng-glass">
+              <h2 className="ng-h3">{compositionLabel}</h2>
               {canExposeStatement(raw, product.compositionNote, "PRODUCT_PAGE") && (
-                <p className="ca-composition-context">
-                  {product.compositionNote}
-                </p>
+                <p className="ng-body">{product.compositionNote}</p>
               )}
-              <table className="ca-dossier-table">
+              <table className="ng-spec-table">
                 <tbody>
                   {product.composition.map((item) => (
                     <tr key={item.label}>
@@ -371,38 +382,35 @@ export default async function ProductDetailPage({
             </section>
           ) : null}
           {sections.usage && (
-            <section id="usage" className="ca-dossier-section">
-              <h2>{c.usage}</h2>
-              <p className="ca-dossier-prose">{product.usage}</p>
+            <section id="usage" className="ng-pdp-section ng-glass">
+              <h2 className="ng-h3">{c.usage}</h2>
+              <p className="ng-pdp-prose">{product.usage}</p>
             </section>
           )}
-          {(sections.science ||
-            (canExposeField(raw, "clinicalReferences", "PRODUCT_PAGE") && product.clinicalReferences?.length)) && (
-            <section id="evidence" className="ca-dossier-section">
-              <h2>{d.product.scientificInfo}</h2>
+          {(sections.science || showReferences) && (
+            <section id="evidence" className="ng-pdp-section ng-glass">
+              <h2 className="ng-h3">{d.product.scientificInfo}</h2>
               {sections.science && product.scientificInfo && (
-                <details className="ca-long-read">
-                  <summary>
-                    {locale === "ar"
-                      ? "اقرأ المعلومات العلمية كاملة"
-                      : "Read the full scientific information"}
-                    <span aria-hidden="true">+</span>
-                  </summary>
-                  <p className="ca-dossier-prose">{product.scientificInfo}</p>
-                </details>
+                <div className="ng-acc">
+                  <details>
+                    <summary>{g.readFullScience}</summary>
+                    <p className="ng-pdp-prose">{product.scientificInfo}</p>
+                  </details>
+                </div>
               )}
-              {canExposeField(raw, "clinicalReferences", "PRODUCT_PAGE") && product.clinicalReferences?.length ? (
+              {showReferences ? (
                 <>
-                  <h3>{d.product.referencesTitle}</h3>
-                  <ol className="ca-reference-list">
-                    {product.clinicalReferences.map((ref) => (
+                  <h3 className="ng-pdp-subhead">{d.product.referencesTitle}</h3>
+                  <ol className="ng-pdp-refs">
+                    {product.clinicalReferences!.map((ref) => (
                       <li key={ref.title}>
-                        <strong>{ref.title}</strong>
-                        <small>
+                        <strong dir="auto">{ref.title}</strong>
+                        <small dir="auto">
                           {[ref.authors, ref.year].filter(Boolean).join(" · ")}
                         </small>
                         {ref.url && /^https?:\/\//.test(ref.url) && (
                           <a
+                            className="ng-link"
                             href={ref.url}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -418,17 +426,19 @@ export default async function ProductDetailPage({
             </section>
           )}
           {product.downloadUrl && (
-            <section id="downloads" className="ca-dossier-section">
-              <h2>{d.product.downloads}</h2>
+            <section id="downloads" className="ng-pdp-section ng-glass">
+              <h2 className="ng-h3">{d.product.downloads}</h2>
               <a
                 href={product.downloadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="ca-dossier-download"
+                className="ng-pdf"
               >
-                <FileDownIcon size={30} aria-hidden="true" />
-                <span>
-                  {d.product.downloadLeaflet}
+                <span className="ng-pdf-icon" aria-hidden="true">
+                  <FileDownIcon size={22} />
+                </span>
+                <span className="ng-pdf-text">
+                  <strong>{d.product.downloadLeaflet}</strong>
                   <small>{c.newWindow}</small>
                 </span>
                 <span aria-hidden="true">↗</span>
@@ -436,42 +446,55 @@ export default async function ProductDetailPage({
             </section>
           )}
           {sections.existingFaq && product.faq?.length ? (
-            <section className="ca-dossier-section">
-              <h2>{d.product.faqTitle}</h2>
-              {product.faq.map((faq) => (
-                <details className="ca-long-read" key={faq.question}>
-                  <summary>
-                    {faq.question}
-                    <span aria-hidden="true">+</span>
-                  </summary>
-                  <p>{faq.answer}</p>
-                </details>
-              ))}
+            <section id="faq" className="ng-pdp-section ng-glass">
+              <h2 className="ng-h3">{d.product.faqTitle}</h2>
+              <div className="ng-acc">
+                {product.faq.map((faq) => (
+                  <details key={faq.question}>
+                    <summary>{faq.question}</summary>
+                    <p>{faq.answer}</p>
+                  </details>
+                ))}
+              </div>
             </section>
           ) : null}
+          <aside className="ng-pdp-ask" aria-labelledby="pdp-ask-title">
+            <div>
+              <h2 id="pdp-ask-title" className="ng-h3">
+                {g.inquiryHeading}
+              </h2>
+              <p className="ng-body">{g.inquiryBody}</p>
+            </div>
+            <Link href={inquiryHref} className="ng-btn ng-btn-primary">
+              {c.askProduct}
+              <span className="ng-arrow" aria-hidden="true">↗</span>
+            </Link>
+          </aside>
         </div>
       </div>
       {relatedArticles.length > 0 && (
-        <section className="ca-related">
-          <h2>{dictionary.blogs.pageTitle}</h2>
-          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <section className="ng-wrap ng-section-tight" aria-labelledby="pdp-articles">
+          <div className="ng-stack" style={{ ["--ng-stack" as string]: "12px", marginBlockEnd: 24 }}>
+            <span className="ng-eyebrow">{g.relatedArticlesEyebrow}</span>
+            <h2 id="pdp-articles" className="ng-h3">
+              {dictionary.blogs.pageTitle}
+            </h2>
+          </div>
+          <ul className="ng-pdp-articles">
             {relatedArticles.map((article) => (
               <li key={article.id}>
-                <Link
-                  href={`/${locale}/blogs/${article.slug}`}
-                  className="flex h-full flex-col gap-2 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/30"
-                >
+                <Link href={`/${locale}/blogs/${article.slug}`} className="ng-pdp-article ng-glass">
                   <span
-                    className={`w-fit rounded-full border px-2.5 py-0.5 text-[11px] font-medium ${TIER_BADGE_CLASS[article.evidenceTier]}`}
+                    className={`ng-pdp-tier rounded-full border ${TIER_BADGE_CLASS[article.evidenceTier]}`}
                   >
                     {evidenceTierLabel(article.evidenceTier, dictionary)}
                   </span>
-                  <span className="font-medium leading-snug text-balance">
-                    {article.title}
-                  </span>
-                  <span className="mt-auto text-xs text-muted-foreground">
-                    {article.source.journal} · {article.source.year}
-                  </span>
+                  <strong>{article.title}</strong>
+                  <small>
+                    {[article.source.journal, article.source.year]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </small>
                 </Link>
               </li>
             ))}
@@ -479,11 +502,13 @@ export default async function ProductDetailPage({
         </section>
       )}
       {relatedProducts.length > 0 && (
-        <section className="ca-related">
-          <div className="ca-section-index">
-            <span className="ca-mono">CONTINUE EXPLORING</span>
-          </div>
-          <h2>{d.product.relatedTitle}</h2>
+        <section className="ng-wrap ng-section" aria-labelledby="pdp-related">
+          <SectionHead
+            eyebrow={g.relatedProductsEyebrow}
+            title={d.product.relatedTitle}
+            id="pdp-related"
+            split={false}
+          />
           <NPFProductGrid
             products={relatedProducts}
             locale={locale}

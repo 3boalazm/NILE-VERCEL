@@ -22,8 +22,6 @@ import { CheckCircle2Icon, Loader2Icon } from "lucide-react"
 import { confirmEmailAddressChange, verifyCustomerAccount } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 
 type AuthDictionary = Dictionary["auth"]
@@ -83,27 +81,29 @@ export function NPFVerifyTokenForm({
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="font-heading text-2xl font-semibold">{title}</h1>
-        <p className="text-sm text-muted-foreground">{body}</p>
+    <div className="ngc-form">
+      <div className="ngc-stack text-center" style={{ ["--ngc-gap" as string]: "10px" }}>
+        <h1 className="ngc-title ngc-title-sm">{title}</h1>
+        <p className="ngc-sub mx-auto">{body}</p>
       </div>
 
       {done ? (
-        <div className="flex flex-col gap-4 text-center" role="status">
-          <CheckCircle2Icon className="mx-auto size-8 text-primary" aria-hidden="true" />
-          <p className="text-sm leading-relaxed text-muted-foreground">{successCopy}</p>
+        <div className="ngc-form text-center" role="status">
+          <span className="ngc-empty-icon justify-self-center" data-tone="ok" aria-hidden="true">
+            <CheckCircle2Icon />
+          </span>
+          <p className="ngc-sub mx-auto">{successCopy}</p>
           <Link
             href={`${base}/login`}
-            className={cn(ctaButtonVariants({ variant: "onLight" }), "justify-center")}
+            className="ng-btn ng-btn-primary ngc-block"
           >
             {dictionary.loginSubmit}
           </Link>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="ngc-form">
           {error && (
-            <p id="verify-token-error" className="text-sm text-destructive" role="alert">
+            <p id="verify-token-error" className="ngc-alert" role="alert">
               {error}
             </p>
           )}
@@ -111,7 +111,7 @@ export function NPFVerifyTokenForm({
             type="submit"
             disabled={submitting || !token}
             aria-describedby={error ? "verify-token-error" : undefined}
-            className={cn(ctaButtonVariants({ variant: "onLight" }), "w-full justify-center gap-2")}
+            className="ng-btn ng-btn-primary ng-btn-lg ngc-block"
           >
             {submitting && <Loader2Icon className="size-4 animate-spin" aria-hidden="true" />}
             {submitting ? dictionary.verifyTokenSubmitting : dictionary.verifyTokenSubmit}
@@ -120,7 +120,7 @@ export function NPFVerifyTokenForm({
               way back to sign-in is always offered. */}
           <Link
             href={`${base}/login`}
-            className="text-center text-sm font-medium text-muted-foreground hover:text-foreground hover:underline"
+            className="ngc-quiet justify-self-center"
           >
             {dictionary.forgotPasswordBackToLogin}
           </Link>

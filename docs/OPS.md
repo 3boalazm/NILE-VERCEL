@@ -491,3 +491,77 @@ Rollback today means redeploying the previous commit; keep the previous
 `vercel` deployment id at hand before promoting a new one.
 
 ---
+
+---
+
+## 11. Fresh database → full working state (Payload + Vendure)
+
+Everything the storefront needs from the databases is code in this repo; nothing
+depends on `/tmp` files or on state typed into an admin UI. Order matters.
+
+### 11.1 Local / sandbox (no Docker): one command
+
+```bash
+npm ci
+npm run stack:setup      # = bash scripts/setup-local-stack.sh, idempotent
+set -a; . ./.env; set +a; npm run dev      # storefront on :3000
+curl localhost:3000/api/health             # status "ok", catalog + commerce healthy
+```
+
+`stack:setup` starts an embedded Postgres (a throw-away non-root user when run
+as root), creates **two** databases (`npf_payload` for Payload, `npf` for
+Vendure), generates a git-ignored `.env` only if missing, seeds Payload, builds
+and starts the Vendure **server and worker**, provisions Vendure and runs the
+audit. State lives in `NPF_STACK_DIR` (default `/tmp/npf-stack`). `APP_ENV` must
+be exactly `dev` locally (GraphiQL and the dev-only affordances key off it).
+
+### 11.2 Any environment (hosted Postgres, CI, production): the individual steps
+
+| # | Command | What it does | Idempotent |
+|---|---|---|---|
+| 1 | `npm run seed` | Payload tables + categories, products, media, articles, first admin | yes (`-- --update` re-syncs content) |
+| 2 | `RUN_MIGRATIONS=true node dist/index.js` (after `npm run vendure:build`) | Vendure schema via the committed TypeORM migrations; the default channel/superadmin are created on first boot | yes |
+| 3 | `node dist/index-worker.js` | **mandatory** — runs the search-index / e-mail queues (§2) | – |
+| 4 | `node scripts/seed-vendure-catalog.mjs` | zone Egypt + EG, channel (EGP, ar+en, prices include tax), Standard tax category + 14 % VAT, one product + variant per catalog entry, featured images, awaited reindex | yes (`--sync` re-aligns price/SKU/enabled) |
+| 5 | `node scripts/seed-vendure-demo.cjs` | `manual-settlement` payment method, the three shipping methods (Middle East Courier door-to-door / MECS branch drop-off / company pickup), role `order-operations` | yes (`--sync` re-aligns names/bindings) |
+| 6 | `npm run vendure:audit` | read-only PASS/GAP report of 24+ checks; exit 1 on any gap | – |
+
+The catalog the Vendure seeder reads is `scripts/data/vendure-catalog.json`,
+generated from `mock-repository.ts` by `npm run catalog:dump` and guarded by a
+unit test (`src/lib/products/vendure-catalog-file.test.ts`) so it cannot drift.
+
+Production database that already has the older schema: deploy with
+`RUN_MIGRATIONS=true` once. Migration `…-vendure-3-8-schema-catchup` brings a
+schema created by an older Vendure up to 3.8 (it de-duplicates translation rows
+before adding the new unique constraints). Take a backup first (§5).
+
+### 11.3 Data-integrity rules the provisioning follows
+
+* Prices come only from the catalog file. A product with no approved price
+  (currently `proxeed-men`, `proxeed-women-inositol`) is created **disabled** at
+  price 0, so the Shop API hides it and the storefront shows it as unpriced.
+  The storefront also treats a live price of 0 as unavailable
+  (`src/lib/products/catalog-price.ts`).
+* No stock numbers are invented: variants do not track inventory. Real counts
+  are an owner input (below).
+* No product copy is written to Vendure; descriptions live in Payload.
+* `MOCK_CATALOG_FALLBACK` and `NPF_PREVIEW_MODE` stay `0` in every production
+  configuration.
+
+### 11.4 Verification commands (all run against the live stack)
+
+```bash
+node scripts/probe-conversion-flow.cjs   # guest cart → shipping → manual-settlement → PaymentAuthorized
+node scripts/probe-admin-settle.cjs      # admin settles the payment → PaymentSettled
+node scripts/verify-fixes.mjs            # 45-defect regression harness (storefront on :3000)
+```
+
+### 11.5 Needs owner input (provisioning cannot invent these)
+
+* Prices for **Proxeed Men** and **Proxeed Women Inositol** (approved price list).
+* Real stock quantities per SKU (until then variants are untracked/orderable).
+* Confirmation that listed prices are VAT-inclusive (channel is configured as
+  *prices include tax* with a 14 % product rate; shipping is zero-rated).
+* The 2026 Middle East Courier price-list PDF to re-verify the zone table
+  (`src/plugins/npf-shipping.ts`).
+* Production SMTP credentials, `SUPERADMIN_PASSWORD`, `SEED_KEY`, hosted DB URL.

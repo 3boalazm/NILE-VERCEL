@@ -1,14 +1,18 @@
 import Link from "next/link";
-import { Reveal } from "./motion/reveal";
 import Image from "next/image";
+import { Reveal } from "./motion/reveal";
 import type { Product } from "@/lib/products";
 import type { Locale } from "@/lib/i18n/config";
 import type { ClientSafeDictionary } from "@/lib/i18n/dictionaries";
 import { getExperienceCopy } from "@/lib/i18n/experience";
-import { careAtlasImage } from "@/lib/products/presentation";
+import { productTone } from "@/lib/products/presentation";
 import { AddToCartButton } from "./add-to-cart-button";
 import { WishlistButton } from "./wishlist-button";
 
+/**
+ * Glass product card. The whole card is one click target (the title link's
+ * ::after covers it); wishlist and quick-add sit above that layer.
+ */
 export function NPFProductCard({
   priority = false,
   product: p,
@@ -29,66 +33,56 @@ export function NPFProductCard({
 }) {
   const href = `/${locale}/products/${p.slug}`,
     ui = getExperienceCopy(locale),
-    src = careAtlasImage(p),
     Heading = headingLevel;
   return (
     <Reveal
       as="article"
-      className="ca-catalog-card"
+      className="ng-card"
       delay={(accentIndex % 3) * 0.06}
+      data-tone={productTone(p)}
+      data-cat={p.categorySlug}
+      data-testid="product-card"
     >
-      <div className="ca-card-meta">
-        <span className="ca-mono">
-          {String(accentIndex + 1).padStart(2, "0")} / PRODUCT FILE
-        </span>
-        <span>{categoryName}</span>
-      </div>
-      <Link href={href} className="ca-card-art" aria-label={p.name}>
-        {src && (
+      <div className="ng-card-media">
+        {p.image && (
           <Image
-            src={src}
+            src={p.image}
             alt=""
             fill
-            sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 85vw"
-            className="object-contain"
+            sizes="(min-width:1024px) 22vw, (min-width:640px) 45vw, 90vw"
             priority={priority}
           />
         )}
-        <span className="ca-card-circle" aria-hidden="true" />
-        <span className="ca-card-arrow" aria-hidden="true">
-          ↗
-        </span>
-      </Link>
-      <div className="ca-card-copy">
-        <Heading>
+      </div>
+      {p.status !== "active" && (
+        <span className="ng-pill ng-card-badge">{d.status[p.status]}</span>
+      )}
+      <WishlistButton
+        variant="inline"
+        className="ng-card-wish ng-wish"
+        slug={p.slug}
+        addLabel={d.product.addToWishlist}
+        removeLabel={d.product.removeFromWishlist}
+      />
+      <div className="ng-card-body">
+        {categoryName && <span className="ng-eyebrow">{categoryName}</span>}
+        <Heading className="ng-card-title">
           <Link href={href}>{p.name}</Link>
         </Heading>
-        <p>{p.shortDescription}</p>
-        {p.availableForm && <small>{p.availableForm}</small>}
-        <div className="ca-card-price">
-          <span>{d.status[p.status]}</span>
-          <span>
+        {p.availableForm && <p className="ng-card-sub">{p.availableForm}</p>}
+        <div className="ng-card-foot">
+          <span className="ng-price ng-num">
             {typeof p.price === "number" ? (
               <>
-                {p.priceSource === "demo" && <small>{ui.priceDemo}</small>}
-                {p.price} {locale === "en" ? "EGP" : "ج.م"}
+                {// Western digits: same as cart, checkout and the shipping table
+                p.price.toLocaleString("en-US", { useGrouping: true })}
+                <small>{locale === "en" ? "EGP" : "ج.م"}</small>
+                {p.priceSource === "demo" && <small> · {ui.priceDemo}</small>}
               </>
             ) : (
-              d.product.priceOnRequest
+              <span className="ng-price-na">{d.product.priceOnRequest}</span>
             )}
           </span>
-        </div>
-        <div className="ca-card-actions">
-          <Link href={href} className="ca-solid-link">
-            {d.product.viewDetails}
-            <span aria-hidden="true">↗</span>
-          </Link>
-          <WishlistButton
-            variant="inline"
-            slug={p.slug}
-            addLabel={d.product.addToWishlist}
-            removeLabel={d.product.removeFromWishlist}
-          />
           <AddToCartButton
             product={p}
             tone="onSurface"

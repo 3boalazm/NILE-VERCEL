@@ -5,7 +5,7 @@ import { isValidLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getActiveCustomer } from "@/lib/auth/active-customer";
 import { NPFLoginForm } from "@/components/npf/login-form";
-import { AccessFrame } from "@/components/care-atlas/access-frame";
+import { AccessPanel } from "@/components/glass/access-panel";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
 export async function generateMetadata({
@@ -37,11 +37,12 @@ export default async function LoginPage({
   if (customer) redirect(`/${locale}/account`);
 
   return (
-    <AccessFrame
+    <AccessPanel
+      eyebrow={dictionary.siteName}
       title={dictionary.auth.loginTitle}
       subtitle={dictionary.auth.loginSubtitle}
     >
       <NPFLoginForm locale={locale} dictionary={dictionary.auth} />
-    </AccessFrame>
+    </AccessPanel>
   );
 }

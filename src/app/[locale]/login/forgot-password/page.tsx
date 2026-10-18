@@ -4,7 +4,7 @@ import type { Metadata } from "next"
 import { isValidLocale, type Locale } from "@/lib/i18n/config"
 import { getDictionary } from "@/lib/i18n/dictionaries"
 import { NPFForgotPasswordForm } from "@/components/npf/forgot-password-form"
-import { Reveal } from "@/components/npf/motion/reveal"
+import { AccessPanel } from "@/components/glass/access-panel"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 
 export async function generateMetadata({
@@ -41,16 +41,12 @@ export default async function ForgotPasswordPage({
   const dictionary = getDictionary(locale)
 
   return (
-    <section className="bg-anti-flash-white dark:bg-card">
-      <Reveal className="mx-auto flex max-w-md flex-col gap-6 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="font-heading text-2xl font-semibold">{dictionary.auth.forgotPasswordTitle}</h1>
-          <p className="text-sm text-muted-foreground">{dictionary.auth.forgotPasswordSubtitle}</p>
-        </div>
-        <div className="rounded-2xl border border-border bg-background p-6">
-          <NPFForgotPasswordForm locale={locale} dictionary={dictionary.auth} />
-        </div>
-      </Reveal>
-    </section>
+    <AccessPanel
+      eyebrow={dictionary.siteName}
+      title={dictionary.auth.forgotPasswordTitle}
+      subtitle={dictionary.auth.forgotPasswordSubtitle}
+    >
+      <NPFForgotPasswordForm locale={locale} dictionary={dictionary.auth} />
+    </AccessPanel>
   )
 }

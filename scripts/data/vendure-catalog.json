@@ -1,0 +1,82 @@
+[
+  {
+    "slug": "proxeed-plus",
+    "sku": "PXD-PLS-001",
+    "name": "Proxeed Plus",
+    "nameArabic": "بروكسيد بلس",
+    "category": "supplements",
+    "status": "active",
+    "price": 2550,
+    "image": "/products/proxeed-plus-hero.webp"
+  },
+  {
+    "slug": "proxeed-men",
+    "sku": "PXD-MEN-001",
+    "name": "Proxeed Men",
+    "nameArabic": "بروكسيد رجال",
+    "category": "supplements",
+    "status": "launching_soon",
+    "price": null,
+    "image": "/products/proxeed-men.jpg"
+  },
+  {
+    "slug": "proxeed-women",
+    "sku": "PXD-WMN-001",
+    "name": "Proxeed Women",
+    "nameArabic": "بروكسيد نساء",
+    "category": "supplements",
+    "status": "active",
+    "price": 2550,
+    "image": "/products/proxeed-women-hero.webp"
+  },
+  {
+    "slug": "proxeed-women-inositol",
+    "sku": "PXD-WIN-001",
+    "name": "Proxeed Women Inositol",
+    "nameArabic": "بروكسيد نساء إينوزيتول",
+    "category": "supplements",
+    "status": "launching_soon",
+    "price": null,
+    "image": "/products/proxeed-women-inositol.jpg"
+  },
+  {
+    "slug": "proxerex",
+    "sku": "PXR-001",
+    "name": "Proxerex",
+    "nameArabic": "بروكس إيركس",
+    "category": "supplements",
+    "status": "active",
+    "price": 1790,
+    "image": "/products/proxerex-hero.webp"
+  },
+  {
+    "slug": "ellamuselle",
+    "sku": "ELM-001",
+    "name": "Ellamuselle",
+    "nameArabic": "إلاميوسيل",
+    "category": "supplements",
+    "status": "paused",
+    "price": 1200,
+    "image": "/products/ellamuselle-hero.webp"
+  },
+  {
+    "slug": "ca-mi-pulse-oximeter",
+    "sku": "CAMI-PO-001",
+    "name": "CA-MI Pulse Oximeter",
+    "nameArabic": "جهاز قياس تشبع الأكسجين CA-MI",
+    "category": "medical-devices",
+    "status": "active",
+    "price": 500,
+    "image": "/products/ca-mi-pulse-oximeter.jpg"
+  },
+  {
+    "slug": "ca-mi-ir-thermometer",
+    "sku": "CAMI-IRT-001",
+    "name": "CA-MI IR Thermometer",
+    "nameArabic": "ميزان حرارة بالأشعة تحت الحمراء CA-MI",
+    "category": "medical-devices",
+    "status": "active",
+    "price": 750,
+    "image": "/products/ca-mi-ir-thermometer.jpg"
+  }
+]

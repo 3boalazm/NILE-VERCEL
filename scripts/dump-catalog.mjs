@@ -1,14 +1,17 @@
-// Dumps the storefront's source-of-truth mock catalog (the same data
-// `npm run seed` pushes into Payload) into the JSON shape
-// scripts/seed-vendure-catalog.mjs consumes. Needed after any environment
-// rebuild (the /tmp catalog does not survive sandbox wipes).
+// Dumps the storefront's source-of-truth catalog (the same data `npm run seed`
+// pushes into Payload) into the JSON that scripts/seed-vendure-catalog.mjs
+// consumes. The committed copy lives at scripts/data/vendure-catalog.json (no
+// /tmp dependency); a unit test (scripts/vendure-catalog.test.ts) fails when it
+// drifts from mock-repository.ts, and this script regenerates it.
 //
-// Usage: node scripts/dump-catalog.mjs [outfile=/tmp/catalog.json]
+// Only fields that already exist in the repo are copied. `price` stays null for
+// products with no approved price — they are NEVER given a placeholder price.
+//
+// Usage: node scripts/dump-catalog.mjs [outfile=scripts/data/vendure-catalog.json]
 import { build } from "esbuild"
 import { pathToFileURL } from "url"
-import { writeFileSync } from "node:fs"
 
-const outfile = process.argv[2] || "/tmp/catalog.json"
+const outfile = process.argv[2] || "scripts/data/vendure-catalog.json"
 
 await build({
   stdin: {
@@ -17,9 +20,18 @@ await build({
       import { MockProductRepository } from "${process.cwd()}/src/lib/products/mock-repository";
       const repo = new MockProductRepository();
       const products = await repo.getAllProducts();
-      const catalog = products.map((p) => ({ slug: p.slug, sku: p.sku ?? p.slug + "-SKU", name: p.name, price: p.price }));
-      writeFileSync(process.argv[1] ?? "/tmp/catalog.json", JSON.stringify(catalog, null, 2));
-      console.log("dumped", catalog.length, "products");
+      const catalog = products.map((p) => ({
+        slug: p.slug,
+        sku: p.sku ?? null,
+        name: p.name,
+        nameArabic: p.nameArabic ?? null,
+        category: p.categorySlug,
+        status: p.status,
+        price: typeof p.price === "number" ? p.price : null,
+        image: p.image ?? null,
+      }));
+      writeFileSync(process.argv[1], JSON.stringify(catalog, null, 2) + "\\n");
+      console.log("dumped", catalog.length, "products ->", process.argv[1]);
     `,
     resolveDir: process.cwd(),
     loader: "ts",

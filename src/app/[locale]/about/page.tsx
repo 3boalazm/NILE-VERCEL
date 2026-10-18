@@ -1,12 +1,13 @@
 import Link from "next/link";
-import { EditorialVisual } from "@/components/care-atlas/editorial-visual";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getCareAtlasCopy } from "@/lib/i18n/care-atlas";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
-import { PageIntro, CareContact } from "@/components/care-atlas/sections";
+import { Reveal } from "@/components/npf/motion/reveal";
+import { PageIntro, ContactBand, SectionHead } from "@/components/glass/sections";
+import { EditorialFigure } from "@/components/glass/content";
 
 export async function generateMetadata({
   params,
@@ -31,82 +32,106 @@ export default async function AboutPage({
     c = getCareAtlasCopy(locale),
     base = `/${locale}`;
   return (
-    <>
+    <div className="ng-content">
       <PageIntro
-        index="NPF / OUR PERSPECTIVE"
+        eyebrow={a.pageSubtitle}
         title={a.pageTitle}
         accent={c.brandSub}
         body={c.perspectiveBody}
       />
-      <div className="ca-editorial-banner ca-section-pad">
-        <EditorialVisual kind="about" locale={locale} />
+
+      <div className="ng-wrap ng-band-tight">
+        <EditorialFigure kind="about" locale={locale} wide priority />
       </div>
-      <section className="ca-company-origin ca-section-pad">
-        <div>
-          <span className="ca-mono">ESTABLISHED IN EGYPT</span>
-          <strong className="ca-origin-year">2019</strong>
-          <Link href={`${base}/story`} className="ca-line-link">
-            {a.storyTitle}
-            <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
-        <div className="ca-company-prose">
-          {a.storyBody.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
+
+      <section className="ng-wrap ng-band" aria-labelledby="about-story">
+        <div className="ng-split">
+          <Reveal className="ng-fact">
+            <span className="ng-eyebrow">{a.storyTitle}</span>
+            <span className="ng-fact-value" aria-hidden="true">
+              2019
+            </span>
+            <h2 id="about-story" className="ng-h3">
+              {d.siteName}
+            </h2>
+            <p style={{ margin: 0 }}>
+              <Link href={`${base}/story`} className="ng-link">
+                {d.story.pageTitle}
+              </Link>
+            </p>
+          </Reveal>
+          <Reveal className="ng-prose-stack" delay={0.06}>
+            {a.storyBody.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </Reveal>
         </div>
       </section>
-      <section className="ca-principles ca-section-pad">
-        <div className="ca-section-index">
-          <span className="ca-mono">THE WAY WE WORK</span>
-          <span>{a.principlesEyebrow}</span>
-        </div>
-        <h2>{a.principlesTitle}</h2>
-        <ol>
+
+      <section className="ng-wrap ng-band" aria-labelledby="about-principles">
+        <SectionHead
+          eyebrow={a.principlesEyebrow}
+          title={a.principlesTitle}
+          id="about-principles"
+          split={false}
+        />
+        <ol className="ng-numbered" style={{ marginBlockStart: "clamp(24px, 4vw, 44px)" }}>
           {a.principles.map((principle, i) => (
-            <li key={principle.title}>
-              <span className="ca-mono">0{i + 1}</span>
-              <h3>{principle.title}</h3>
-              <p>{principle.description}</p>
-            </li>
+            <Reveal as="li" key={principle.title} delay={i * 0.06} className="ng-tile">
+              <span className="ng-index" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <h3 className="ng-h4">{principle.title}</h3>
+              <p className="ng-body">{principle.description}</p>
+            </Reveal>
           ))}
         </ol>
       </section>
-      <section className="ca-presence ca-presence-text ca-section-pad">
-        <div>
-          <span className="ca-mono">IN PERSON / IN THE FIELD</span>
-          <h2>{a.presenceTitle}</h2>
-          <p>{a.presenceSubtitle}</p>
-          <Link href={`${base}/contact`} className="ca-line-link">
-            {d.nav.contact}
-            <span aria-hidden="true">↗</span>
-          </Link>
-          <Link href={`${base}/careers`} className="ca-line-link">
-            {d.nav.careers}
-            <span aria-hidden="true">↗</span>
-          </Link>
+
+      <section className="ng-wrap ng-band">
+        <div className="ng-bento">
+          <Reveal className="span-6 ng-glass ng-pad ng-stack" style={{ ["--ng-stack" as string]: "14px" }}>
+            <h2 className="ng-eyebrow" style={{ margin: 0 }}>{a.visionTitle}</h2>
+            <p className="ng-statement">{a.visionBody}</p>
+          </Reveal>
+          <Reveal
+            className="span-6 ng-glass ng-pad ng-stack"
+            delay={0.06}
+            style={{ ["--ng-stack" as string]: "14px" }}
+          >
+            <h2 className="ng-eyebrow" style={{ margin: 0 }}>{a.missionTitle}</h2>
+            <p className="ng-statement">{a.missionBody}</p>
+          </Reveal>
+          <Reveal className="span-7 ng-glass ng-pad ng-stack" style={{ ["--ng-stack" as string]: "14px" }}>
+            <h2 className="ng-h3">{a.presenceTitle}</h2>
+            <p className="ng-body">{a.presenceSubtitle}</p>
+            <div className="ng-hero-cta">
+              <Link href={`${base}/contact`} className="ng-btn ng-btn-primary">
+                {d.nav.contact}
+                <span className="ng-arrow" aria-hidden="true">↗</span>
+              </Link>
+              <Link href={`${base}/careers`} className="ng-btn ng-btn-ghost">
+                {d.nav.careers}
+              </Link>
+            </div>
+          </Reveal>
+          <div className="span-5 ng-acc">
+            <details>
+              <summary>{d.quality.sourcingTitle}</summary>
+              <div>
+                <p className="ng-body">{a.manufacturingNote}</p>
+                <p style={{ marginBlockStart: 12 }}>
+                  <Link href={`${base}/quality-sourcing`} className="ng-link">
+                    {d.quality.pageTitle}
+                  </Link>
+                </p>
+              </div>
+            </details>
+          </div>
         </div>
       </section>
-      <section className="ca-company-statements ca-section-pad">
-        {[
-          { title: a.visionTitle, body: a.visionBody },
-          { title: a.missionTitle, body: a.missionBody },
-        ].map((s) => (
-          <div key={s.title}>
-            <h2>{s.title}</h2>
-            <p>{s.body}</p>
-          </div>
-        ))}
-        <details className="ca-long-read">
-          <summary>
-            {d.quality.sourcingTitle}
-            <span aria-hidden="true">+</span>
-          </summary>
-          <p>{a.manufacturingNote}</p>
-          <Link href={`${base}/quality-sourcing`}>{d.quality.pageTitle} ↗</Link>
-        </details>
-      </section>
-      <CareContact locale={locale} />
-    </>
+
+      <ContactBand locale={locale} />
+    </div>
   );
 }

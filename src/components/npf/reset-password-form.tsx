@@ -16,8 +16,6 @@ import { CheckCircle2Icon, Loader2Icon } from "lucide-react"
 import { resetPassword } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 import { PasswordField } from "@/components/npf/password-field"
 
@@ -90,14 +88,16 @@ export function NPFResetPasswordForm({
 
   if (done) {
     return (
-      <div className="flex flex-col gap-4 text-center" role="status">
-        <CheckCircle2Icon className="mx-auto size-8 text-primary" aria-hidden="true" />
-        <p className="text-sm leading-relaxed text-muted-foreground">
+      <div className="ngc-form text-center" role="status">
+        <span className="ngc-empty-icon justify-self-center" data-tone="ok" aria-hidden="true">
+          <CheckCircle2Icon />
+        </span>
+        <p className="ngc-sub mx-auto">
           {dictionary.resetPasswordSuccess}
         </p>
         <Link
           href={`${base}/login`}
-          className={cn(ctaButtonVariants({ variant: "onLight" }), "justify-center")}
+          className="ng-btn ng-btn-primary ngc-block"
         >
           {dictionary.loginSubmit}
         </Link>
@@ -108,7 +108,7 @@ export function NPFResetPasswordForm({
   const errorId = "reset-password-error"
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form method="post" onSubmit={handleSubmit} className="ngc-form">
       {/* F-59: same show/hide toggle as every other password field on the
           site — resetting a password you can't see is peak frustration. */}
       <PasswordField
@@ -139,7 +139,7 @@ export function NPFResetPasswordForm({
       />
 
       {error && (
-        <p id={errorId} className="text-sm text-destructive" role="alert">
+        <p id={errorId} className="ngc-alert" role="alert">
           {error}
         </p>
       )}
@@ -147,7 +147,7 @@ export function NPFResetPasswordForm({
       <button
         type="submit"
         disabled={submitting}
-        className={cn(ctaButtonVariants({ variant: "onLight" }), "w-full justify-center gap-2")}
+        className="ng-btn ng-btn-primary ng-btn-lg ngc-block"
       >
         {submitting && <Loader2Icon className="size-4 animate-spin" aria-hidden="true" />}
         {submitting ? dictionary.resetPasswordSubmitting : dictionary.resetPasswordSubmit}
@@ -155,8 +155,8 @@ export function NPFResetPasswordForm({
 
       {/* An expired/invalid link is the most common way to land here with no
           token at all, so the escape hatch is always visible. */}
-      <p className="text-center text-sm text-muted-foreground">
-        <Link href={`${base}/login/forgot-password`} className="font-medium text-primary hover:underline">
+      <p className="ngc-form-foot">
+        <Link href={`${base}/login/forgot-password`} className="ngc-inline-link">
           {dictionary.resetPasswordRequestLink}
         </Link>
       </p>

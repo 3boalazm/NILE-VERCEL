@@ -8,10 +8,8 @@ import { Loader2Icon } from "lucide-react"
 import { register } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 import { reconcileWishlist } from "@/lib/wishlist"
 import { PasswordField, PasswordStrengthMeter, passwordStrength } from "@/components/npf/password-field"
@@ -79,22 +77,22 @@ export function NPFRegisterForm({ locale, dictionary }: { locale: string; dictio
   }
 
   return (
-    <form aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
+    <form method="post" aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="ngc-form">
+      <div className="ngc-grid-2">
+        <div className="ngc-field">
           <Label htmlFor="firstName">{dictionary.registerFirstName} *</Label>
           <Input id="firstName" name="firstName" required autoComplete="given-name" />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="ngc-field">
           <Label htmlFor="lastName">{dictionary.registerLastName} *</Label>
           <Input id="lastName" name="lastName" required autoComplete="family-name" />
         </div>
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="ngc-field">
         <Label htmlFor="email">{dictionary.registerEmail} *</Label>
         <Input id="email" name="email" type="email" required autoComplete="email" />
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="ngc-field">
         <Label htmlFor="phone">{dictionary.registerPhone}</Label>
         <Input id="phone" name="phone" type="tel" autoComplete="tel" />
       </div>
@@ -145,13 +143,13 @@ export function NPFRegisterForm({ locale, dictionary }: { locale: string; dictio
         describedBy={mismatch ? "confirm-mismatch" : undefined}
       />
       {mismatch && (
-        <p id="confirm-mismatch" role="alert" className="text-sm text-destructive">
+        <p id="confirm-mismatch" role="alert" className="ngc-alert">
           {dictionary.registerConfirmMismatch}
         </p>
       )}
 
       {error && (
-        <p className="text-sm text-destructive" id="form-feedback" role="alert">
+        <p className="ngc-alert" id="form-feedback" role="alert">
           {error}
         </p>
       )}
@@ -159,15 +157,15 @@ export function NPFRegisterForm({ locale, dictionary }: { locale: string; dictio
       <button
         type="submit"
         disabled={submitting}
-        className={cn(ctaButtonVariants({ variant: "onLight" }), "w-full justify-center gap-2")}
+        className="ng-btn ng-btn-primary ng-btn-lg ngc-block"
       >
         {submitting && <Loader2Icon className="size-4 animate-spin" />}
         {submitting ? dictionary.registerSubmitting : dictionary.registerSubmit}
       </button>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="ngc-form-foot">
         {dictionary.registerHaveAccount}{" "}
-        <Link href={`${base}/login`} className="font-medium text-primary hover:underline">
+        <Link href={`${base}/login`} className="ngc-inline-link">
           {dictionary.registerLoginLink}
         </Link>
       </p>

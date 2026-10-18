@@ -10,9 +10,7 @@ import { getExperienceCopy } from "@/lib/i18n/experience"
 import type { Product } from "@/lib/products"
 import type { Locale } from "@/lib/i18n/config"
 import type { ClientSafeDictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
 import { NPFProductGrid } from "@/components/npf/product-grid"
-import { cn } from "@/lib/utils"
 
 export function WishlistContent({
   locale,
@@ -80,13 +78,14 @@ export function WishlistContent({
 
   if (failed)
     return (
-      <div
-        className="mx-auto flex max-w-lg flex-col items-center gap-5 px-6 py-20 text-center"
-        role="alert"
-      >
-        <p>{c.wishlistError}</p>
+      <div className="ng-wrap ngc-empty" role="alert">
+        <span className="ngc-empty-icon" data-tone="danger" aria-hidden="true">
+          <HeartIcon />
+        </span>
+        <p className="ngc-sub">{c.wishlistError}</p>
         <button
-          className="studio-button !px-6"
+          type="button"
+          className="ng-btn ng-btn-primary"
           onClick={() => {
             setFailed(false);
             setProducts(null);
@@ -100,30 +99,24 @@ export function WishlistContent({
 
   if (products === null) {
     return (
-      <div className="flex flex-col items-center gap-3 py-24 text-center text-muted-foreground">
-        <Loader2Icon className="size-6 animate-spin" aria-hidden="true" />
-        <p role="status">{dictionary.wishlist.pageTitle}…</p>
+      <div className="ng-wrap ngc-empty" style={{ paddingBlock: "48px" }}>
+        <Loader2Icon className="ngc-spin size-6" aria-hidden="true" style={{ color: "var(--ng-ink-3)" }} />
+        <p className="ngc-sub" role="status">{dictionary.wishlist.pageTitle}…</p>
       </div>
     );
   }
 
   if (products.length === 0) {
     return (
-      <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center">
-        <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <HeartIcon className="size-6" />
-        </div>
-        <h2 className="mt-4 font-heading text-2xl font-semibold">
-          {dictionary.wishlist.emptyTitle}
-        </h2>
-        <p className="mt-2 text-pretty text-muted-foreground">
-          {dictionary.wishlist.emptyBody}
-        </p>
-        <Link
-          href={`${base}/products`}
-          className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-8")}
-        >
+      <div className="ng-wrap ngc-empty" style={{ paddingBlockStart: "24px" }}>
+        <span className="ngc-empty-icon" aria-hidden="true">
+          <HeartIcon />
+        </span>
+        <h2 className="ngc-title ngc-title-sm">{dictionary.wishlist.emptyTitle}</h2>
+        <p className="ngc-sub">{dictionary.wishlist.emptyBody}</p>
+        <Link href={`${base}/products`} className="ng-btn ng-btn-primary ng-btn-lg">
           {dictionary.wishlist.emptyCta}
+          <span className="ng-arrow" aria-hidden="true">↗</span>
         </Link>
       </div>
     );
@@ -132,19 +125,13 @@ export function WishlistContent({
   const someUnavailable = products.length < slugs.length;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div className="ng-wrap ngc-page" style={{ paddingBlockStart: "8px" }}>
       {someUnavailable && (
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="ngc-info" style={{ marginBlockEnd: "20px" }}>
           {dictionary.wishlist.unavailableNote}
         </p>
       )}
-      <div className="mt-8">
-        <NPFProductGrid
-          products={products}
-          locale={locale}
-          dictionary={dictionary}
-        />
-      </div>
+      <NPFProductGrid products={products} locale={locale} dictionary={dictionary} />
     </div>
   );
 }

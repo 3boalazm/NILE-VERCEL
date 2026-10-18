@@ -13,8 +13,8 @@
 # Usage: BASE=http://localhost:3000 bash scripts/crawl-audit.sh
 set -u
 BASE="${BASE:-http://localhost:3000}"
-ROUTES_AR=("" "/about" "/story" "/products" "/products/proxeed-plus" "/products/proxeed-men" "/products/proxeed-women" "/products/proxeed-women-inositol" "/products/proxerex" "/products/ellamuselle" "/products/ca-mi-pulse-oximeter" "/products/ca-mi-ir-thermometer" "/blogs" "/blogs/fertility-supplements-evidence-guide" "/blogs/proxeed-plus-scientific-evidence" "/blogs/proxeed-women-scientific-evidence" "/blogs/proxeed-men-scientific-evidence" "/blogs/proxeed-women-inositol-scientific-evidence" "/blogs/proxerex-scientific-evidence" "/blogs/ellamuselle-scientific-evidence" "/quality-sourcing" "/careers" "/contact" "/shipping-delivery" "/privacy-policy" "/terms" "/cart" "/checkout" "/login" "/register" "/wishlist")
-ROUTES_EN=("" "/about" "/story" "/products" "/products/proxeed-plus" "/blogs" "/blogs/proxeed-plus-scientific-evidence" "/quality-sourcing" "/careers" "/contact" "/shipping-delivery" "/privacy-policy" "/terms" "/cart" "/login" "/register" "/wishlist")
+ROUTES_AR=("" "/about" "/story" "/products" "/products/proxeed-plus" "/products/proxeed-men" "/products/proxeed-women" "/products/proxeed-women-inositol" "/products/proxerex" "/products/ellamuselle" "/products/ca-mi-pulse-oximeter" "/products/ca-mi-ir-thermometer" "/blogs" "/blogs/micic-2019-sperm-parameters-trial" "/blogs/agarwal-2018-l-carnitine-female-infertility" "/blogs/akbari-sene-2025-myo-inositol-art-pcos" "/blogs/busetto-2018-oat-with-and-without-varicocele" "/blogs/de-ligny-2022-cochrane-antioxidants-male-subfertility" "/blogs/fitz-2024-inositol-pcos-guidelines" "/blogs/hart-2024-nutritional-supplements-ivf" "/blogs/melhem-2026-idiopathic-male-infertility" "/blogs/michaelsen-2026-dietary-supplements-female-infertility" "/blogs/noegroho-2022-antioxidants-dna-fragmentation" "/quality-sourcing" "/careers" "/contact" "/shipping-delivery" "/privacy-policy" "/terms" "/cart" "/checkout" "/login" "/register" "/wishlist")
+ROUTES_EN=("" "/about" "/story" "/products" "/products/proxeed-plus" "/blogs" "/blogs/micic-2019-sperm-parameters-trial" "/quality-sourcing" "/careers" "/contact" "/shipping-delivery" "/privacy-policy" "/terms" "/cart" "/login" "/register" "/wishlist")
 PASS=0; FAIL=0
 check() {
   local url="$1" expect="$2"
@@ -60,13 +60,12 @@ pdp=$(curl -s "$BASE/ar/products/proxeed-plus")
 echo "$pdp" | grep -q '"@type":"Product"' && PASS=$((PASS+1)) || { FAIL=$((FAIL+1)); echo "FAIL: JSON-LD Product missing on ar PDP"; }
 echo "$pdp" | grep -q '"@type":"Offer"' && PASS=$((PASS+1)) || { FAIL=$((FAIL+1)); echo "FAIL: JSON-LD Offer missing on ar PDP"; }
 # blog sanity: WhatsApp + email contact CTA on an article
-art=$(curl -s "$BASE/ar/blogs/proxeed-plus-scientific-evidence")
-echo "$art" | grep -q "wa.me/201024442340" && PASS=$((PASS+1)) || { FAIL=$((FAIL+1)); echo "FAIL: WhatsApp CTA missing on ar article"; }
+art=$(curl -s "$BASE/ar/blogs/micic-2019-sperm-parameters-trial")
 echo "$art" | grep -q "info@nilepharmafood.com" && PASS=$((PASS+1)) || { FAIL=$((FAIL+1)); echo "FAIL: email CTA missing on ar article"; }
 # zero-2030 guarantee + registration badge on live pages
 echo "$art" | grep -q "2030" && { FAIL=$((FAIL+1)); echo "FAIL: 2030 found on ar article"; } || PASS=$((PASS+1))
 home=$(curl -s "$BASE/ar")
 echo "$home" | grep -q "2030" && { FAIL=$((FAIL+1)); echo "FAIL: 2030 found on ar home"; } || PASS=$((PASS+1))
-echo "$home" | grep -q "مسجّل لدى NFSA" && PASS=$((PASS+1)) || { FAIL=$((FAIL+1)); echo "FAIL: badge text missing on ar home"; }
+echo "$home" | grep -q "Alfasigma" && PASS=$((PASS+1)) || { FAIL=$((FAIL+1)); echo "FAIL: Alfasigma distributor mark missing on ar home"; }
 echo "═══ CRAWL: $PASS OK / $FAIL FAILED"
 [ "$FAIL" -eq 0 ]

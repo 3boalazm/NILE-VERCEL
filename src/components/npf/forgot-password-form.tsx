@@ -17,10 +17,8 @@ import { ArrowLeftIcon, CheckCircle2Icon, Loader2Icon } from "lucide-react"
 import { requestPasswordReset } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 
 type AuthDictionary = Dictionary["auth"]
@@ -72,14 +70,16 @@ export function NPFForgotPasswordForm({
   // requests that the rate limiter would then refuse).
   if (sent) {
     return (
-      <div className="flex flex-col gap-4 text-center" role="status">
-        <CheckCircle2Icon className="mx-auto size-8 text-primary" aria-hidden="true" />
-        <p className="text-sm leading-relaxed text-muted-foreground">
+      <div className="ngc-form text-center" role="status">
+        <span className="ngc-empty-icon justify-self-center" data-tone="ok" aria-hidden="true">
+          <CheckCircle2Icon />
+        </span>
+        <p className="ngc-sub mx-auto">
           {dictionary.forgotPasswordSuccess}
         </p>
         <Link
           href={`${base}/login`}
-          className={cn(ctaButtonVariants({ variant: "onLight" }), "justify-center gap-2")}
+          className="ng-btn ng-btn-primary ngc-block"
         >
           <ArrowLeftIcon className="size-4 rtl:rotate-180" aria-hidden="true" />
           {dictionary.forgotPasswordBackToLogin}
@@ -91,8 +91,8 @@ export function NPFForgotPasswordForm({
   const errorId = "forgot-password-error"
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
+    <form method="post" onSubmit={handleSubmit} className="ngc-form">
+      <div className="ngc-field">
         <Label htmlFor="email">{dictionary.forgotPasswordEmail} *</Label>
         <Input
           id="email"
@@ -106,7 +106,7 @@ export function NPFForgotPasswordForm({
       </div>
 
       {error && (
-        <p id={errorId} className="text-sm text-destructive" role="alert">
+        <p id={errorId} className="ngc-alert" role="alert">
           {error}
         </p>
       )}
@@ -114,14 +114,14 @@ export function NPFForgotPasswordForm({
       <button
         type="submit"
         disabled={submitting}
-        className={cn(ctaButtonVariants({ variant: "onLight" }), "w-full justify-center gap-2")}
+        className="ng-btn ng-btn-primary ng-btn-lg ngc-block"
       >
         {submitting && <Loader2Icon className="size-4 animate-spin" aria-hidden="true" />}
         {submitting ? dictionary.forgotPasswordSubmitting : dictionary.forgotPasswordSubmit}
       </button>
 
-      <p className="text-center text-sm text-muted-foreground">
-        <Link href={`${base}/login`} className="font-medium text-primary hover:underline">
+      <p className="ngc-form-foot">
+        <Link href={`${base}/login`} className="ngc-inline-link">
           {dictionary.forgotPasswordBackToLogin}
         </Link>
       </p>

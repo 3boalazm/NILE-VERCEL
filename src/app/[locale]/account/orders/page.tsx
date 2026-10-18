@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
-import Image from "next/image"
 import type { Metadata } from "next"
 import { PackageIcon, ChevronLeftIcon } from "lucide-react"
 
@@ -8,10 +7,8 @@ import { isValidLocale, type Locale } from "@/lib/i18n/config"
 import { getDictionary } from "@/lib/i18n/dictionaries"
 import { requireActiveCustomer } from "@/lib/auth/active-customer"
 import { toOrderStatusKey } from "@/lib/auth/types"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { ProductImagePlaceholder } from "@/components/npf/product-image-placeholder"
+import { LineThumb } from "@/components/glass/line-thumb"
 import { Reveal } from "@/components/npf/motion/reveal"
-import { cn } from "@/lib/utils"
 
 export async function generateMetadata({
   params,
@@ -35,13 +32,13 @@ export default async function AccountOrdersPage({ params }: PageProps<"/[locale]
 
   if (customer.orders.length === 0) {
     return (
-      <Reveal className="flex flex-col items-center gap-4 py-16 text-center">
-        <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <PackageIcon className="size-6" />
-        </div>
-        <h1 className="font-heading text-xl font-semibold">{dictionary.auth.ordersEmptyTitle}</h1>
-        <p className="max-w-sm text-pretty text-muted-foreground">{dictionary.auth.ordersEmptyBody}</p>
-        <Link href={`${base}/products`} className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-2")}>
+      <Reveal className="ngc-panel ngc-empty" style={{ maxInlineSize: "none", paddingBlock: "56px" }}>
+        <span className="ngc-empty-icon" aria-hidden="true">
+          <PackageIcon />
+        </span>
+        <h1 className="ngc-title ngc-title-sm">{dictionary.auth.ordersEmptyTitle}</h1>
+        <p className="ngc-sub">{dictionary.auth.ordersEmptyBody}</p>
+        <Link href={`${base}/products`} className="ng-btn ng-btn-primary">
           {dictionary.auth.ordersEmptyCta}
         </Link>
       </Reveal>
@@ -49,41 +46,31 @@ export default async function AccountOrdersPage({ params }: PageProps<"/[locale]
   }
 
   return (
-    <Reveal className="flex flex-col gap-6">
-      <h1 className="font-heading text-2xl font-semibold">{dictionary.auth.ordersTitle}</h1>
-      <ul className="flex flex-col gap-4">
+    <Reveal className="ngc-stack" style={{ ["--ngc-gap" as string]: "20px" }}>
+      <h1 className="ngc-title ngc-title-sm">{dictionary.auth.ordersTitle}</h1>
+      <ul className="ngc-lines">
         {customer.orders.map((order) => (
-          <li
-            key={order.code}
-            className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-4 sm:flex-row sm:items-center"
-          >
-            <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-muted">
-              {order.firstItemImage ? (
-                <Image src={order.firstItemImage} alt="" fill sizes="64px" className="object-cover" />
-              ) : (
-                <ProductImagePlaceholder />
-              )}
-            </div>
-            <div className="flex flex-1 flex-col gap-1">
+          <li key={order.code} className="ngc-panel ngc-order">
+            <span className="ngc-thumb ngc-thumb-sm" style={{ inlineSize: "64px" }}>
+              <LineThumb src={order.firstItemImage} sizes="64px" />
+            </span>
+            <div className="ngc-stack" style={{ ["--ngc-gap" as string]: "6px" }}>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <span className="font-medium">
-                  {dictionary.auth.orderNumberLabel} {order.code}
+                <span className="ngc-h3">
+                  {dictionary.auth.orderNumberLabel} <span className="ngc-mono">{order.code}</span>
                 </span>
-                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                  {dictionary.auth.orderStatus[toOrderStatusKey(order.state)]}
-                </span>
+                <span className="ngc-status">{dictionary.auth.orderStatus[toOrderStatusKey(order.state)]}</span>
               </div>
-              <span className="text-sm text-muted-foreground">
+              <span className="ngc-line-meta">
                 {new Date(order.createdAt).toLocaleDateString(dateLocale)} · {order.itemCount} {dictionary.auth.orderItemsLabel} ·{" "}
-                {order.total} {currencyLabel}
+                <span className="ngc-amount">
+                  {order.total} {currencyLabel}
+                </span>
               </span>
             </div>
-            <Link
-              href={`${base}/account/orders/${order.code}`}
-              className={cn(ctaButtonVariants({ variant: "outline" }), "shrink-0 justify-center gap-1.5")}
-            >
+            <Link href={`${base}/account/orders/${order.code}`} className="ng-btn">
               {dictionary.auth.viewOrderCta}
-              <ChevronLeftIcon className="size-3.5 rtl:rotate-180" />
+              <ChevronLeftIcon className="size-4 ltr:rotate-180" aria-hidden="true" />
             </Link>
           </li>
         ))}

@@ -30,7 +30,7 @@ const states = {
     "/products?q=" + "z".repeat(200) + "&category=medical-devices&sort=desc",
   filtered:
     "/products?q=plus%20proxeed&category=supplements&need=mens-health&sort=desc",
-  atlas: "",
+  atlas: "/products",
   chapter: "/products/proxeed-plus",
 };
 try {
@@ -42,27 +42,27 @@ try {
         await page.evaluate(() => document.fonts.ready);
         if (state === "atlas") {
           await page
-            .locator('.ca-product-explorer input[type="search"]')
+            .locator('[data-testid="atlas-search"]')
             .fill("no-match-zzzz");
           await page
-            .locator(".ca-atlas-empty-actions")
+            .locator('[data-testid="atlas-empty-actions"]')
             .waitFor({ state: "visible" });
           await page
-            .locator(".ca-product-explorer")
+            .locator('[data-testid="product-atlas"]')
             .evaluate((element) =>
               element.scrollIntoView({ behavior: "instant", block: "start" }),
             );
         } else if (state === "chapter") {
-          await page.locator('.ca-dossier-index a[href="#usage"]').click();
+          await page.locator('[data-testid="product-chapters"] a[href="#downloads"]').click();
           await page
             .locator(
-              '.ca-dossier-index a[href="#usage"][aria-current="location"]',
+              '[data-testid="product-chapters"] a[href="#downloads"][aria-current="location"]',
             )
             .waitFor();
         } else {
           await page
             .locator(
-              state === "empty" ? ".ca-catalog-empty" : ".ca-applied-filters",
+              state === "empty" ? '[data-testid="catalog-empty"]' : '[data-testid="applied-filters"]',
             )
             .evaluate((element) =>
               element.scrollIntoView({ behavior: "instant", block: "center" }),

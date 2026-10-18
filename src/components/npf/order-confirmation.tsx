@@ -1,7 +1,6 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
 import { CheckCircle2Icon, ExternalLinkIcon, MessageCircleIcon, PackageSearchIcon } from "lucide-react"
 
 import {
@@ -15,10 +14,8 @@ import { CopyToClipboardButton } from "./copy-to-clipboard-button"
 
 import type { Order } from "@/lib/cart"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { ProductImagePlaceholder } from "./product-image-placeholder"
+import { LineThumb } from "@/components/glass/line-thumb"
 import { TrackPurchase } from "@/components/npf/analytics-events"
-import { cn } from "@/lib/utils"
 
 type ConfirmationDictionary = Dictionary["checkout"]["confirmation"]
 type CheckoutDictionary = Dictionary["checkout"]
@@ -74,13 +71,13 @@ export function NPFOrderConfirmation({
 
   if (!order) {
     return (
-      <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center sm:px-6 lg:px-8">
-        <div className="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
-          <PackageSearchIcon className="size-6" />
-        </div>
-        <h1 className="mt-4 font-heading text-2xl font-semibold">{dictionary.noOrderTitle}</h1>
-        <p className="mt-2 text-pretty text-muted-foreground">{dictionary.noOrderBody}</p>
-        <Link href={`${base}/products`} className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-8")}>
+      <div className="ng-wrap ngc-empty">
+        <span className="ngc-empty-icon" aria-hidden="true">
+          <PackageSearchIcon />
+        </span>
+        <h1 className="ngc-title">{dictionary.noOrderTitle}</h1>
+        <p className="ngc-sub">{dictionary.noOrderBody}</p>
+        <Link href={`${base}/products`} className="ng-btn ng-btn-primary ng-btn-lg">
           {dictionary.noOrderCta}
         </Link>
       </div>
@@ -95,7 +92,7 @@ export function NPFOrderConfirmation({
   })
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+    <div className="ng-wrap ngc-page" style={{ maxInlineSize: "52rem" }}>
       {/* F-70: GA4 purchase — transaction id + value + items, once. */}
       <TrackPurchase
         orderNumber={order.orderNumber}
@@ -103,185 +100,174 @@ export function NPFOrderConfirmation({
         currency="EGP"
         items={order.items}
       />
-      <div className="flex flex-col items-center text-center">
-        <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <CheckCircle2Icon className="size-8" />
-        </div>
-        <h1 className="mt-4 font-heading text-2xl font-semibold sm:text-3xl">{dictionary.title}</h1>
-        <p className="mt-2 max-w-md text-pretty text-muted-foreground">{dictionary.body}</p>
+      <div className="ngc-hero-check">
+        <span className="ngc-empty-icon" data-tone="ok" aria-hidden="true">
+          <CheckCircle2Icon />
+        </span>
+        <h1 className="ngc-title">{dictionary.title}</h1>
+        <p className="ngc-sub" style={{ marginInline: "auto" }}>{dictionary.body}</p>
       </div>
 
-      <div className="mt-10 rounded-2xl border border-border bg-anti-flash-white p-6 dark:bg-card sm:p-8">
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-          <div>
-            <dt className="text-xs text-muted-foreground">{dictionary.orderNumberLabel}</dt>
-            <dd className="mt-0.5 font-heading text-lg font-semibold">{order.orderNumber}</dd>
-          </div>
-          <div>
-            <dt className="text-xs text-muted-foreground">{dictionary.dateLabel}</dt>
-            <dd className="mt-0.5 font-medium">{orderDate}</dd>
-          </div>
-          <div>
-            <dt className="text-xs text-muted-foreground">{dictionary.paymentLabel}</dt>
-            <dd className="mt-0.5 font-medium">{checkoutDictionary[PAYMENT_LABEL_KEY[order.paymentMethod]]}</dd>
-            {order.paymentMethod === "card" && (
-              <dd className="mt-0.5 text-xs text-muted-foreground">{checkoutDictionary.paymentCardNote}</dd>
-            )}
-          </div>
-          {order.fulfillmentMode && (
+      <div className="ngc-stack" style={{ ["--ngc-gap" as string]: "20px" }}>
+        <section className="ngc-panel ngc-panel-strong ngc-stack" style={{ ["--ngc-gap" as string]: "20px" }}>
+          <dl className="ngc-facts">
             <div>
-              <dt className="text-xs text-muted-foreground">{dictionary.fulfillmentLabel}</dt>
-              <dd className="mt-0.5 font-medium">{checkoutDictionary[FULFILLMENT_LABEL_KEY[order.fulfillmentMode]]}</dd>
+              <dt>{dictionary.orderNumberLabel}</dt>
+              <dd className="ngc-fact-key ngc-mono">{order.orderNumber}</dd>
             </div>
-          )}
-        </dl>
-
-        <h2 className="mt-8 font-heading text-base font-semibold">{dictionary.itemsTitle}</h2>
-        <ul className="mt-4 flex flex-col divide-y divide-border">
-          {order.items.map((item) => (
-            <li key={item.lineId} className="flex items-center gap-3 py-3">
-              <div className="relative size-12 shrink-0 overflow-hidden rounded-lg bg-muted">
-                {item.image ? (
-                  <Image src={item.image} alt={item.name} fill sizes="48px" className="object-cover" />
-                ) : (
-                  <ProductImagePlaceholder />
-                )}
-              </div>
-              <div className="flex flex-1 flex-col">
-                <span className="line-clamp-1 text-sm font-medium">{item.name}</span>
-                <span className="text-xs text-muted-foreground">× {item.qty}</span>
-              </div>
-              <span className="shrink-0 text-sm font-medium tabular-nums">
-                {typeof item.price === "number"
-                  ? `${item.price * item.qty} ${currencyLabel}`
-                  : "—"}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">{dictionary.subtotalLabel}</span>
-            <span className="font-semibold tabular-nums">
-              {order.subtotal} {currencyLabel}
-            </span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">{dictionary.shippingCostLabel}</span>
-            <span className="font-semibold tabular-nums">
-              {order.shippingCost === 0 ? dictionary.shippingFreeLabel : `${order.shippingCost} ${currencyLabel}`}
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-base">
-            <span className="font-medium">{dictionary.totalLabel}</span>
-            <span className="font-semibold tabular-nums">
-              {order.total} {currencyLabel}
-            </span>
-          </div>
-        </div>
-        {order.hasUnpricedItems && (
-          <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{dictionary.unpricedNote}</p>
-        )}
-      </div>
-
-      {/* Manual prepayment (InstaPay / Vodafone Cash): repeat both rails
-          from checkout so the customer can actually send the money, with the
-          WhatsApp receipt hand-off pre-filled from this order. Only for
-          bank_transfer orders. */}
-      {order.paymentMethod === "bank_transfer" && (
-        <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-6 text-start sm:p-8">
-          <h2 className="font-heading text-base font-semibold">{dictionary.transferReminderTitle}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{checkoutDictionary.paymentBankNote}</p>
-
-          <div className="mt-4 flex flex-col gap-3">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-sm font-medium">{checkoutDictionary.paymentInstapay}</span>
-              <span className="text-xs font-medium" dir="ltr">
-                {INSTAPAY_ALIAS}
-              </span>
-              <CopyToClipboardButton
-                value={INSTAPAY_ALIAS}
-                label={checkoutDictionary.copyAliasLabel}
-                copiedLabel={checkoutDictionary.copiedInstapayLabel}
-              />
-              <a
-                href={INSTAPAY_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/5 focus-visible:ring-3 focus-visible:ring-ring/50"
-              >
-                {checkoutDictionary.paymentInstapayCta}
-                <ExternalLinkIcon className="size-3.5" aria-hidden="true" />
-              </a>
+            <div>
+              <dt>{dictionary.dateLabel}</dt>
+              <dd>{orderDate}</dd>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="text-sm font-medium">{checkoutDictionary.paymentVodafone}</span>
-              <span className="text-xs font-semibold tabular-nums" dir="ltr">
-                {VODAFONE_CASH_NUMBER}
-              </span>
-              <CopyToClipboardButton
-                value={VODAFONE_CASH_NUMBER}
-                label={checkoutDictionary.copyNumberLabel}
-                copiedLabel={checkoutDictionary.copiedVodafoneLabel}
-              />
+            <div>
+              <dt>{dictionary.paymentLabel}</dt>
+              <dd>{checkoutDictionary[PAYMENT_LABEL_KEY[order.paymentMethod]]}</dd>
+              {order.paymentMethod === "card" && (
+                <dd className="ngc-note">{checkoutDictionary.paymentCardNote}</dd>
+              )}
+            </div>
+            {order.fulfillmentMode && (
+              <div>
+                <dt>{dictionary.fulfillmentLabel}</dt>
+                <dd>{checkoutDictionary[FULFILLMENT_LABEL_KEY[order.fulfillmentMode]]}</dd>
+              </div>
+            )}
+          </dl>
+
+          <hr className="ngc-divider" />
+
+          <h2 className="ngc-h3">{dictionary.itemsTitle}</h2>
+          <ul className="ngc-mini">
+            {order.items.map((item) => (
+              <li key={item.lineId}>
+                <span className="ngc-thumb ngc-thumb-sm">
+                  <LineThumb src={item.image} sizes="52px" />
+                </span>
+                <span>
+                  <span className="ngc-mini-name">{item.name}</span>
+                  <span className="ngc-line-meta">× {item.qty}</span>
+                </span>
+                <span className="ngc-amount">
+                  {typeof item.price === "number"
+                    ? `${item.price * item.qty} ${currencyLabel}`
+                    : "—"}
+                </span>
+              </li>
+            ))}
+          </ul>
+
+          <dl className="ngc-rows">
+            <div className="ngc-row">
+              <dt>{dictionary.subtotalLabel}</dt>
+              <dd className="ngc-amount">
+                {order.subtotal} {currencyLabel}
+              </dd>
+            </div>
+            <div className="ngc-row">
+              <dt>{dictionary.shippingCostLabel}</dt>
+              <dd className="ngc-amount">
+                {order.shippingCost === 0 ? dictionary.shippingFreeLabel : `${order.shippingCost} ${currencyLabel}`}
+              </dd>
+            </div>
+            <div className="ngc-row ngc-row-total">
+              <dt>{dictionary.totalLabel}</dt>
+              <dd className="ngc-amount">
+                {order.total} {currencyLabel}
+              </dd>
+            </div>
+          </dl>
+          {order.hasUnpricedItems && <p className="ngc-note">{dictionary.unpricedNote}</p>}
+        </section>
+
+        {/* Manual prepayment (InstaPay / Vodafone Cash): repeat both rails
+            from checkout so the customer can actually send the money, with the
+            WhatsApp receipt hand-off pre-filled from this order. Only for
+            bank_transfer orders. */}
+        {order.paymentMethod === "bank_transfer" && (
+          <section className="ngc-panel ngc-panel-tint ngc-stack" style={{ ["--ngc-gap" as string]: "14px" }} aria-labelledby="transfer-reminder-title">
+            <h2 id="transfer-reminder-title" className="ngc-h2">{dictionary.transferReminderTitle}</h2>
+            <p className="ngc-sub">{checkoutDictionary.paymentBankNote}</p>
+
+            <div className="ngc-grid-2">
+              <div className="ngc-transfer">
+                <span className="ngc-option-title">{checkoutDictionary.paymentInstapay}</span>
+                <span className="ngc-mono">{INSTAPAY_ALIAS.split("@")[0]}<wbr />@{INSTAPAY_ALIAS.split("@").slice(1).join("@")}</span>
+                <span className="ngc-actions">
+                  <CopyToClipboardButton
+                    value={INSTAPAY_ALIAS}
+                    label={checkoutDictionary.copyAliasLabel}
+                    copiedLabel={checkoutDictionary.copiedInstapayLabel}
+                  />
+                  <a href={INSTAPAY_URL} target="_blank" rel="noopener noreferrer" className="ngc-pill-btn">
+                    {checkoutDictionary.paymentInstapayCta}
+                    <ExternalLinkIcon aria-hidden="true" />
+                  </a>
+                </span>
+              </div>
+              <div className="ngc-transfer">
+                <span className="ngc-option-title">{checkoutDictionary.paymentVodafone}</span>
+                <span className="ngc-mono" style={{ fontSize: "var(--ng-t-md)" }}>{VODAFONE_CASH_NUMBER}</span>
+                <span className="ngc-actions">
+                  <CopyToClipboardButton
+                    value={VODAFONE_CASH_NUMBER}
+                    label={checkoutDictionary.copyNumberLabel}
+                    copiedLabel={checkoutDictionary.copiedVodafoneLabel}
+                  />
+                </span>
+              </div>
             </div>
 
             {/* The exact amount to send, stated where the customer acts. */}
-            <p className="text-base font-semibold">
-              {checkoutDictionary.transferAmountLabel}{" "}
-              <span className="tabular-nums">
+            <p className="ngc-due">
+              <span>{checkoutDictionary.transferAmountLabel}</span>
+              <span className="ngc-amount">
                 {order.total} {currencyLabel}
               </span>
             </p>
             {order.transferRef && (
-              <p className="text-xs text-muted-foreground">
+              <p className="ngc-note">
                 {checkoutDictionary.transferRefRecordedLabel}{" "}
-                <span className="font-medium text-foreground" dir="ltr">
-                  {order.transferRef}
-                </span>
+                <span className="ngc-mono">{order.transferRef}</span>
               </p>
             )}
+
+            {/* Receipt hand-off: a plain wa.me link pre-filled from THIS order
+                (order number from the created order, never user input). It is
+                not a payment path — the order stays PENDING until the admin
+                verifies the transfer and settles it. */}
+            <a
+              href={paymentWhatsAppUrl(
+                buildTransferConfirmationMessage(checkoutDictionary.whatsappTransferTemplate, {
+                  orderNumber: order.orderNumber,
+                  paymentMethod: checkoutDictionary.paymentBank,
+                  orderTotal: `${order.total} ${currencyLabel}`,
+                })
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ng-btn ng-btn-lg ngc-wa ngc-block"
+            >
+              <MessageCircleIcon aria-hidden="true" />
+              {checkoutDictionary.whatsappReceiptCta}
+            </a>
+            <p className="ngc-note">{checkoutDictionary.whatsappPendingNote}</p>
+          </section>
+        )}
+
+        <div className="ngc-stack ngc-center" style={{ ["--ngc-gap" as string]: "12px", paddingBlockStart: "12px" }}>
+          <p className="ngc-sub" style={{ marginInline: "auto" }}>{dictionary.contactNote}</p>
+          <div className="ngc-actions ngc-center">
+            <Link href={`${base}/contact`} className="ng-btn">
+              {dictionary.contactCta}
+            </Link>
+            <Link href={`${base}/products`} className="ng-btn ng-btn-primary">
+              {dictionary.continueShoppingCta}
+            </Link>
           </div>
-
-          {/* Receipt hand-off: a plain wa.me link pre-filled from THIS order
-              (order number from the created order, never user input). It is
-              not a payment path — the order stays PENDING until the admin
-              verifies the transfer and settles it. */}
-          <a
-            href={paymentWhatsAppUrl(
-              buildTransferConfirmationMessage(checkoutDictionary.whatsappTransferTemplate, {
-                orderNumber: order.orderNumber,
-                paymentMethod: checkoutDictionary.paymentBank,
-                orderTotal: `${order.total} ${currencyLabel}`,
-              })
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-5")}
-          >
-            <MessageCircleIcon className="size-4" aria-hidden="true" />
-            {checkoutDictionary.whatsappReceiptCta}
-          </a>
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            {checkoutDictionary.whatsappPendingNote}
-          </p>
-        </div>
-      )}
-
-      <div className="mt-8 flex flex-col items-center gap-3 text-center">
-        <p className="text-sm text-muted-foreground">{dictionary.contactNote}</p>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Link href={`${base}/contact`} className={cn(ctaButtonVariants({ variant: "outline" }))}>
-            {dictionary.contactCta}
-          </Link>
-          <Link href={`${base}/products`} className={cn(ctaButtonVariants({ variant: "onLight" }))}>
-            {dictionary.continueShoppingCta}
+          <Link href={base} className="ngc-quiet justify-self-center">
+            {dictionary.backHomeCta}
           </Link>
         </div>
-        <Link href={base} className="mt-2 text-sm text-muted-foreground hover:text-foreground">
-          {dictionary.backHomeCta}
-        </Link>
       </div>
     </div>
   )

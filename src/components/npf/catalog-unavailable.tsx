@@ -1,4 +1,7 @@
 import Link from "next/link"
+import { CloudOffIcon } from "lucide-react"
+
+import { Notice } from "@/components/glass/content"
 
 import { getCatalogNoticeCopy } from "@/lib/i18n/catalog-copy"
 import type { Locale } from "@/lib/i18n/config"
@@ -29,30 +32,25 @@ export function CatalogUnavailable({
 }) {
   const copy = getCatalogNoticeCopy(locale)
   return (
-    <section
-      className={`ca-catalog-empty${className ? ` ${className}` : ""}`}
+    <Notice
+      className={className}
       role="status"
       aria-live="polite"
       data-catalog-state="unavailable"
+      mark={<CloudOffIcon className="size-7" />}
+      eyebrow={copy.eyebrow}
+      title={copy.title}
+      body={copy.body}
     >
-      <span className="ca-empty-symbol" aria-hidden="true">
-        ⋯
-      </span>
-      <div>
-        <span className="ca-mono">{copy.eyebrow}</span>
-        <h2>{copy.title}</h2>
-        <p>{copy.body}</p>
-        <div className="ca-empty-links">
-          <Link href={`/${locale}/contact`} className="ca-solid-link">
-            {copy.contactCta}
-            <span aria-hidden="true">↗</span>
-          </Link>
-          <Link href={`/${locale}/products`} className="ca-line-link">
-            {copy.browseCta}
-            <span aria-hidden="true">↗</span>
-          </Link>
-        </div>
+      <div className="ng-hero-cta">
+        <Link href={`/${locale}/contact`} className="ng-btn ng-btn-primary">
+          {copy.contactCta}
+          <span className="ng-arrow" aria-hidden="true">↗</span>
+        </Link>
+        <Link href={`/${locale}/products`} className="ng-btn ng-btn-ghost">
+          {copy.browseCta}
+        </Link>
       </div>
-    </section>
+    </Notice>
   )
 }

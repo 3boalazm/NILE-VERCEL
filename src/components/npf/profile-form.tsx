@@ -8,10 +8,8 @@ import { updateProfile } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Customer } from "@/lib/auth/types"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 
 type AuthDictionary = Dictionary["auth"]
@@ -63,34 +61,34 @@ export function ProfileForm({
 
   if (!editing) {
     return (
-      <div className="flex flex-col gap-6">
-        <dl className="flex flex-col divide-y divide-border rounded-2xl border border-border bg-card">
-          <div className="flex items-center justify-between gap-4 px-5 py-4">
-            <dt className="text-sm text-muted-foreground">{dictionary.profileNameLabel}</dt>
-            <dd className="font-medium">{`${customer.firstName} ${customer.lastName}`.trim()}</dd>
+      <div className="ngc-stack">
+        <dl className="ngc-kv">
+          <div>
+            <dt>{dictionary.profileNameLabel}</dt>
+            <dd>{`${customer.firstName} ${customer.lastName}`.trim()}</dd>
           </div>
-          <div className="flex items-center justify-between gap-4 px-5 py-4">
-            <dt className="text-sm text-muted-foreground">{dictionary.profileEmailLabel}</dt>
-            <dd className="font-medium" dir="ltr">
+          <div>
+            <dt>{dictionary.profileEmailLabel}</dt>
+            <dd dir="ltr">
               {customer.email}
             </dd>
           </div>
-          <div className="flex items-center justify-between gap-4 px-5 py-4">
-            <dt className="text-sm text-muted-foreground">{dictionary.profilePhoneLabel}</dt>
-            <dd className="font-medium" dir="ltr">
+          <div>
+            <dt>{dictionary.profilePhoneLabel}</dt>
+            <dd dir="ltr">
               {customer.phone || dictionary.profileNotProvided}
             </dd>
           </div>
         </dl>
-        <p className="text-xs text-muted-foreground">{dictionary.profileEmailPhoneNote}</p>
-        {saved && <p className="text-sm text-primary">{dictionary.profileSaved}</p>}
+        <p className="ngc-note">{dictionary.profileEmailPhoneNote}</p>
+        {saved && <p role="status" className="ngc-ok">{dictionary.profileSaved}</p>}
         <button
           type="button"
           onClick={() => {
             setSaved(false)
             setEditing(true)
           }}
-          className={cn(ctaButtonVariants({ variant: "outline" }), "w-fit gap-1.5")}
+          className="ng-btn justify-self-start"
         >
           <PencilIcon className="size-3.5" />
           {dictionary.profileEditCta}
@@ -100,34 +98,34 @@ export function ProfileForm({
   }
 
   return (
-    <form aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="flex max-w-md flex-col gap-4 rounded-2xl border border-border bg-card p-6">
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
+    <form method="post" aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="ngc-panel ngc-form">
+      <div className="ngc-grid-2">
+        <div className="ngc-field">
           <Label htmlFor="firstName">{dictionary.profileFirstName} *</Label>
           <Input id="firstName" name="firstName" defaultValue={customer.firstName} required autoComplete="given-name" />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="ngc-field">
           <Label htmlFor="lastName">{dictionary.profileLastName} *</Label>
           <Input id="lastName" name="lastName" defaultValue={customer.lastName} required autoComplete="family-name" />
         </div>
       </div>
 
       {error && (
-        <p className="text-sm text-destructive" id="form-feedback" role="alert">
+        <p className="ngc-alert" id="form-feedback" role="alert">
           {error}
         </p>
       )}
 
-      <div className="flex gap-3">
+      <div className="ngc-actions">
         <button
           type="submit"
           disabled={submitting}
-          className={cn(ctaButtonVariants({ variant: "onLight" }), "gap-2")}
+          className="ng-btn ng-btn-primary"
         >
           {submitting && <Loader2Icon className="size-4 animate-spin" />}
           {submitting ? dictionary.profileSaving : dictionary.profileSaveCta}
         </button>
-        <button type="button" onClick={() => setEditing(false)} className={cn(ctaButtonVariants({ variant: "outline" }))}>
+        <button type="button" onClick={() => setEditing(false)} className="ng-btn ng-btn-ghost">
           {dictionary.cancelCta}
         </button>
       </div>

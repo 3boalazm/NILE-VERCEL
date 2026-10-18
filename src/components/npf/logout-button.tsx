@@ -51,19 +51,19 @@ export function LogoutButton({
   }
 
   return (
-    <div className={cn("flex flex-col gap-1", className)}>
+    <div className={cn("ngc-logout-wrap", className)}>
       <button
         type="button"
         onClick={handleClick}
         disabled={isPending}
         aria-describedby={error ? "logout-error" : undefined}
-        className="flex w-full items-center gap-2.5 rounded-xl border border-border px-4 py-2.5 text-sm font-medium whitespace-nowrap text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50"
+        className="ngc-logout disabled:opacity-50"
       >
-        <LogOutIcon className="size-4 shrink-0" />
+        <LogOutIcon aria-hidden="true" />
         {label}
       </button>
       {error && (
-        <p id="logout-error" role="alert" className="text-xs text-destructive">
+        <p id="logout-error" role="alert" className="ngc-field-error px-4 text-xs">
           {error}
         </p>
       )}

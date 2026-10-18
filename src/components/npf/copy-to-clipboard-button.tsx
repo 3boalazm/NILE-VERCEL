@@ -42,15 +42,13 @@ export function CopyToClipboardButton({
       type="button"
       onClick={handleCopy}
       aria-live="polite"
-      className={cn(
-        "inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50",
-        className
-      )}
+      data-copied={copied}
+      className={cn("ngc-pill-btn", className)}
     >
       {copied ? (
-        <CheckIcon className="size-3.5" aria-hidden="true" />
+        <CheckIcon aria-hidden="true" />
       ) : (
-        <CopyIcon className="size-3.5" aria-hidden="true" />
+        <CopyIcon aria-hidden="true" />
       )}
       {copied ? copiedLabel : label}
     </button>

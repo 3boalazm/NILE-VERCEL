@@ -1,15 +1,12 @@
 "use client"
 
 import Link from "next/link"
-import Image from "next/image"
-import { ShoppingBagIcon, Trash2Icon } from "lucide-react"
+import { ArrowLeftIcon, ShoppingBagIcon, Trash2Icon } from "lucide-react"
 
 import { useCart } from "@/lib/cart"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { ProductImagePlaceholder } from "./product-image-placeholder"
+import { LineThumb } from "@/components/glass/line-thumb"
 import { QuantityStepper } from "./quantity-stepper"
-import { cn } from "@/lib/utils"
 
 type CartDictionary = Dictionary["cart"]
 
@@ -26,13 +23,13 @@ export function NPFCartView({
 
   if (cartStatus === "unavailable" && items.length === 0) {
     return (
-      <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center sm:px-6 lg:px-8" role="alert">
-        <div className="flex size-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-          <ShoppingBagIcon className="size-6" />
-        </div>
-        <h1 className="mt-4 font-heading text-2xl font-semibold">{dictionary.unavailableTitle}</h1>
-        <p className="mt-2 text-pretty text-muted-foreground">{dictionary.unavailableBody}</p>
-        <button type="button" onClick={retryCart} className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-8")}>
+      <div className="ng-wrap ngc-empty" role="alert">
+        <span className="ngc-empty-icon" data-tone="danger" aria-hidden="true">
+          <ShoppingBagIcon />
+        </span>
+        <h1 className="ngc-title">{dictionary.unavailableTitle}</h1>
+        <p className="ngc-sub">{dictionary.unavailableBody}</p>
+        <button type="button" onClick={retryCart} className="ng-btn ng-btn-primary ng-btn-lg">
           {dictionary.unavailableRetry}
         </button>
       </div>
@@ -41,80 +38,74 @@ export function NPFCartView({
 
   if (items.length === 0) {
     return (
-      <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center sm:px-6 lg:px-8">
-        <div className="flex size-14 items-center justify-center rounded-full bg-primary/10 text-primary">
-          <ShoppingBagIcon className="size-6" />
-        </div>
-        <h1 className="mt-4 font-heading text-2xl font-semibold">{dictionary.emptyTitle}</h1>
-        <p className="mt-2 text-pretty text-muted-foreground">{dictionary.emptyBody}</p>
-        <Link href={`${base}/products`} className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-8")}>
+      <div className="ng-wrap ngc-empty">
+        <span className="ngc-empty-icon" aria-hidden="true">
+          <ShoppingBagIcon />
+        </span>
+        <h1 className="ngc-title">{dictionary.emptyTitle}</h1>
+        <p className="ngc-sub">{dictionary.emptyBody}</p>
+        <Link href={`${base}/products`} className="ng-btn ng-btn-primary ng-btn-lg">
           {dictionary.emptyCta}
+          <span className="ng-arrow" aria-hidden="true">↗</span>
         </Link>
       </div>
     )
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="font-heading text-3xl font-semibold">{dictionary.pageTitle}</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        {items.length} {dictionary.itemsCountSuffix}
-      </p>
+    <div className="ng-wrap ngc-page">
+      <header className="ngc-head">
+        <h1 className="ngc-title">{dictionary.pageTitle}</h1>
+        <p className="ngc-sub">
+          <span className="ngc-amount">{items.length}</span> {dictionary.itemsCountSuffix}
+        </p>
+      </header>
 
       {cartStatus === "unavailable" && (
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-sm" role="alert">
+        <div className="ngc-alert" role="alert" style={{ marginBlockEnd: "20px" }}>
           <span>{dictionary.unavailableBody}</span>
-          <button type="button" onClick={retryCart} className="font-medium text-primary underline underline-offset-2">
+          <button type="button" onClick={retryCart}>
             {dictionary.unavailableRetry}
           </button>
         </div>
       )}
 
-      <div className="mt-8 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_360px]">
-        <ul className="flex flex-col gap-4">
+      <div className="ngc-layout">
+        <ul className="ngc-lines">
           {items.map((item) => (
-            <li
-              key={item.productId}
-              className="flex gap-4 rounded-2xl border border-border bg-anti-flash-white p-4 dark:bg-card"
-            >
-              <Link
-                href={`${base}/products/${item.slug}`}
-                className="relative size-24 shrink-0 overflow-hidden rounded-xl bg-muted"
-              >
-                {item.image ? (
-                  <Image src={item.image} alt={item.name} fill sizes="96px" className="object-cover" />
-                ) : (
-                  <ProductImagePlaceholder />
-                )}
+            <li key={item.productId} className="ngc-line">
+              <Link href={`${base}/products/${item.slug}`} className="ngc-thumb" tabIndex={-1} aria-hidden="true">
+                <LineThumb src={item.image} sizes="108px" />
               </Link>
 
-              <div className="flex flex-1 flex-col gap-2">
-                <div className="flex items-start justify-between gap-3">
-                  <Link
-                    href={`${base}/products/${item.slug}`}
-                    className="font-heading text-base font-semibold hover:underline"
-                  >
+              <div className="ngc-line-body">
+                <div className="ngc-line-top">
+                  <Link href={`${base}/products/${item.slug}`} className="ngc-line-name">
                     {item.name}
                   </Link>
                   <button
                     type="button"
-                    aria-label={dictionary.removeLabel}
+                    aria-label={`${dictionary.removeLabel}: ${item.name}`}
                     title={dictionary.removeLabel}
                     onClick={() => removeItem(item.lineId)}
                     disabled={isPending}
-                    className="-m-2.5 inline-flex size-9 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-destructive max-lg:-m-3.5 max-lg:size-11 disabled:pointer-events-none disabled:opacity-40"
+                    className="ngc-icon-btn"
                   >
-                    <Trash2Icon className="size-4" />
+                    <Trash2Icon aria-hidden="true" />
                   </button>
                 </div>
 
-                <p className="text-sm font-medium text-foreground">
-                  {typeof item.price === "number"
-                    ? `${item.price} ${currencyLabel}`
-                    : dictionary.priceOnRequest}
+                <p className="ngc-line-meta" style={{ margin: 0 }}>
+                  {typeof item.price === "number" ? (
+                    <span className="ngc-amount" style={{ fontWeight: 600, color: "inherit" }}>
+                      {item.price} {currencyLabel}
+                    </span>
+                  ) : (
+                    dictionary.priceOnRequest
+                  )}
                 </p>
 
-                <div className="mt-auto flex items-center justify-between gap-3">
+                <div className="ngc-line-foot">
                   <QuantityStepper
                     value={item.qty}
                     onChange={(qty) => updateQty(item.lineId, qty)}
@@ -122,7 +113,7 @@ export function NPFCartView({
                     disabled={isPending}
                   />
                   {typeof item.price === "number" && (
-                    <span className="text-sm font-semibold tabular-nums">
+                    <span className="ngc-amount" style={{ fontSize: "var(--ng-t-md)" }}>
                       {item.price * item.qty} {currencyLabel}
                     </span>
                   )}
@@ -132,29 +123,22 @@ export function NPFCartView({
           ))}
         </ul>
 
-        <aside className="h-fit rounded-2xl border border-border bg-anti-flash-white p-6 dark:bg-card">
-          <h2 className="font-heading text-lg font-semibold">{dictionary.summaryTitle}</h2>
-          <div className="mt-4 flex items-center justify-between text-sm">
-            <span className="text-muted-foreground">{dictionary.subtotalLabel}</span>
-            <span className="font-semibold tabular-nums">
-              {subtotal} {currencyLabel}
-            </span>
-          </div>
-          {hasUnpricedItems && (
-            <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
-              {dictionary.unpricedNote}
-            </p>
-          )}
-          <Link
-            href={`${base}/checkout`}
-            className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-6 w-full justify-center")}
-          >
+        <aside className="ngc-panel ngc-panel-tint ngc-sticky ngc-stack" style={{ ["--ngc-gap" as string]: "16px" }} aria-labelledby="cart-summary-title">
+          <h2 id="cart-summary-title" className="ngc-h2">{dictionary.summaryTitle}</h2>
+          <dl className="ngc-rows">
+            <div className="ngc-row ngc-row-total">
+              <dt>{dictionary.subtotalLabel}</dt>
+              <dd className="ngc-amount">
+                {subtotal} {currencyLabel}
+              </dd>
+            </div>
+          </dl>
+          {hasUnpricedItems && <p className="ngc-note">{dictionary.unpricedNote}</p>}
+          <Link href={`${base}/checkout`} className="ng-btn ng-btn-primary ng-btn-lg ngc-block">
             {dictionary.checkoutCta}
+            <ArrowLeftIcon className="ltr:rotate-180" aria-hidden="true" />
           </Link>
-          <Link
-            href={`${base}/products`}
-            className="mt-3 block text-center text-sm text-muted-foreground hover:text-foreground"
-          >
+          <Link href={`${base}/products`} className="ngc-quiet justify-self-center">
             {dictionary.continueShopping}
           </Link>
         </aside>

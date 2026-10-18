@@ -6,8 +6,6 @@ import { Loader2Icon } from "lucide-react"
 import { changePassword } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 import { PasswordField } from "@/components/npf/password-field"
 
@@ -62,7 +60,7 @@ export function ChangePasswordForm({ locale, dictionary }: { locale: string; dic
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate={false}>
+    <form method="post" onSubmit={handleSubmit} className="ngc-form" noValidate={false}>
       <PasswordField
         id="currentPassword"
         name="currentPassword"
@@ -110,26 +108,26 @@ export function ChangePasswordForm({ locale, dictionary }: { locale: string; dic
         describedBy={mismatch ? "chpwd-mismatch" : undefined}
       />
       {mismatch && (
-        <p id="chpwd-mismatch" role="alert" className="text-sm text-destructive">
+        <p id="chpwd-mismatch" role="alert" className="ngc-alert">
           {dictionary.registerConfirmMismatch}
         </p>
       )}
       {status === "success" && (
-        <p role="status" className="rounded-lg border border-emerald-600/30 bg-emerald-600/5 p-3 text-sm text-emerald-700 dark:text-emerald-400">
+        <p role="status" className="ngc-ok">
           {dictionary.changePasswordSuccess}
         </p>
       )}
       {status === "invalid" && (
-        <p id="chpwd-error" role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+        <p id="chpwd-error" role="alert" className="ngc-alert">
           {dictionary.changePasswordInvalid}
         </p>
       )}
       {status === "error" && (
-        <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm text-destructive">
+        <p role="alert" className="ngc-alert">
           {common.networkError}
         </p>
       )}
-      <button type="submit" disabled={submitting} className={cn(ctaButtonVariants({ variant: "onLight" }), "w-fit justify-center")}>
+      <button type="submit" disabled={submitting} className="ng-btn ng-btn-primary justify-self-start">
         {submitting && <Loader2Icon className="size-4 animate-spin" aria-hidden="true" />}
         {dictionary.changePasswordCta}
       </button>

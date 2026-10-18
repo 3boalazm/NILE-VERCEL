@@ -4,10 +4,8 @@ import { MotionConfig } from "framer-motion"
 import { SerwistProvider } from "@/components/providers/serwist-provider"
 
 import "../globals.css"
-import "../care-atlas.css"
-import "../care-atlas-motion.css"
-import "../care-atlas-editorial.css"
-import "../care-atlas-discovery.css"
+import "../glass.css"
+import "../glass-commerce.css"
 import { DirectionProvider } from "@/components/ui/direction"
 import { AnalyticsProvider } from "@/components/npf/analytics-provider"
 import { CookieConsentBanner } from "@/components/npf/cookie-consent-banner"
@@ -33,40 +31,61 @@ import { CartProvider } from "@/lib/cart"
 import { readActiveOrderItems } from "@/lib/vendure/active-order"
 import { getActiveCustomer } from "@/lib/auth/active-customer"
 
+// Self-hosted, all SIL OFL (see src/app/fonts/LICENSES.md). Arabic: Noto Kufi
+// Arabic for display + IBM Plex Sans Arabic for text. Latin: Bricolage
+// Grotesque for display + Manrope for text. `preload: false` keeps both
+// scripts' files off the critical path; `swap` + the system fallback keeps
+// text visible and the LCP element is an image, not a webfont.
 const fontSans = localFont({
   src: [
-    {
-      path: "../fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2",
-      weight: "400",
-      style: "normal",
-    },
-    {
-      path: "../fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2",
-      weight: "500",
-      style: "normal",
-    },
-    {
-      path: "../fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2",
-      weight: "600",
-      style: "normal",
-    },
-    {
-      path: "../fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2",
-      weight: "700",
-      style: "normal",
-    },
+    { path: "../fonts/ibm-plex-sans-arabic-arabic-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/ibm-plex-sans-arabic-arabic-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/ibm-plex-sans-arabic-arabic-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/ibm-plex-sans-arabic-arabic-700-normal.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-sans",
   display: "swap",
   preload: false,
-});
+})
+
+const fontKufi = localFont({
+  src: [
+    { path: "../fonts/noto-kufi-arabic-arabic-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/noto-kufi-arabic-arabic-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-kufi",
+  display: "swap",
+  preload: false,
+})
+
+const fontBricolage = localFont({
+  src: [
+    { path: "../fonts/bricolage-grotesque-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/bricolage-grotesque-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-bricolage",
+  display: "swap",
+  preload: false,
+})
+
+const fontManrope = localFont({
+  src: [
+    { path: "../fonts/manrope-latin-400-normal.woff2", weight: "400", style: "normal" },
+    { path: "../fonts/manrope-latin-500-normal.woff2", weight: "500", style: "normal" },
+    { path: "../fonts/manrope-latin-600-normal.woff2", weight: "600", style: "normal" },
+    { path: "../fonts/manrope-latin-700-normal.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-manrope",
+  display: "swap",
+  preload: false,
+})
 
 const fontPlexMono = localFont({
   src: "../fonts/ibm-plex-mono-latin-500-normal.woff2",
   variable: "--font-plex-mono",
   display: "swap",
   preload: false,
-});
+})
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -197,7 +216,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={direction}
-      className={`${fontSans.variable} ${fontPlexMono.variable}`}
+      className={`${fontSans.variable} ${fontKufi.variable} ${fontBricolage.variable} ${fontManrope.variable} ${fontPlexMono.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -237,7 +256,7 @@ export default async function LocaleLayout({
         })}
       </head>
       <body
-        className={`ca-site flex min-h-screen flex-col antialiased ${mockFallbackEnabled() || process.env.NPF_PREVIEW_MODE === "1" ? "ca-with-notice" : ""}`}
+        className="ng-site flex min-h-screen flex-col antialiased"
       >
         <a href="#main-content" className="skip-link">
           {ui.skip}

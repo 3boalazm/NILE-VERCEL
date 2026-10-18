@@ -101,6 +101,12 @@ async function ensureMedia(
     return id
   }
 
+  // No DB row for this filename, so any same-named file already in ./media is an
+  // orphan from a previous database (e.g. a reset DB with the media dir kept).
+  // Payload would rename the new upload to `<name>-1.ext` and then trip its own
+  // filename validation — clear the orphan so a fresh database always seeds.
+  fs.rmSync(path.join(process.cwd(), "media", filename), { force: true })
+
   const created = await payload.create({
     collection: "media",
     data: { alt },

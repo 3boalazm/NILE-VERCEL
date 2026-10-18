@@ -11,61 +11,15 @@ Subsetted from Fontsource 5.3.0 packages.
 
 - **IBM Plex Sans Arabic**: Copyright 2019 IBM Corp.; SIL Open Font License 1.1.
 - **IBM Plex Mono**: Copyright 2017 IBM Corp.; SIL Open Font License 1.1.
-- **Montserrat**: Copyright 2011 The Montserrat Project Authors; SIL Open Font License 1.1.
+- **Noto Kufi Arabic** (600/700): Copyright The Noto Project Authors; SIL Open Font License 1.1.
+- **Manrope** (400–700): Copyright 2018 The Manrope Project Authors; SIL Open Font License 1.1.
+- **Bricolage Grotesque** (600/700): Copyright 2022 The Bricolage Grotesque Project Authors; SIL Open Font License 1.1.
 
 The full SIL Open Font License text is available at https://scripts.sil.org/OFL.
 
-## Brand faces — ⚠️ licence status must be confirmed before launch
+## Retired faces (2026-10-18, Nile Glass redesign)
 
-These two families were supplied to the project rather than downloaded from a
-foundry catalogue, and **neither is covered by an OFL entry above**. What is
-known comes from the licence metadata embedded in the files themselves
-(`nameID 0`/`7`/`8`/`9`, read with fontTools):
-
-| Family | Embedded licence statement | Designer / foundry |
-|---|---|---|
-| **KO Banzeen** (Arabic display, 3 cuts) | “Banzeen is a free typeface. **Don't redistribute or re-sell.** Copyright © 2024 Protype Foundry. All rights reserved.” · contact `hello@protype.studio` | Ibrahim Hamdi — Protype Foundry, ko-type.com |
-| **Glora** (Latin display, 6 weights) | **none** — the files carry no `nameID 0` licence record at all | “Khaiuns” (designer credit, `nameID 9`) |
-
-Two consequences worth being explicit about:
-
-1. **KO Banzeen's “don't redistribute” needs a ruling.** Serving a webfont to
-   site visitors is normal web embedding, but these binaries are also committed
-   to a **public** GitHub repository, which is closer to redistribution than to
-   embedding. Ask Protype Foundry (`hello@protype.studio`) to confirm web use —
-   or move the files to a private asset store, or swap to an OFL-licensed Arabic
-   display face. This is a business/legal question, not something code can
-   settle; it is tracked in the defect register so it cannot be lost.
-2. **Glora has no recorded licence.** It came from the client (“Ahmed's own
-   files” per the layout comment). If it was commissioned or purchased, the
-   licence terms should be filed here; if it was downloaded, the source needs
-   identifying. Shipping a font with no known licence is the same class of risk
-   as shipping unlicensed photography.
-
-Nothing above blocks the current work: converting the files to WOFF2 does not
-change what is already being served or already committed — it makes the same
-delivery ~44% smaller.
-
-## Regenerating the WOFF2 files
-
-The conversion is a one-off asset build, not a runtime step (the repo's other
-WOFF2 files were added the same way). To redo it after editing a source font:
-
-```bash
-pip install fonttools brotli
-python3 - <<'PY'
-from fontTools.ttLib import TTFont
-import os
-for name in os.listdir("assets/fonts-source"):
-    if not name.lower().endswith((".ttf", ".otf")): continue
-    font = TTFont(os.path.join("assets/fonts-source", name))
-    font.flavor = "woff2"                       # WOFF2 = Brotli-compressed SFNT
-    font.save(os.path.join("src/app/fonts", os.path.splitext(name)[0] + ".woff2"))
-PY
-```
-
-Full conversion, **no subsetting**, on purpose: these faces drive display
-headings whose text comes from the CMS and from product names, so trimming the
-character set to today's copy would break tomorrow's. Sizes are small enough
-that the trade is easy — Glora ≈ 6.1 KB/weight, KO Banzeen ≈ 14.5 KB/cut, total
-143 KB → 80 KB raw. Measured with fontTools 4.65.0.
+KO Banzeen and Glora were removed from the delivery path: neither carried an OFL grant (Banzeen: "don't redistribute", Glora: no licence
+record) and the repository is public. They are no longer referenced by any CSS or `next/font/local` call and their woff2 files were deleted.
+The display role is now Noto Kufi Arabic (Arabic) and Bricolage Grotesque (Latin), both OFL. Montserrat was deleted as unused.
+If the owner obtains written web-use rights for the old brand faces they can be restored from git history (`9df98f7`).
