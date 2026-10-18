@@ -12,7 +12,7 @@ Vendure/DB work: `03-vendure-audit.md`. Running log: `PROGRESS.md`. Before/after
 * **Vocabulary** — `.ng-wrap/.ng-section/.ng-bento`, `.ng-glass`, `.ng-card`, `.ng-btn(-primary|-ghost|-lg)`, `.ng-eyebrow`, `.ng-display/.ng-h1/.ng-h2/.ng-lead/.ng-body`,
   `.ng-chip`, `.ng-acc`, `.ng-dock`, … Page-group CSS lives in `glass-catalog.css`, `glass-content.css`, `glass-commerce.css`.
 * **Typography** — Noto Kufi Arabic (600/700, display) + Manrope (text) + Bricolage Grotesque (Latin display), self-hosted OFL via
-  `next/font/local` (`src/app/fonts`, `preload:false` except what the first paint needs). Arabic-Indic numerals in `/ar`. Removed the
+  `next/font/local` (`src/app/fonts`, `preload:false` except what the first paint needs). Prices use Western digits with grouping in both locales (identical to cart, checkout and the shipping table); dates stay in Arabic-Indic in `/ar`. Removed the
   unused Glora / Ko Banzeen / Montserrat from the pipeline (see `LICENSES.md` / `DECISIONS.md` for the font-licence rule that was kept).
 * **Glass, restrained** — one glass layer per region; backdrop-filter only on header bar, dock, hero chips and a few hero panels. Fallbacks:
   `@supports not (backdrop-filter)` and `prefers-reduced-transparency` swap to opaque surfaces; `prefers-reduced-motion` removes entrances,
@@ -53,7 +53,8 @@ a hosted Postgres with SSL (PR #4 path) — the local stack uses plain embedded 
 ## 4. Known limits / follow-ups
 
 * The dev-only Next overlay "1 Issue" is React's dev warning about the inline theme `<script>` in the layout (pre-existing, silent in production).
-* Home product order follows the Payload catalogue order; if you want a fixed merchandising order add an `order` field in Payload.
+* On a local stack (http Vendure assets) cart/checkout thumbnails fall back to the neutral placeholder because the CSP `img-src` allows `https:` only; production assets are https, so thumbnails render there.
+* Listing order is a fixed merchandising list in `src/lib/products/presentation.ts` (`sortForListing`: supplements in family order, then devices); new products appear after the known ones.
 * The NFSA / FDA registration chips in the dictionary (`heroTrustChips`) are **not** shown on the new home — they were already unused before
   the redesign and no registration document is in the evidence set (see list below).
 

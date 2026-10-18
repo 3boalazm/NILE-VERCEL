@@ -1,4 +1,5 @@
 "use client"
+import { FIELD_LIMITS } from "@/lib/forms/field-limits"
 import { useState, type FormEvent } from "react"
 import Link from "next/link"
 import { requestPasswordReset, resetPassword } from "@/lib/auth/password-reset"
@@ -124,7 +125,7 @@ export function PasswordRecoveryForm({
             dir="ltr"
             autoComplete="email"
             required
-            maxLength={254}
+            maxLength={FIELD_LIMITS.emailAddress}
           />
         </div>
       )}

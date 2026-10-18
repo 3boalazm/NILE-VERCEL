@@ -280,7 +280,7 @@ export default async function ProductDetailPage({
               {priced ? (
                 <>
                   <p className="ng-price ng-num">
-                    {product.price!.toLocaleString(locale === "ar" ? "ar-EG" : "en-US")}
+                    {product.price!.toLocaleString("en-US")}
                     <small>{locale === "en" ? "EGP" : "ج.م"}</small>
                   </p>
                   <p className="ng-pdp-price-note">

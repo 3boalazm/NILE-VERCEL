@@ -27,5 +27,5 @@ overflow** at every width — the problems were visual, not structural.
 
 "Nile Glass": light aurora ground sampled from the pack photography (peach / aqua / rose / mint), frosted-glass cards used sparingly
 (one glass layer per region, never stacked), a single navy brand accent, large Noto Kufi Arabic display type with Manrope / Bricolage
-for Latin, real Arabic-Indic numerals in `/ar`, logical CSS properties throughout, one token set (`--ng-*`) for colour, type, space,
+for Latin, one numeral convention for money (Western digits, consistent with cart/checkout), logical CSS properties throughout, one token set (`--ng-*`) for colour, type, space,
 radius, blur, shadow and motion. Details and decisions: `02-redesign-handoff.md`.

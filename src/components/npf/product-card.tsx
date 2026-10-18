@@ -74,9 +74,8 @@ export function NPFProductCard({
           <span className="ng-price ng-num">
             {typeof p.price === "number" ? (
               <>
-                {p.price.toLocaleString(locale === "ar" ? "ar-EG" : "en-US", {
-                  useGrouping: true,
-                })}
+                {// Western digits: same as cart, checkout and the shipping table
+                p.price.toLocaleString("en-US", { useGrouping: true })}
                 <small>{locale === "en" ? "EGP" : "ج.م"}</small>
                 {p.priceSource === "demo" && <small> · {ui.priceDemo}</small>}
               </>

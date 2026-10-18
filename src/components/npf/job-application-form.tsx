@@ -1,5 +1,6 @@
 "use client"
 
+import { FIELD_LIMITS } from "@/lib/forms/field-limits"
 import { useState, type FormEvent } from "react"
 import { Loader2Icon, CheckCircle2Icon, TriangleAlertIcon } from "lucide-react"
 
@@ -74,16 +75,16 @@ export function NPFJobApplicationForm({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="apply-name">{dictionary.formName}</Label>
-          <Input id="apply-name" name="name" required autoComplete="name" maxLength={120} />
+          <Input id="apply-name" name="name" required autoComplete="name" maxLength={FIELD_LIMITS.personName} />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="apply-email">{dictionary.formEmail}</Label>
-          <Input id="apply-email" name="email" type="email" required autoComplete="email" maxLength={254} />
+          <Input id="apply-email" name="email" type="email" required autoComplete="email" maxLength={FIELD_LIMITS.emailAddress} />
         </div>
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="apply-phone">{dictionary.formPhone}</Label>
-        <Input id="apply-phone" name="phone" type="tel" autoComplete="tel" maxLength={40} />
+        <Input id="apply-phone" name="phone" type="tel" autoComplete="tel" maxLength={FIELD_LIMITS.phoneNumber} />
       </div>
       <div className="flex flex-col gap-2">
         <Label htmlFor="apply-message">{dictionary.formMessage}</Label>

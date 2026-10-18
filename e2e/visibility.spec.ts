@@ -289,6 +289,9 @@ test.describe("layout integrity", () => {
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/ar");
     await scrollThrough(page);
+    // Let in-flight reveal transforms (scale .98 → 1) settle: a mid-animation
+    // card reports its children at 43.9px.
+    await page.waitForTimeout(900);
     const small = await page.evaluate(() => {
       const selectors = [
         "header button",
