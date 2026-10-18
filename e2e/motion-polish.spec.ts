@@ -56,7 +56,11 @@ test("hero stage animates an actual product change without a hidden initial slid
 }) => {
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto("/en");
+  const heading = page.locator("#hero-title");
+  await expect(heading).toBeVisible();
+  await expect(heading).toHaveCSS("opacity", "1");
   const slides = page.locator(".ng-stage-slide");
+  await expect(slides).not.toHaveCount(0);
   await expect(slides.first()).toHaveAttribute("data-active", "true");
   await expect(slides.first()).toHaveCSS("opacity", "1");
   const dot = page.getByRole("button", { name: "Proxeed Women", exact: true });
@@ -145,13 +149,58 @@ test("reduced transparency supplies opaque glass fallbacks", async ({
     "backdrop-filter",
     "none",
   );
-  const alpha = await page
-    .locator(".ng-header-bar")
-    .evaluate((el) => getComputedStyle(el).backgroundColor);
-  // Opaque (rgb(...)) or ≥ 0.95 alpha — never a see-through surface.
-  expect(
-    /^rgb\(/.test(alpha) || Number(alpha.match(/,\s*([\d.]+)\)$/)?.[1]) >= 0.95,
-  ).toBe(true);
+  const utilityBlur = await page.evaluate(() => {
+    const probe = document.createElement("div");
+    probe.className = "backdrop-blur-sm";
+    document.body.append(probe);
+    const value = getComputedStyle(probe).backdropFilter;
+    probe.remove();
+    return value;
+  });
+  expect(utilityBlur).toBe("none");
+  const surfaces = await page.evaluate(() => {
+    return ["--card", "--secondary", "--popover", "--muted"].map((token) => {
+      const probe = document.createElement("div");
+      probe.style.backgroundColor = `var(${token})`;
+      document.body.append(probe);
+      const value = getComputedStyle(probe).backgroundColor;
+      probe.remove();
+      const match = value.match(/rgba?\(([^)]+)\)/i);
+      if (!match) {
+        const alpha = value.match(/\/\s*([\d.]+)\s*\)$/)?.[1];
+        return { token, value, alpha: Number(alpha ?? 1) };
+      }
+      const channels = match[1].split(/[\s,/]+/).filter(Boolean);
+      return {
+        token,
+        value,
+        alpha: channels.length === 4 ? Number(channels[3]) : 1,
+      };
+    });
+  });
+  // Legacy shadcn/Tailwind surfaces share the glass tokens and become opaque
+  // or near-opaque when transparency is reduced.
+  for (const surface of surfaces) {
+    expect(surface.alpha, `${surface.token}: ${surface.value}`).toBeGreaterThanOrEqual(0.95);
+  }
+
+  await page.evaluate(() => document.documentElement.classList.add("dark"));
+  await expect(page.locator(".ng-header-bar")).toHaveCSS(
+    "backdrop-filter",
+    "none",
+  );
+  const darkCard = await page.evaluate(() => {
+    const probe = document.createElement("div");
+    probe.style.backgroundColor = "var(--card)";
+    document.body.append(probe);
+    const value = getComputedStyle(probe).backgroundColor;
+    probe.remove();
+    return value;
+  });
+  const darkAlpha = darkCard.match(/rgba?\(([^)]+)\)/i)?.[1]
+    .split(/[\s,/]+/)
+    .filter(Boolean);
+  expect(darkAlpha?.length === 4 ? Number(darkAlpha[3]) : 1).toBeGreaterThanOrEqual(0.95);
 });
 
 test("touch devices keep the call-to-action stationary", async ({
