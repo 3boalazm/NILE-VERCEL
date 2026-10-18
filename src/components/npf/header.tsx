@@ -25,7 +25,6 @@ export function NPFHeader({
           { href: `${base}/products`, label: d.nav.products },
           { href: `${base}/about`, label: d.nav.about },
           { href: `${base}/quality-sourcing`, label: d.nav.quality },
-          { href: `${base}/blogs`, label: d.nav.blogs },
         ]}
         account={account}
         labels={{

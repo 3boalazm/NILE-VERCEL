@@ -7,9 +7,9 @@ for (const locale of ["ar", "en"] as const) {
   test(`${locale}: atlas keyboard selection opens the actual product file`, async ({
     page,
   }) => {
-    await page.goto(`/${locale}`);
-    const explorer = page.locator(".ca-product-explorer");
-    const rows = explorer.locator(".ca-product-row");
+    await page.goto(`/${locale}/products`);
+    const explorer = page.getByTestId("product-atlas");
+    const rows = explorer.getByTestId("atlas-row");
     const names = await rows.locator("strong").allTextContents();
     const plus = rows.filter({
       has: page.getByText("Proxeed Plus", { exact: true }),
@@ -27,7 +27,7 @@ for (const locale of ["ar", "en"] as const) {
     await women.click();
     await expect(women).toHaveAttribute("aria-pressed", "true");
     await expect(plus).toHaveAttribute("aria-pressed", "false");
-    await explorer.locator(".ca-file-links a").first().click();
+    await explorer.getByTestId("atlas-file-links").locator("a").first().click();
     await expect(page).toHaveURL(`/${locale}/products/proxeed-women`);
     await expect(page.locator("h1")).toHaveText(
       locale === "ar" ? "بروكسيد نساء" : "Proxeed Women",
@@ -37,39 +37,39 @@ for (const locale of ["ar", "en"] as const) {
     page,
   }) => {
     const c = getCareAtlasCopy(locale);
-    await page.goto(`/${locale}`);
-    const explorer = page.locator(".ca-product-explorer");
+    await page.goto(`/${locale}/products`);
+    const explorer = page.getByTestId("product-atlas");
     await explorer
       .getByRole("button", { name: c.filterDevices, exact: true })
       .click();
-    await expect(explorer.locator(".ca-product-row")).toHaveCount(2);
+    await expect(explorer.getByTestId("atlas-row")).toHaveCount(2);
     await expect(
-      explorer.locator(".ca-product-tabs button").first(),
+      explorer.getByTestId("atlas-tabs").locator("button").first(),
     ).toHaveText(c.specifications);
     await explorer
       .getByRole("button", { name: c.filterAll, exact: true })
       .click();
-    const search = explorer.getByRole("searchbox");
+    const search = explorer.getByTestId("atlas-search");
     await search.fill("بروكسيد بلس");
-    await expect(explorer.locator(".ca-product-row")).toHaveCount(1);
+    await expect(explorer.getByTestId("atlas-row")).toHaveCount(1);
     await expect(explorer.locator("h3")).toHaveText("Proxeed Plus");
     await search.fill("no-match-zzzz");
-    await expect(explorer.locator(".ca-empty")).toBeVisible();
-    await expect(explorer.locator(".ca-product-stage")).toHaveCount(0);
+    await expect(explorer.getByTestId("atlas-empty")).toBeVisible();
+    await expect(explorer.getByTestId("atlas-stage")).toHaveCount(0);
     await search.clear();
-    await expect(explorer.locator(".ca-product-row")).toHaveCount(8);
-    await expect(explorer.locator(".ca-product-stage")).toBeVisible();
+    await expect(explorer.getByTestId("atlas-row")).toHaveCount(8);
+    await expect(explorer.getByTestId("atlas-stage")).toBeVisible();
   });
   test(`${locale}: atlas uses genuine leaflets and verified inquiry context`, async ({
     page,
   }) => {
     const c = getCareAtlasCopy(locale);
-    await page.goto(`/${locale}`);
-    const explorer = page.locator(".ca-product-explorer");
+    await page.goto(`/${locale}/products`);
+    const explorer = page.getByTestId("product-atlas");
     await explorer
       .getByRole("button", { name: c.leaflet, exact: true })
       .click();
-    await expect(explorer.locator(".ca-pdf-link")).toHaveAttribute(
+    await expect(explorer.getByTestId("atlas-pdf-link")).toHaveAttribute(
       "href",
       "/downloads/proxeed-plus-leaflet.pdf",
     );
@@ -79,12 +79,12 @@ for (const locale of ["ar", "en"] as const) {
     await explorer
       .getByRole("button", { name: c.leaflet, exact: true })
       .click();
-    await expect(explorer.locator(".ca-product-detail")).toContainText(
+    await expect(explorer.getByTestId("atlas-detail")).toContainText(
       c.noLeaflet,
     );
-    await expect(explorer.locator(".ca-pdf-link")).toHaveCount(0);
+    await expect(explorer.getByTestId("atlas-pdf-link")).toHaveCount(0);
     const name = await explorer.locator("h3").textContent();
-    await explorer.locator(".ca-file-links a").last().click();
+    await explorer.getByTestId("atlas-file-links").locator("a").last().click();
     await expect(page).toHaveURL(new RegExp(`/${locale}/contact\\?product=`));
     await expect(page.locator('input[name="subject"]')).toHaveValue(
       `${locale === "ar" ? "استفسار عن المنتج" : "Product inquiry"}: ${name}`,
@@ -96,7 +96,7 @@ test("saved products survive navigation and can be removed again", async ({
   page,
 }) => {
   await page.goto("/en/products");
-  const plus = page.locator(".ca-catalog-card").filter({
+  const plus = page.getByTestId("product-card").filter({
     has: page.getByRole("heading", { name: "Proxeed Plus", exact: true }),
   });
   await plus
@@ -130,16 +130,17 @@ test("no JavaScript: all eight actual product files remain reachable", async ({
     baseURL,
   });
   const page = await context.newPage();
-  await page.goto("/en");
-  const links = page.locator(".ca-noscript-note a");
+  await page.goto("/en/products");
+  const links = page.getByTestId("atlas-noscript").locator("a");
   await expect(links).toHaveCount(8);
   await links.filter({ hasText: "Proxeed Women Inositol" }).click();
   await expect(page).toHaveURL(/\/en\/products\/proxeed-women-inositol$/);
   await expect(page.locator("h1")).toHaveText("Proxeed Women Inositol");
   await page.goto("/en/products");
-  await page.getByRole("searchbox").fill("بروكسيد بلس");
-  await page.getByRole("button", { name: /Search/ }).click();
-  await expect(page.locator(".ca-catalog-card")).toHaveCount(1);
+  const catalogSearch = page.getByRole("search");
+  await catalogSearch.getByRole("searchbox").fill("بروكسيد بلس");
+  await catalogSearch.getByRole("button", { name: /Search/ }).click();
+  await expect(page.getByTestId("product-card")).toHaveCount(1);
   await expect(
     page.getByRole("heading", { name: "Proxeed Plus", exact: true }),
   ).toBeVisible();

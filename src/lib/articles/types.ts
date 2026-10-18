@@ -104,9 +104,17 @@ export function localizeArticle(article: Article, locale: Locale): Article {
   if (locale === "ar") return article
   const t = article.translations?.en
   if (!t) return article
+  // Only fields the translation actually provides override the original: the
+  // CMS adapter emits `journal: undefined` when a row has no English journal,
+  // and spreading that blanked the citation's journal on /en article pages.
+  const defined = <T extends object>(value: T | undefined): Partial<T> =>
+    Object.fromEntries(
+      Object.entries(value ?? {}).filter(([, v]) => v !== undefined && v !== null && v !== "")
+    ) as Partial<T>
+  const { source, ...rest } = t
   return {
     ...article,
-    ...t,
-    source: { ...article.source, ...(t.source ?? {}) },
+    ...defined(rest),
+    source: { ...article.source, ...defined(source) },
   }
 }

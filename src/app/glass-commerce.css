@@ -1,0 +1,1408 @@
+/* ==========================================================================
+   NILE GLASS — commerce & account layer (2026-10-18)
+   --------------------------------------------------------------------------
+   Cart, checkout, order confirmation, account, auth, wishlist and the global
+   commerce widgets (consent banner, install hint, steppers, add-to-cart,
+   wishlist toggles). Builds ONLY on the --ng-* tokens in glass.css.
+
+   Rules kept here
+   - No backdrop-filter on in-flow panels: these pages sit over the plain
+     aurora, where a blur is invisible but still costs a compositor layer.
+     The only blurred surfaces are the two FIXED floaters (consent, install
+     hint), which scroll over content; both fall back to opaque surfaces.
+   - Logical properties throughout; nothing is mirrored by hand.
+   - Every interactive target is >= 44px; focus rings come from glass.css.
+   - Numbers (prices, phone, alias) are isolated + tabular so bidi never
+     reorders "320 ج.م" or an LTR wallet number inside Arabic text.
+   ========================================================================== */
+
+/* ---------- page frame ---------------------------------------------------- */
+.ngc-page {
+  padding-block: clamp(24px, 4.5vw, 64px) clamp(40px, 6vw, 96px);
+}
+.ngc-head {
+  display: grid;
+  gap: 10px;
+  margin-block-end: clamp(20px, 3vw, 36px);
+}
+.ngc-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 24px;
+}
+.ngc-title {
+  margin: 0;
+  font-family: var(--ng-font-display);
+  font-weight: 700;
+  font-size: clamp(1.85rem, 1.3rem + 2.3vw, 3rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--ng-ink);
+  text-wrap: balance;
+}
+html[lang="ar"] .ngc-title {
+  letter-spacing: 0;
+  line-height: 1.3;
+}
+.ngc-title-sm {
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem);
+}
+.ngc-sub {
+  margin: 0;
+  color: var(--ng-ink-3);
+  font-size: var(--ng-t-sm);
+  line-height: 1.7;
+  max-inline-size: 60ch;
+  text-wrap: pretty;
+}
+.ngc-h2 {
+  margin: 0;
+  font-family: var(--ng-font-display);
+  font-weight: 700;
+  font-size: var(--ng-t-lg);
+  line-height: 1.35;
+  color: var(--ng-ink);
+}
+.ngc-h3 {
+  margin: 0;
+  font-family: var(--ng-font-display);
+  font-weight: 600;
+  font-size: var(--ng-t-md);
+  line-height: 1.4;
+  color: var(--ng-ink);
+}
+
+/* ---------- layout -------------------------------------------------------- */
+.ngc-layout {
+  display: grid;
+  gap: clamp(20px, 3vw, 40px);
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .ngc-layout {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+  .ngc-sticky {
+    position: sticky;
+    inset-block-start: calc(var(--ng-header-h) + 32px);
+  }
+}
+.ngc-stack {
+  display: grid;
+  gap: var(--ngc-gap, 16px);
+  min-inline-size: 0;
+}
+.ngc-grid-2 {
+  display: grid;
+  gap: 16px;
+}
+@media (min-width: 640px) {
+  .ngc-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.ngc-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.ngc-center {
+  justify-content: center;
+  text-align: center;
+}
+
+/* ---------- surfaces ------------------------------------------------------ */
+.ngc-panel {
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  border-radius: var(--ng-r-3);
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+  padding: clamp(18px, 2.6vw, 30px);
+  min-inline-size: 0;
+}
+.ngc-panel-strong {
+  background: var(--ng-glass-strong);
+}
+.ngc-panel-tint {
+  background:
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--ng-aqua) 16%, transparent), transparent 60%),
+    var(--ng-glass-strong);
+}
+.ngc-divider {
+  border: 0;
+  border-block-start: 1px solid var(--ng-hairline);
+  margin: 0;
+}
+
+/* ---------- buttons (extensions of .ng-btn) -------------------------------- */
+.ngc-block {
+  inline-size: 100%;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.35;
+}
+.ng-btn.ngc-block {
+  padding-block: 10px;
+}
+.ngc-btn-danger {
+  --btn-bg: color-mix(in srgb, var(--ng-danger) 10%, var(--ng-glass-strong));
+  --btn-fg: var(--ng-danger);
+  --btn-bd: color-mix(in srgb, var(--ng-danger) 40%, transparent);
+  box-shadow: none;
+}
+.ngc-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-block-size: 44px;
+  padding: 0 16px;
+  border-radius: var(--ng-r-pill);
+  border: 1px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-strong);
+  color: var(--ng-ink);
+  font: 600 var(--ng-t-xs) / 1.2 var(--ng-font-text);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--ng-dur-1) linear, border-color var(--ng-dur-1) linear;
+}
+.ngc-pill-btn:hover {
+  background: var(--ng-aqua-soft);
+  border-color: color-mix(in srgb, var(--ng-brand) 40%, transparent);
+}
+.ngc-pill-btn svg {
+  inline-size: 15px;
+  block-size: 15px;
+  flex: none;
+}
+.ngc-pill-btn[data-copied="true"] {
+  border-color: var(--ng-ok);
+  color: var(--ng-ok);
+}
+.ngc-quiet {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-block-size: 44px;
+  color: var(--ng-ink-2);
+  font-size: var(--ng-t-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--ng-hairline-strong);
+  text-underline-offset: 5px;
+  transition: color var(--ng-dur-1) linear, text-decoration-color var(--ng-dur-1) linear;
+}
+.ngc-quiet:hover {
+  color: var(--ng-brand);
+  text-decoration-color: currentColor;
+}
+.ngc-inline-link {
+  color: var(--ng-brand);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.ngc-inline-link:hover {
+  text-decoration-thickness: 2px;
+}
+.ngc-spin {
+  animation: ngc-spin 900ms linear infinite;
+}
+@keyframes ngc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- money & numbers ----------------------------------------------- */
+.ngc-amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--ng-ink);
+  white-space: nowrap;
+  unicode-bidi: isolate;
+}
+.ngc-mono {
+  font-family: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+  font-weight: 500;
+  font-size: clamp(0.8rem, 0.72rem + 0.35vw, 0.9375rem);
+  letter-spacing: 0;
+  color: var(--ng-ink);
+  direction: ltr;
+  unicode-bidi: isolate;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- summary rows -------------------------------------------------- */
+.ngc-rows {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.ngc-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: var(--ng-t-sm);
+  margin: 0;
+}
+.ngc-row > :first-child {
+  color: var(--ng-ink-3);
+}
+.ngc-row dd {
+  margin: 0;
+}
+.ngc-row-total {
+  margin-block-start: 6px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--ng-hairline);
+  font-size: var(--ng-t-md);
+}
+.ngc-row-total > :first-child {
+  color: var(--ng-ink);
+  font-weight: 700;
+}
+.ngc-row-total .ngc-amount {
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-xl);
+  line-height: 1.2;
+}
+
+/* ---------- line items ---------------------------------------------------- */
+.ngc-lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.ngc-line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(12px, 2vw, 20px);
+  padding: clamp(12px, 1.8vw, 16px);
+  border-radius: var(--ng-r-3);
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+}
+.ngc-line-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-inline-size: 0;
+}
+.ngc-line-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ngc-line-name {
+  font-family: var(--ng-font-display);
+  font-weight: 700;
+  font-size: var(--ng-t-md);
+  line-height: 1.4;
+  color: var(--ng-ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+a.ngc-line-name:hover {
+  color: var(--ng-brand);
+}
+.ngc-line-meta {
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+}
+.ngc-line-foot {
+  margin-block-start: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ngc-thumb {
+  position: relative;
+  display: block;
+  inline-size: clamp(76px, 18vw, 108px);
+  aspect-ratio: 1;
+  border-radius: var(--ng-r-2);
+  overflow: hidden;
+  background: var(--ng-aqua-soft);
+  flex: none;
+}
+.ngc-thumb img {
+  object-fit: cover;
+}
+.ngc-thumb-sm {
+  inline-size: 52px;
+  border-radius: 12px;
+}
+/* compact rows (checkout summary, confirmation, order detail) */
+.ngc-mini {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.ngc-mini > li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding-block: 12px;
+}
+.ngc-mini > li + li {
+  border-block-start: 1px solid var(--ng-hairline);
+}
+.ngc-mini-name {
+  display: block;
+  font-weight: 600;
+  font-size: var(--ng-t-sm);
+  line-height: 1.45;
+  color: var(--ng-ink);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- icon button (remove) ------------------------------------------ */
+.ngc-icon-btn {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  margin: -8px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ng-ink-3);
+  cursor: pointer;
+  transition: background-color var(--ng-dur-1) linear, color var(--ng-dur-1) linear;
+}
+.ngc-icon-btn:hover {
+  background: color-mix(in srgb, var(--ng-danger) 10%, transparent);
+  color: var(--ng-danger);
+}
+.ngc-icon-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.ngc-icon-btn svg {
+  inline-size: 18px;
+  block-size: 18px;
+}
+
+/* ---------- quantity stepper ---------------------------------------------- */
+.ngc-stepper {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px;
+  border-radius: var(--ng-r-pill);
+  border: 1px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-strong);
+}
+.ngc-stepper button {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ng-ink);
+  cursor: pointer;
+  transition: background-color var(--ng-dur-1) linear;
+}
+.ngc-stepper button:hover {
+  background: var(--ng-aqua-soft);
+}
+.ngc-stepper button:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.ngc-stepper button svg {
+  inline-size: 15px;
+  block-size: 15px;
+}
+.ngc-stepper output,
+.ngc-stepper span {
+  min-inline-size: 2.25rem;
+  text-align: center;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- empty / state screens ----------------------------------------- */
+.ngc-empty {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  max-inline-size: 36rem;
+  margin-inline: auto;
+  padding-block: clamp(48px, 10vw, 120px);
+  text-align: center;
+}
+.ngc-empty .ngc-sub {
+  margin-inline: auto;
+}
+.ngc-empty .ng-btn {
+  margin-block-start: 10px;
+}
+.ngc-empty-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 76px;
+  block-size: 76px;
+  border-radius: 50%;
+  color: var(--ng-brand);
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.95), transparent 58%),
+    linear-gradient(140deg, var(--ng-aqua-soft), color-mix(in srgb, var(--ng-rose-soft) 80%, transparent));
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-2);
+  margin-block-end: 6px;
+}
+.dark .ngc-empty-icon {
+  background: linear-gradient(140deg, var(--ng-aqua-soft), var(--ng-rose-soft));
+}
+.ngc-empty-icon svg {
+  inline-size: 28px;
+  block-size: 28px;
+}
+.ngc-empty-icon[data-tone="danger"] {
+  color: var(--ng-danger);
+}
+.ngc-empty-icon[data-tone="ok"] {
+  color: var(--ng-ok);
+}
+
+/* ---------- messages ------------------------------------------------------ */
+.ngc-alert,
+.ngc-ok,
+.ngc-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 14px;
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--ng-r-2);
+  font-size: var(--ng-t-sm);
+  line-height: 1.6;
+}
+.ngc-alert {
+  color: var(--ng-danger);
+  background: color-mix(in srgb, var(--ng-danger) 8%, var(--ng-glass-strong));
+  border: 1px solid color-mix(in srgb, var(--ng-danger) 32%, transparent);
+}
+.ngc-ok {
+  color: var(--ng-ok);
+  background: color-mix(in srgb, var(--ng-ok) 8%, var(--ng-glass-strong));
+  border: 1px solid color-mix(in srgb, var(--ng-ok) 30%, transparent);
+}
+.ngc-info {
+  color: var(--ng-ink-2);
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-hairline);
+}
+.ngc-alert button,
+.ngc-info button {
+  min-block-size: 44px;
+  padding: 0 4px;
+  border: 0;
+  background: none;
+  color: var(--ng-brand);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+.ngc-field-error {
+  margin: 0;
+  color: var(--ng-danger);
+  font-size: var(--ng-t-sm);
+  font-weight: 600;
+}
+.ngc-note {
+  margin: 0;
+  color: var(--ng-ink-3);
+  font-size: var(--ng-t-xs);
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+
+/* ---------- forms --------------------------------------------------------- */
+.ngc-fieldset {
+  border: 0;
+  margin: 0;
+  min-inline-size: 0;
+  display: grid;
+  gap: 14px;
+}
+.ngc-fieldset:not(.ngc-panel) {
+  padding: 0;
+}
+/* float takes the legend out of "rendered legend" mode (which straddles the
+   fieldset's top edge) and makes it an ordinary first grid row. */
+.ngc-fieldset > legend {
+  float: inline-start;
+  padding: 0;
+  inline-size: 100%;
+}
+.ngc-field {
+  display: grid;
+  gap: 6px;
+  min-inline-size: 0;
+}
+.ngc-select {
+  appearance: none;
+  -webkit-appearance: none;
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding-block: 10px;
+  padding-inline: 16px 44px;
+  border-radius: var(--ng-r-2);
+  border: 1px solid var(--input, var(--ng-hairline-strong));
+  background-color: var(--ng-glass-strong);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%234f6579' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' viewBox='0 0 24 24'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  color: var(--ng-ink);
+  font: 500 var(--ng-t-md) / 1.4 var(--ng-font-text);
+  cursor: pointer;
+  transition: border-color var(--ng-dur-1) linear, box-shadow var(--ng-dur-2) var(--ng-ease);
+}
+[dir="rtl"] .ngc-select {
+  background-position: left 16px center;
+}
+.ngc-select:focus-visible {
+  outline: none;
+  border-color: var(--ng-brand);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ng-aqua) 35%, transparent);
+}
+.ngc-select:invalid {
+  color: var(--ng-ink-3);
+}
+.ngc-select option {
+  color: #0a1a2b;
+  background: #fff;
+}
+@media (min-width: 768px) {
+  .ngc-select {
+    font-size: var(--ng-t-sm);
+  }
+}
+.ngc-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: var(--ng-t-sm);
+  line-height: 1.6;
+  color: var(--ng-ink-2);
+  cursor: pointer;
+}
+.ngc-check input {
+  flex: none;
+  inline-size: 20px;
+  block-size: 20px;
+  margin-block-start: 2px;
+  accent-color: var(--ng-brand);
+  cursor: pointer;
+}
+
+/* ---------- checkout steps ------------------------------------------------ */
+.ngc-steps {
+  counter-reset: ngc-step;
+  display: grid;
+  gap: clamp(16px, 2.4vw, 24px);
+  min-inline-size: 0;
+}
+.ngc-step {
+  counter-increment: ngc-step;
+}
+.ngc-step-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ngc-step-title::before {
+  content: counter(ngc-step);
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 50%;
+  background: var(--ng-ink);
+  color: var(--ng-bg-2);
+  font: 700 var(--ng-t-sm) / 1 var(--ng-font-text);
+  font-variant-numeric: tabular-nums;
+}
+.dark .ngc-step-title::before {
+  background: var(--ng-brand);
+  color: #04121f;
+}
+
+/* ---------- selectable option cards (radios) ------------------------------ */
+.ngc-options {
+  display: grid;
+  gap: 10px;
+}
+.ngc-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--ng-r-3);
+  border: 1px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-faint);
+  cursor: pointer;
+  transition: border-color var(--ng-dur-1) linear, background-color var(--ng-dur-1) linear, box-shadow var(--ng-dur-2) var(--ng-ease);
+}
+.ngc-option:hover {
+  border-color: color-mix(in srgb, var(--ng-brand) 45%, transparent);
+  background: var(--ng-glass);
+}
+.ngc-option:has(> input:checked),
+.ngc-option[data-checked="true"] {
+  border-color: var(--ng-brand);
+  background: color-mix(in srgb, var(--ng-aqua-soft) 55%, var(--ng-glass-strong));
+  box-shadow: 0 0 0 1px var(--ng-brand) inset, var(--ng-shadow-1);
+}
+.ngc-option > input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  margin: 2px 0 0;
+  inline-size: 22px;
+  block-size: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-strong);
+  cursor: pointer;
+  transition: border-color var(--ng-dur-1) linear, box-shadow var(--ng-dur-2) var(--ng-ease);
+}
+.ngc-option > input[type="radio"]:checked {
+  border-color: var(--ng-brand);
+  background: var(--ng-brand);
+  box-shadow: inset 0 0 0 4px var(--ng-glass-strong);
+}
+@media (forced-colors: active) {
+  .ngc-option > input[type="radio"] {
+    appearance: auto;
+    -webkit-appearance: auto;
+  }
+}
+.ngc-option-body {
+  display: grid;
+  gap: 4px;
+  min-inline-size: 0;
+}
+.ngc-option-title {
+  font-weight: 700;
+  font-size: var(--ng-t-sm);
+  line-height: 1.5;
+  color: var(--ng-ink);
+}
+.ngc-option-note {
+  font-size: var(--ng-t-xs);
+  line-height: 1.7;
+  color: var(--ng-ink-3);
+}
+.ngc-option-price {
+  font-size: var(--ng-t-sm);
+}
+.ngc-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 16px 18px;
+  border-radius: var(--ng-r-3);
+  border: 1px dashed var(--ng-hairline-strong);
+  color: var(--ng-ink-3);
+  font-size: var(--ng-t-sm);
+}
+.ngc-loading svg {
+  inline-size: 18px;
+  block-size: 18px;
+  flex: none;
+}
+
+/* ---------- manual-transfer instructions ---------------------------------- */
+.ngc-transfer {
+  display: grid;
+  gap: 12px;
+  margin-block-start: 6px;
+  padding: 14px;
+  border-radius: var(--ng-r-2);
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-hairline);
+  cursor: auto;
+}
+.ngc-transfer-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  min-inline-size: 0;
+}
+.ngc-transfer-label {
+  display: block;
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+}
+.ngc-due {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin: 0;
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--ng-hairline);
+  font-weight: 700;
+  font-size: var(--ng-t-sm);
+  color: var(--ng-ink);
+}
+.ngc-due .ngc-amount {
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-lg);
+  color: var(--ng-brand);
+}
+.ngc-wa {
+  --btn-bg: #0b6b4d;
+  --btn-fg: #fff;
+  --btn-bd: transparent;
+}
+.dark .ngc-wa {
+  --btn-bg: #77e0b8;
+  --btn-fg: #04121f;
+}
+.ngc-wa:hover {
+  --btn-bg: #095a41;
+}
+.dark .ngc-wa:hover {
+  --btn-bg: #9aebcb;
+}
+
+/* ---------- confirmation / order facts ------------------------------------ */
+.ngc-hero-check {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  text-align: center;
+  margin-block-end: clamp(24px, 4vw, 40px);
+}
+.ngc-facts {
+  display: grid;
+  gap: 16px 24px;
+  margin: 0;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+}
+.ngc-facts dt {
+  font-size: var(--ng-t-xs);
+  color: var(--ng-ink-3);
+}
+.ngc-facts dd {
+  margin: 4px 0 0;
+  font-weight: 600;
+  color: var(--ng-ink);
+  overflow-wrap: anywhere;
+}
+.ngc-facts .ngc-fact-key {
+  font-size: var(--ng-t-md);
+  font-weight: 600;
+  overflow-wrap: normal;
+  word-break: break-all;
+}
+.ngc-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-block-size: 28px;
+  padding: 0 12px;
+  border-radius: var(--ng-r-pill);
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-hairline);
+  color: var(--ng-ink-2);
+  font: 700 var(--ng-t-xs) / 1 var(--ng-font-text);
+  white-space: nowrap;
+}
+.ngc-status::before {
+  content: "";
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: var(--ng-aqua);
+}
+
+/* ---------- account shell ------------------------------------------------- */
+.ngc-account {
+  display: grid;
+  gap: clamp(18px, 3vw, 32px);
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .ngc-account {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+}
+.ngc-account-nav {
+  display: flex;
+  gap: 4px;
+  padding: 6px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  border-radius: var(--ng-r-pill);
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+  min-inline-size: 0;
+}
+.ngc-account-nav::-webkit-scrollbar {
+  display: none;
+}
+.ngc-account-nav a,
+.ngc-account-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+  min-block-size: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: var(--ng-r-pill);
+  background: transparent;
+  color: var(--ng-ink-2);
+  font: 600 var(--ng-t-sm) / 1.2 var(--ng-font-text);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--ng-dur-1) linear, color var(--ng-dur-1) linear;
+}
+.ngc-account-nav a:hover,
+.ngc-account-nav button:hover {
+  background: var(--ng-glass-strong);
+  color: var(--ng-ink);
+}
+.ngc-account-nav a[aria-current="page"] {
+  background: var(--ng-ink);
+  color: var(--ng-bg-2);
+}
+.dark .ngc-account-nav a[aria-current="page"] {
+  background: var(--ng-brand);
+  color: #04121f;
+}
+.ngc-account-nav svg {
+  inline-size: 17px;
+  block-size: 17px;
+  flex: none;
+}
+.ngc-account-nav .ngc-logout {
+  color: var(--ng-danger);
+}
+.ngc-account-nav .ngc-logout:hover {
+  background: color-mix(in srgb, var(--ng-danger) 10%, transparent);
+  color: var(--ng-danger);
+}
+.ngc-account-nav .ngc-logout-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+}
+@media (min-width: 1024px) {
+  .ngc-account-nav {
+    flex-direction: column;
+    overflow: visible;
+    padding: 10px;
+    border-radius: var(--ng-r-3);
+    position: sticky;
+    inset-block-start: calc(var(--ng-header-h) + 32px);
+  }
+  .ngc-account-nav a,
+  .ngc-account-nav button {
+    inline-size: 100%;
+    border-radius: var(--ng-r-2);
+  }
+  .ngc-account-nav .ngc-logout-wrap {
+    margin-block-start: 6px;
+    padding-block-start: 10px;
+    border-block-start: 1px solid var(--ng-hairline);
+  }
+}
+.ngc-tiles {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+.ngc-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  border-radius: var(--ng-r-3);
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--ng-dur-2) var(--ng-ease), box-shadow var(--ng-dur-2) var(--ng-ease);
+}
+.ngc-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ng-shadow-2), 0 0 0 1px var(--ng-hairline);
+}
+.ngc-tile-top {
+  block-size: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ngc-tile-icon {
+  display: grid;
+  place-items: center;
+  inline-size: 46px;
+  block-size: 46px;
+  border-radius: 50%;
+  background: var(--ng-aqua-soft);
+  color: var(--ng-brand);
+}
+.ngc-tile-icon svg {
+  inline-size: 20px;
+  block-size: 20px;
+}
+.ngc-tile-count {
+  line-height: 1;
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-xl);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ng-ink);
+}
+.ngc-tile-more {
+  margin-block-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ng-brand);
+  font-weight: 700;
+  font-size: var(--ng-t-sm);
+}
+.ngc-order {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 14px 16px;
+}
+.ngc-order > .ng-btn {
+  grid-column: 1 / -1;
+}
+@media (min-width: 640px) {
+  .ngc-order {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .ngc-order > .ng-btn {
+    grid-column: auto;
+  }
+}
+.ngc-kv {
+  display: grid;
+  margin: 0;
+  border-radius: var(--ng-r-3);
+  background: var(--ng-glass);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+}
+.ngc-kv > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 16px 20px;
+}
+.ngc-kv > div + div {
+  border-block-start: 1px solid var(--ng-hairline);
+}
+.ngc-kv dt {
+  color: var(--ng-ink-3);
+  font-size: var(--ng-t-sm);
+}
+.ngc-kv dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.ngc-danger-zone {
+  border-color: color-mix(in srgb, var(--ng-danger) 30%, transparent);
+  background: color-mix(in srgb, var(--ng-danger) 5%, var(--ng-glass));
+}
+
+/* ---------- auth (login, register, recovery, verify) ---------------------- */
+.ngc-access {
+  display: grid;
+  gap: clamp(22px, 4vw, 56px);
+  align-items: center;
+  padding-block: clamp(24px, 6vw, 88px) clamp(40px, 7vw, 104px);
+}
+@media (min-width: 960px) {
+  .ngc-access {
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  }
+}
+.ngc-access-intro {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  min-inline-size: 0;
+}
+.ngc-access-art {
+  display: none;
+}
+@media (min-width: 960px) {
+  .ngc-access-art {
+    position: relative;
+    display: block;
+    inline-size: min(100%, 360px);
+    aspect-ratio: 1.4;
+    margin-block-start: 12px;
+  }
+  .ngc-access-art .ng-orb:nth-child(1) {
+    inline-size: 46%;
+    aspect-ratio: 1;
+    inset-block-start: 0;
+    inset-inline-start: 6%;
+  }
+  .ngc-access-art .ng-orb:nth-child(2) {
+    inline-size: 28%;
+    aspect-ratio: 1;
+    inset-block-end: 4%;
+    inset-inline-start: 46%;
+    animation-delay: -3s;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), color-mix(in srgb, var(--ng-rose) 38%, transparent) 55%, transparent 72%);
+  }
+  .ngc-access-art .ng-orb:nth-child(3) {
+    inline-size: 16%;
+    aspect-ratio: 1;
+    inset-block-start: 10%;
+    inset-inline-start: 66%;
+    animation-delay: -6s;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.95), color-mix(in srgb, var(--ng-mint) 60%, transparent) 55%, transparent 72%);
+  }
+}
+.dark .ngc-access-art .ng-orb {
+  opacity: 0.22;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.ngc-access-card {
+  inline-size: 100%;
+  max-inline-size: 540px;
+  justify-self: center;
+  padding: clamp(22px, 3.6vw, 40px);
+  border-radius: var(--ng-r-4);
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-3), 0 0 0 1px var(--ng-hairline);
+}
+@media (min-width: 960px) {
+  .ngc-access-card {
+    justify-self: end;
+  }
+}
+.ngc-access-solo {
+  grid-template-columns: minmax(0, 1fr) !important;
+  justify-items: center;
+}
+.ngc-access-solo .ngc-access-card {
+  justify-self: center;
+}
+.ngc-form {
+  display: grid;
+  gap: 18px;
+}
+.ngc-form-foot {
+  margin: 0;
+  text-align: center;
+  font-size: var(--ng-t-sm);
+  color: var(--ng-ink-3);
+}
+.ngc-form-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+}
+.ngc-form-row a {
+  font-size: var(--ng-t-xs);
+  font-weight: 700;
+  color: var(--ng-brand);
+  text-decoration: none;
+  min-block-size: 24px;
+}
+.ngc-form-row a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.ngc-pass {
+  position: relative;
+}
+.ngc-pass-toggle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 2px;
+  display: inline-grid;
+  place-items: center;
+  inline-size: 46px;
+  border: 0;
+  background: transparent;
+  color: var(--ng-ink-3);
+  cursor: pointer;
+  border-radius: var(--ng-r-2);
+}
+.ngc-pass-toggle:hover {
+  color: var(--ng-ink);
+}
+.ngc-pass-toggle svg {
+  inline-size: 18px;
+  block-size: 18px;
+}
+.ngc-meter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.ngc-meter-bars {
+  display: flex;
+  flex: 1;
+  gap: 4px;
+}
+.ngc-meter-bars span {
+  flex: 1;
+  block-size: 6px;
+  border-radius: 3px;
+  background: var(--ng-hairline-strong);
+  transition: background-color var(--ng-dur-2) linear;
+}
+.ngc-meter[data-score="1"] .ngc-meter-bars span[data-on="true"] {
+  background: var(--ng-danger);
+}
+.ngc-meter[data-score="2"] .ngc-meter-bars span[data-on="true"] {
+  background: #b26a00;
+}
+.ngc-meter[data-score="3"] .ngc-meter-bars span[data-on="true"] {
+  background: var(--ng-aqua);
+}
+.ngc-meter[data-score="4"] .ngc-meter-bars span[data-on="true"] {
+  background: var(--ng-ok);
+}
+.ngc-meter-label {
+  min-inline-size: 4.5rem;
+  text-align: end;
+  font-size: var(--ng-t-xs);
+  font-weight: 600;
+  color: var(--ng-ink-3);
+}
+
+/* ---------- product-card / PDP commerce controls -------------------------- */
+.ngc-cart-btn {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-strong);
+  color: var(--ng-ink);
+  cursor: pointer;
+  transition: background-color var(--ng-dur-1) linear, color var(--ng-dur-1) linear, transform var(--ng-dur-2) var(--ng-ease);
+}
+.ngc-cart-btn:hover {
+  background: var(--ng-ink);
+  color: var(--ng-bg-2);
+  transform: translateY(-1px);
+}
+.ngc-cart-btn[data-tone="onImage"] {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(10, 26, 43, 0.28);
+  color: #fff;
+}
+.ngc-cart-btn[data-state="added"] {
+  background: var(--ng-brand);
+  border-color: var(--ng-brand);
+  color: #fff;
+}
+.dark .ngc-cart-btn[data-state="added"] {
+  color: #04121f;
+}
+.ngc-cart-btn[data-state="error"] {
+  background: var(--ng-danger);
+  border-color: var(--ng-danger);
+  color: #fff;
+}
+.dark .ngc-cart-btn[data-state="error"] {
+  color: #04121f;
+}
+.ngc-cart-btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+.ngc-cart-btn svg {
+  inline-size: 18px;
+  block-size: 18px;
+}
+.ng-btn[data-state="added"] {
+  --btn-bg: var(--ng-ok);
+}
+.ng-btn[data-state="error"] {
+  --btn-bg: var(--ng-danger);
+}
+.dark .ng-btn[data-state="added"],
+.dark .ng-btn[data-state="error"] {
+  --btn-fg: #04121f;
+}
+.ng-btn svg {
+  inline-size: 18px;
+  block-size: 18px;
+  flex: none;
+}
+.ngc-wish {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 44px;
+  block-size: 44px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px solid var(--ng-hairline-strong);
+  background: var(--ng-glass-strong);
+  color: var(--ng-ink-2);
+  cursor: pointer;
+  transition: background-color var(--ng-dur-1) linear, color var(--ng-dur-1) linear, transform var(--ng-dur-2) var(--ng-ease);
+}
+.ngc-wish:hover {
+  color: #c0306f;
+  transform: scale(1.06);
+}
+.ngc-wish[data-variant="overlay"] {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(10, 26, 43, 0.28);
+  color: #fff;
+}
+.ngc-wish[aria-pressed="true"] {
+  color: #c0306f;
+  border-color: color-mix(in srgb, #c0306f 40%, transparent);
+  background: var(--ng-rose-soft);
+}
+.dark .ngc-wish:hover,
+.dark .ngc-wish[aria-pressed="true"] {
+  color: #ffb3d1;
+}
+.ngc-wish svg {
+  inline-size: 18px;
+  block-size: 18px;
+}
+.ngc-wish[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+/* ---------- floating notices (consent, install hint) ---------------------- */
+.ngc-float {
+  position: fixed;
+  z-index: 60;
+  inset-inline: 12px;
+  /* clears the mobile dock (≈78px tall incl. its offset) */
+  inset-block-end: calc(max(12px, env(safe-area-inset-bottom)) + 80px);
+  max-inline-size: 460px;
+  margin-inline: auto;
+  padding: 18px 20px;
+  border-radius: var(--ng-r-3);
+  background: var(--ng-glass-strong);
+  border: 1px solid var(--ng-glass-edge);
+  box-shadow: var(--ng-shadow-3), 0 0 0 1px var(--ng-hairline);
+  -webkit-backdrop-filter: blur(var(--ng-blur)) saturate(var(--ng-sat));
+  backdrop-filter: blur(var(--ng-blur)) saturate(var(--ng-sat));
+  color: var(--ng-ink);
+  animation: ngc-rise var(--ng-dur-3) var(--ng-ease) both;
+}
+@media (min-width: 960px) {
+  .ngc-float {
+    inset-inline: 24px auto;
+    inset-block-end: 24px;
+    margin-inline: 0;
+  }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ngc-float {
+    background: var(--ng-bg-2);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .ngc-float {
+    background: var(--ng-bg-2);
+  }
+}
+@keyframes ngc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+.ngc-float h2 {
+  margin: 0;
+  font-family: var(--ng-font-display);
+  font-size: var(--ng-t-md);
+  font-weight: 700;
+}
+.ngc-float p {
+  margin: 8px 0 0;
+  color: var(--ng-ink-2);
+  font-size: var(--ng-t-sm);
+  line-height: 1.7;
+}
+.ngc-float-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-block-start: 14px;
+}
+.ngc-float-actions .ng-btn {
+  min-block-size: 46px;
+  padding-inline: 12px;
+  white-space: normal;
+  text-align: center;
+}
+.ngc-float-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-block: 10px;
+}
+.ngc-float-row p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ngc-tile:hover,
+  .ngc-wish:hover,
+  .ngc-cart-btn:hover {
+    transform: none;
+  }
+  .ngc-spin {
+    animation: none;
+  }
+}

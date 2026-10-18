@@ -6,7 +6,6 @@ import { Loader2Icon, TriangleAlertIcon } from "lucide-react"
 import { requestAccountDeletion } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 
 type AuthDictionary = Dictionary["auth"]
@@ -51,7 +50,7 @@ export function DeleteAccountForm({ locale, dictionary }: { locale: string; dict
 
   if (done) {
     return (
-      <p role="status" className="rounded-xl border border-border bg-muted/30 p-4 text-sm leading-relaxed">
+      <p role="status" className="ngc-info">
         {dictionary.deleteAccountSuccess}
       </p>
     )
@@ -59,28 +58,27 @@ export function DeleteAccountForm({ locale, dictionary }: { locale: string; dict
 
   return (
     <form
+      method="post"
       onSubmit={handleSubmit}
-      className="flex flex-col gap-4 rounded-xl border border-destructive/30 bg-destructive/5 p-4"
+      className="ngc-panel ngc-danger-zone ngc-form"
     >
-      <p className="flex items-start gap-2 text-sm leading-relaxed text-muted-foreground">
+      <p className="flex items-start gap-2 ngc-sub">
         <TriangleAlertIcon className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden="true" />
         {dictionary.deleteAccountBody}
       </p>
-      <label className="flex cursor-pointer items-start gap-2 text-sm">
-        <input type="checkbox" name="confirmed" required className="mt-0.5 shrink-0" />
+      <label className="ngc-check">
+        <input type="checkbox" name="confirmed" required />
         {dictionary.deleteAccountConfirmLabel}
       </label>
       {error && (
-        <p role="alert" className="text-sm text-destructive">
+        <p role="alert" className="ngc-alert">
           {error}
         </p>
       )}
       <button
         type="submit"
         disabled={submitting}
-        className={cn(
-          "inline-flex min-h-11 w-fit items-center justify-center gap-2 rounded-full bg-destructive px-5 text-sm font-medium text-destructive-foreground transition-colors hover:bg-destructive/90 focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-60"
-        )}
+        className="ng-btn ngc-btn-danger justify-self-start"
       >
         {submitting && <Loader2Icon className="size-4 animate-spin" aria-hidden="true" />}
         {dictionary.deleteAccountCta}

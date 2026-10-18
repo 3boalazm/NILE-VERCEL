@@ -6,7 +6,6 @@ import { CheckIcon, ShoppingCartIcon, TriangleAlertIcon } from "lucide-react"
 import type { ProductStatus } from "@/lib/products"
 import { useCart } from "@/lib/cart"
 import { cn } from "@/lib/utils"
-import { ctaButtonVariants } from "@/components/ui/button"
 
 type AddToCartProduct = {
   id: string
@@ -99,20 +98,15 @@ export function AddToCartButton({
         // THIS button unambiguously (see e2e/commerce.spec.ts).
         data-testid="pdp-add-to-cart"
         title={title}
-        className={cn(
-          ctaButtonVariants({ variant: "outline" }),
-          "flex-1 justify-center sm:flex-initial",
-          justAdded && "border-primary text-primary",
-          addError && "border-destructive text-destructive",
-          className
-        )}
+        data-state={addError ? "error" : justAdded ? "added" : undefined}
+        className={cn("ng-btn ng-btn-primary ng-btn-lg flex-1 sm:flex-initial", className)}
       >
         {addError ? (
-          <TriangleAlertIcon className="size-4" />
+          <TriangleAlertIcon aria-hidden="true" />
         ) : justAdded ? (
-          <CheckIcon className="size-4" />
+          <CheckIcon aria-hidden="true" />
         ) : (
-          <ShoppingCartIcon className="size-4" />
+          <ShoppingCartIcon aria-hidden="true" />
         )}
         {title}
       </button>
@@ -126,27 +120,16 @@ export function AddToCartButton({
       disabled={disabled}
       aria-label={title}
       title={title}
-      className={cn(
-        // 44px everywhere: it sits next to a 44px primary CTA on the card,
-        // and a 36-40px round target is exactly what the mobile audit flagged.
-        "inline-flex size-11 shrink-0 items-center justify-center rounded-full border transition-colors focus-visible:ring-3 focus-visible:ring-ring/50",
-        addError
-          ? "border-destructive bg-destructive text-white"
-          : justAdded
-            ? "border-primary bg-primary text-primary-foreground"
-            : tone === "onSurface"
-              ? "border-border text-foreground hover:bg-muted"
-              : "border-white/30 text-white hover:bg-white/15",
-        disabled && "pointer-events-none opacity-40",
-        className
-      )}
+      data-tone={tone}
+      data-state={addError ? "error" : justAdded ? "added" : undefined}
+      className={cn("ngc-cart-btn", className)}
     >
       {addError ? (
-        <TriangleAlertIcon className="size-4" />
+        <TriangleAlertIcon aria-hidden="true" />
       ) : justAdded ? (
-        <CheckIcon className="size-4" />
+        <CheckIcon aria-hidden="true" />
       ) : (
-        <ShoppingCartIcon className="size-4" />
+        <ShoppingCartIcon aria-hidden="true" />
       )}
     </button>
   )

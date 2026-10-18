@@ -8,21 +8,21 @@ for (const locale of ["ar", "en"] as const) {
     await page.goto(
       `/${locale}/products?q=${encodeURIComponent("بُرُوكْسِيد بِلْس")}`,
     );
-    await expect(page.locator(".ca-catalog-card")).toHaveCount(1);
-    await expect(page.locator(".ca-catalog-card h2")).toHaveText(
+    await expect(page.getByTestId("product-card")).toHaveCount(1);
+    await expect(page.getByTestId("product-card").locator("h2")).toHaveText(
       "Proxeed Plus",
     );
-    await page.goto(`/${locale}`);
-    const search = page.locator(".ca-product-explorer").getByRole("searchbox");
+    await page.goto(`/${locale}/products`);
+    const search = page.getByTestId("atlas-search");
     await search.fill("بِلْس بروكــسيد");
-    await expect(page.locator(".ca-product-row")).toHaveCount(1);
+    await expect(page.getByTestId("atlas-row")).toHaveCount(1);
     await search.fill("no-match-zzzz");
-    await expect(page.locator(".ca-atlas-workspace")).toHaveAttribute(
+    await expect(page.getByTestId("atlas-workspace")).toHaveAttribute(
       "data-empty",
       "true",
     );
-    const workspace = await page.locator(".ca-atlas-workspace").boundingBox();
-    const index = await page.locator(".ca-product-index").boundingBox();
+    const workspace = await page.getByTestId("atlas-workspace").boundingBox();
+    const index = await page.getByTestId("atlas-index").boundingBox();
     expect(index!.width).toBeGreaterThanOrEqual(workspace!.width - 4);
     await page
       .getByRole("button", {
@@ -30,14 +30,14 @@ for (const locale of ["ar", "en"] as const) {
         exact: true,
       })
       .click();
-    await expect(page.locator(".ca-product-row")).toHaveCount(8);
+    await expect(page.getByTestId("atlas-row")).toHaveCount(8);
     await expect(search).toBeFocused();
     await search.fill("another-no-match-zzzz");
     await page
-      .locator(".ca-atlas-empty-actions")
+      .getByTestId("atlas-empty-actions")
       .getByRole("button", { name: getDiscoveryCopy(locale).all, exact: true })
       .click();
-    await expect(page.locator(".ca-product-row")).toHaveCount(8);
+    await expect(page.getByTestId("atlas-row")).toHaveCount(8);
     await expect(search).toBeFocused();
   });
 
@@ -61,7 +61,7 @@ for (const locale of ["ar", "en"] as const) {
     expect(query.get("category")).toBe("supplements");
     expect(query.get("need")).toBe("mens-health");
     expect(query.get("sort")).toBe("desc");
-    await expect(page.locator(".ca-catalog-card")).toHaveCount(3);
+    await expect(page.getByTestId("product-card")).toHaveCount(3);
   });
 
   test(`${locale}: no-results recovery neither invents products nor leaks search to contact`, async ({
@@ -71,20 +71,20 @@ for (const locale of ["ar", "en"] as const) {
     await page.goto(
       `/${locale}/products?q=no-match-private-query&category=medical-devices`,
     );
-    await expect(page.locator(".ca-catalog-card")).toHaveCount(0);
+    await expect(page.getByTestId("product-card")).toHaveCount(0);
     await expect(
       page.getByRole("heading", { name: copy.emptyTitle }),
     ).toBeVisible();
-    const empty = page.locator(".ca-catalog-empty");
+    const empty = page.getByTestId("catalog-empty");
     await expect(
       empty.getByRole("link", { name: copy.contact }),
     ).toHaveAttribute("href", `/${locale}/contact`);
     await empty.getByRole("link", { name: copy.browse }).click();
     await expect(page).toHaveURL(`/${locale}/products`);
-    await expect(page.locator(".ca-catalog-card")).toHaveCount(8);
+    await expect(page.getByTestId("product-card")).toHaveCount(8);
     await page.goto(`/${locale}/products?category=not-a-real-category`);
-    await expect(page.locator(".ca-catalog-card")).toHaveCount(8);
-    await expect(page.locator(".ca-applied-filters")).toHaveCount(0);
+    await expect(page.getByTestId("product-card")).toHaveCount(8);
+    await expect(page.getByTestId("applied-filters")).toHaveCount(0);
   });
 
   test(`${locale}: mobile chapter links remain native and identify the current chapter`, async ({
@@ -124,7 +124,9 @@ for (const locale of ["ar", "en"] as const) {
       box!.x + box!.width + 1,
     );
     expect(box!.y).toBeGreaterThanOrEqual(0);
-    expect(box!.y).toBeLessThan(40);
+    // The strip sticks just below the floating glass header (12px inset +
+    // 64px bar), not at the very top of the viewport.
+    expect(box!.y).toBeLessThan(120);
     await expect(page.locator("#downloads h2")).toBeVisible();
     const width = await page.evaluate(() => [
       innerWidth,
@@ -146,14 +148,14 @@ test("no JavaScript: filter chips and product chapters still work", async ({
   const page = await context.newPage();
   await page.goto("/en/products?q=proxeed&category=supplements&sort=desc");
   await page
-    .locator(".ca-applied-filters a")
+    .getByTestId("applied-filters").locator("a")
     .filter({ hasText: "proxeed" })
     .click();
   expect(new URL(page.url()).searchParams.has("q")).toBe(false);
   expect(new URL(page.url()).searchParams.get("category")).toBe("supplements");
   // Devices carry published specifications; supplements stay evidence-gated.
   await page.goto("/en/products/ca-mi-pulse-oximeter");
-  await page.locator('.ca-dossier-index a[href="#composition"]').click();
+  await page.getByTestId("product-chapters").locator('a[href="#composition"]').click();
   await expect(page).toHaveURL(/#composition$/);
   await expect(page.locator("#composition h2")).toBeVisible();
   await context.close();

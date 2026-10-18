@@ -12,10 +12,8 @@ import { reconcileWishlist } from "@/lib/wishlist"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Locale } from "@/lib/i18n/config"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 import { PasswordField } from "@/components/npf/password-field"
 
@@ -70,12 +68,12 @@ export function NPFLoginForm({ locale, dictionary }: { locale: Locale; dictionar
   }
 
   return (
-    <form aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
+    <form method="post" aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="ngc-form">
+      <div className="ngc-field">
         <Label htmlFor="email">{dictionary.loginEmail} *</Label>
         <Input id="email" name="email" type="email" required autoComplete="email" />
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="ngc-field">
         <PasswordField
           id="password"
           name="password"
@@ -91,19 +89,16 @@ export function NPFLoginForm({ locale, dictionary }: { locale: Locale; dictionar
             /* F-04: recovery entry point. Sits on the password row (the place
                people look when they cannot remember it) rather than buried
                under the submit button. */
-            <Link
-              href={`${base}/login/forgot-password`}
-              className="text-xs font-medium text-primary hover:underline"
-            >
+            <Link href={`${base}/login/forgot-password`}>
               {dictionary.forgotPasswordLink}
             </Link>
           }
         />
       </div>
 
-      <Link href={`${base}/forgot-password`} className="quiet-link self-start text-sm">{getRecoveryCopy(locale).forgot}</Link>
+      <Link href={`${base}/forgot-password`} className="ngc-quiet justify-self-start">{getRecoveryCopy(locale).forgot}</Link>
       {error && (
-        <p className="text-sm text-destructive" id="form-feedback" role="alert">
+        <p className="ngc-alert" id="form-feedback" role="alert">
           {error}
         </p>
       )}
@@ -111,15 +106,15 @@ export function NPFLoginForm({ locale, dictionary }: { locale: Locale; dictionar
       <button
         type="submit"
         disabled={submitting}
-        className={cn(ctaButtonVariants({ variant: "onLight" }), "w-full justify-center gap-2")}
+        className="ng-btn ng-btn-primary ng-btn-lg ngc-block"
       >
         {submitting && <Loader2Icon className="size-4 animate-spin" />}
         {submitting ? dictionary.loginSubmitting : dictionary.loginSubmit}
       </button>
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="ngc-form-foot">
         {dictionary.loginNoAccount}{" "}
-        <Link href={`${base}/register`} className="font-medium text-primary hover:underline">
+        <Link href={`${base}/register`} className="ngc-inline-link">
           {dictionary.loginRegisterLink}
         </Link>
       </p>

@@ -5,7 +5,6 @@ import { EyeIcon, EyeOffIcon } from "lucide-react"
 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 
 /**
  * F-59 — password input with a show/hide toggle, shared by every form that
@@ -57,16 +56,16 @@ export function PasswordField({
   const hintId = useId()
 
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="ngc-field">
       {labelSuffix ? (
-        <div className="flex items-baseline justify-between gap-3">
+        <div className="ngc-form-row">
           <Label htmlFor={id}>{label}</Label>
           {labelSuffix}
         </div>
       ) : (
         <Label htmlFor={id}>{label}</Label>
       )}
-      <div className="relative">
+      <div className="ngc-pass">
         <Input
           id={id}
           name={name}
@@ -78,7 +77,7 @@ export function PasswordField({
           onChange={onValueChange ? (event) => onValueChange(event.target.value) : undefined}
           aria-invalid={invalid || undefined}
           aria-describedby={describedBy ?? (hint ? hintId : undefined)}
-          className="pe-11"
+          className="pe-12"
         />
         <button
           type="button"
@@ -86,13 +85,13 @@ export function PasswordField({
           aria-pressed={showPassword}
           aria-label={showPassword ? hideLabel : showLabel}
           title={showPassword ? hideLabel : showLabel}
-          className="absolute inset-y-0 end-0 inline-flex min-w-11 items-center justify-center rounded-e-md text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="ngc-pass-toggle"
         >
-          {showPassword ? <EyeOffIcon className="size-4" aria-hidden="true" /> : <EyeIcon className="size-4" aria-hidden="true" />}
+          {showPassword ? <EyeOffIcon aria-hidden="true" /> : <EyeIcon aria-hidden="true" />}
         </button>
       </div>
       {hint && (
-        <p id={hintId} className="text-xs text-muted-foreground">
+        <p id={hintId} className="ngc-note">
           {hint}
         </p>
       )}
@@ -138,30 +137,17 @@ export function PasswordStrengthMeter({
   const level = score - 1
   return (
     <div
-      className="flex items-center gap-2"
+      className="ngc-meter"
+      data-score={score}
       role="status"
       aria-label={`${ariaLabel}: ${labels[level]}`}
     >
-      <div className="flex flex-1 gap-1" aria-hidden="true">
+      <div className="ngc-meter-bars" aria-hidden="true">
         {[0, 1, 2, 3].map((i) => (
-          <span
-            key={i}
-            className={cn(
-              "h-1.5 flex-1 rounded-full transition-colors",
-              i <= level
-                ? score <= 1
-                  ? "bg-destructive"
-                  : score === 2
-                    ? "bg-amber-500"
-                    : score === 3
-                      ? "bg-lime-600"
-                      : "bg-emerald-600"
-                : "bg-muted"
-            )}
-          />
+          <span key={i} data-on={i <= level} />
         ))}
       </div>
-      <span className="w-16 text-end text-xs text-muted-foreground">{labels[level]}</span>
+      <span className="ngc-meter-label">{labels[level]}</span>
     </div>
   )
 }

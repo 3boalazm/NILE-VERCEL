@@ -8,8 +8,6 @@ import { reorderItems } from "@/lib/cart/actions"
 import { useCart } from "@/lib/cart"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 
 type AuthDictionary = Dictionary["auth"]
@@ -61,9 +59,9 @@ export function ReorderButton({
 
     return (
       <div className="flex flex-col items-start gap-2 sm:items-end" role="status">
-        <p className="text-sm text-muted-foreground">{message}</p>
+        <p className="ngc-ok">{message}</p>
         {result.added > 0 && (
-          <Link href={`${base}/cart`} className={cn(ctaButtonVariants({ variant: "onLight" }), "gap-1.5")}>
+          <Link href={`${base}/cart`} className="ng-btn ng-btn-primary">
             {locale === "en" ? "Go to Cart" : "الذهاب للسلة"}
           </Link>
         )}
@@ -74,7 +72,7 @@ export function ReorderButton({
   return (
     <div className="flex flex-col items-start gap-1.5 sm:items-end">
       {error && (
-        <p id="reorder-error" role="alert" className="text-sm text-destructive">
+        <p id="reorder-error" role="alert" className="ngc-alert">
           {error}
         </p>
       )}
@@ -83,7 +81,7 @@ export function ReorderButton({
         onClick={handleClick}
         disabled={isPending}
         aria-describedby={error ? "reorder-error" : undefined}
-        className={cn(ctaButtonVariants({ variant: "outline" }), "gap-1.5")}
+        className="ng-btn"
       >
         {isPending ? <Loader2Icon className="size-4 animate-spin" /> : <RefreshCwIcon className="size-4" />}
         {isPending ? dictionary.reorderAdding : dictionary.reorderCta}

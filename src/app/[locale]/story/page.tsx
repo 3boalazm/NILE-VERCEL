@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Reveal } from "@/components/npf/motion/reveal";
-import { EditorialVisual } from "@/components/care-atlas/editorial-visual";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
-import { PageIntro, CareContact } from "@/components/care-atlas/sections";
+import { PageIntro, ContactBand, SectionHead } from "@/components/glass/sections";
+import { EditorialFigure } from "@/components/glass/content";
 
 export async function generateMetadata({
   params,
@@ -53,71 +53,65 @@ export default async function StoryPage({
     },
   ];
   return (
-    <>
-      <PageIntro
-        index="NPF / OUR STORY — SINCE 2019"
-        title={s.pageTitle}
-        body={s.heroSubtitle}
-      />
-      <section className="ca-story-cover ca-section-pad">
-        <div>
-          <span className="ca-mono">THE BEGINNING</span>
-          <strong>2019</strong>
-          <p>{d.about.storyBody[0]}</p>
+    <div className="ng-content">
+      <PageIntro eyebrow={s.heroEyebrow} title={s.pageTitle} accent={s.heroTitle} body={s.heroSubtitle} />
+
+      <section className="ng-wrap ng-band-tight" aria-labelledby="story-beginning">
+        <div className="ng-bento">
+          <Reveal className="span-5 ng-glass ng-pad ng-fact" style={{ alignSelf: "stretch", alignContent: "center" }}>
+            <span className="ng-eyebrow">{s.timeline[0]?.title}</span>
+            <span className="ng-fact-value" aria-hidden="true">
+              2019
+            </span>
+            <h2 id="story-beginning" className="ng-sr">
+              {s.timeline[0]?.title} 2019
+            </h2>
+            <p className="ng-body" style={{ margin: 0 }}>
+              {d.about.storyBody[0]}
+            </p>
+          </Reveal>
+          <div className="span-7">
+            <EditorialFigure kind="story" locale={locale} priority sizes="(min-width: 900px) 56vw, 100vw" />
+          </div>
         </div>
-        <EditorialVisual kind="story" locale={locale} />
       </section>
-      <div className="ca-story-chapters ca-section-pad">
+
+      <div className="ng-wrap ng-band ng-chapters">
         {chapters.map((chapter, index) => (
-          <section key={chapter.label}>
-            <span className="ca-chapter-number" aria-hidden="true">
+          <Reveal as="section" key={chapter.label} className="ng-tile ng-chapter" delay={index * 0.05}>
+            <span className="ng-index" aria-hidden="true">
               0{index + 1}
             </span>
             <div>
-              <span className="ca-eyebrow">{chapter.label}</span>
-              <h2>{chapter.title}</h2>
+              <span className="ng-eyebrow">{chapter.label}</span>
+              <h2 className="ng-h3">{chapter.title}</h2>
             </div>
             <div>
-              <p>{chapter.body}</p>
-              <Link className="ca-line-link" href={chapter.href}>
-                {chapter.cta}
-                <span aria-hidden="true">↗</span>
-              </Link>
+              <p className="ng-body">{chapter.body}</p>
+              <p style={{ margin: 0 }}>
+                <Link className="ng-link" href={chapter.href}>
+                  {chapter.cta}
+                </Link>
+              </p>
             </div>
-          </section>
+          </Reveal>
         ))}
       </div>
+
       {/* Timeline — deliberately limited to milestones that can be verified
           from the company's own record (founding year, today's line-up).
           Invented dates would be indistinguishable from real ones here, so
-          nothing is added until the client supplies it. Fixed light/dark
-          tokens for the same reason as the chapters above: this page opts
-          out of the site-wide theme toggle. */}
-      <section className="bg-anti-flash-white text-anti-flash-navy">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-          <Reveal className="flex flex-col gap-3">
-            <span className="eyebrow text-anti-flash-navy/70">{s.timelineEyebrow}</span>
-            <h2 className="text-balance font-heading text-3xl font-semibold sm:text-4xl">
-              {s.timelineTitle}
-            </h2>
-          </Reveal>
-          <ol className="mt-10 flex flex-col">
-            {s.timeline.map((stop, index) => (
-              <li key={stop.year} className="relative flex flex-col gap-2 pb-10 last:pb-0 sm:flex-row sm:gap-10">
-                {index < s.timeline.length - 1 && (
-                  <span
-                    aria-hidden="true"
-                    className="absolute start-[3px] top-16 bottom-0 hidden w-px bg-anti-flash-navy/20 sm:block"
-                  />
-                )}
-                <span className="font-heading text-4xl font-black tabular-nums sm:w-32 sm:shrink-0">
-                  {stop.year}
-                </span>
-                <div className="flex flex-col gap-2 border-s-2 border-anti-flash-navy/20 ps-5 sm:border-s-0 sm:ps-0">
-                  <h3 className="font-heading text-lg font-semibold">{stop.title}</h3>
-                  <p className="max-w-2xl text-pretty leading-relaxed text-anti-flash-navy/70">
-                    {stop.body}
-                  </p>
+          nothing is added until the client supplies it. */}
+      <section className="ng-wrap ng-band" aria-labelledby="story-timeline">
+        <div className="ng-split">
+          <SectionHead eyebrow={s.timelineEyebrow} title={s.timelineTitle} id="story-timeline" split={false} />
+          <ol className="ng-timeline ng-glass ng-pad">
+            {s.timeline.map((stop) => (
+              <li key={stop.year}>
+                <span className="ng-timeline-year">{stop.year}</span>
+                <div>
+                  <h3 className="ng-h4">{stop.title}</h3>
+                  <p className="ng-body">{stop.body}</p>
                 </div>
               </li>
             ))}
@@ -127,22 +121,22 @@ export default async function StoryPage({
 
       {/* The site's own rule, stated as a principle — and backed by the blog,
           which is where the evidence for each claim actually lives. */}
-      <section className="bg-anti-flash-white text-anti-flash-navy">
-        <Reveal className="mx-auto flex max-w-3xl flex-col items-start gap-4 px-4 py-20 sm:px-6 lg:px-8">
-          <span className="eyebrow text-anti-flash-navy/70">{s.principleEyebrow}</span>
-          <h2 className="text-balance font-heading text-3xl font-semibold sm:text-4xl">
+      <section className="ng-wrap ng-band" aria-labelledby="story-principle">
+        <Reveal className="ng-callout ng-callout-info ng-pad ng-stack" style={{ ["--ng-stack" as string]: "16px" }}>
+          <span className="ng-eyebrow">{s.principleEyebrow}</span>
+          <h2 id="story-principle" className="ng-h2">
             {s.principleTitle}
           </h2>
-          <p className="text-pretty leading-relaxed text-anti-flash-navy/70">{s.principleBody}</p>
-          <Link
-            href={`${base}/blogs`}
-            className="mt-2 inline-flex w-fit items-center justify-center gap-2.5 rounded-full bg-anti-flash-navy px-6 py-3 text-sm font-medium whitespace-nowrap text-anti-flash-white transition-all hover:bg-anti-flash-navy/85"
-          >
-            {s.principleCta}
-          </Link>
+          <p className="ng-lead">{s.principleBody}</p>
+          <div className="ng-hero-cta">
+            <Link href={`${base}/blogs`} className="ng-btn ng-btn-primary">
+              {s.principleCta}
+              <span className="ng-arrow" aria-hidden="true">↗</span>
+            </Link>
+          </div>
         </Reveal>
       </section>
-      <CareContact locale={locale} />
-    </>
+      <ContactBand locale={locale} />
+    </div>
   );
 }

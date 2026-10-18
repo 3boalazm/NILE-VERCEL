@@ -1,8 +1,9 @@
-import { AccessFrame } from "@/components/care-atlas/access-frame";
+import { AccessPanel } from "@/components/glass/access-panel";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isValidLocale } from "@/lib/i18n/config";
 import { getRecoveryCopy } from "@/lib/i18n/recovery";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { passwordResetEnabled } from "@/lib/auth/reset-policy";
 import { PasswordRecoveryForm } from "@/components/npf/password-recovery-form";
@@ -28,8 +29,8 @@ export default async function RecoveryPage({
   const c = getRecoveryCopy(locale);
   await searchParams;
   return (
-    <AccessFrame title={c.title} subtitle={c.body}>
+    <AccessPanel eyebrow={getDictionary(locale).siteName} title={c.title} subtitle={c.body}>
       <PasswordRecoveryForm locale={locale} enabled={passwordResetEnabled()} />
-    </AccessFrame>
+    </AccessPanel>
   );
 }

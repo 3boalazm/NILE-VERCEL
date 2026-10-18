@@ -4,8 +4,7 @@ import { ArrowLeftIcon } from "lucide-react"
 
 import { defaultLocale, locales, type Locale } from "@/lib/i18n/config"
 import { getDictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Notice } from "@/components/glass/content"
 
 export default async function NotFound() {
   // not-found.tsx can't receive params — the locale is recovered from a
@@ -19,19 +18,21 @@ export default async function NotFound() {
   const dictionary = getDictionary(locale)
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center sm:px-6 lg:px-8">
-      <span className="eyebrow text-primary">{dictionary.notFound.eyebrow}</span>
-      <h1 className="mt-2 font-heading text-3xl font-semibold">{dictionary.notFound.title}</h1>
-      <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">
-        {dictionary.notFound.body}
-      </p>
-      <Link
-        href={`/${locale}`}
-        className={cn(ctaButtonVariants({ variant: "onLight" }), "mt-8")}
-      >
-        {dictionary.notFound.cta}
-        <ArrowLeftIcon className="size-4 rtl:rotate-180" />
-      </Link>
+    <div className="ng-content ng-wrap ng-notice-wrap">
+      <Notice titleAs="h1" eyebrow={dictionary.notFound.eyebrow} title={dictionary.notFound.title} body={dictionary.notFound.body}>
+        <p className="ng-notice-code" aria-hidden="true" style={{ order: -1 }}>
+          404
+        </p>
+        <div className="ng-hero-cta">
+          <Link href={`/${locale}`} className="ng-btn ng-btn-primary ng-btn-lg">
+            {dictionary.notFound.cta}
+            <ArrowLeftIcon className="size-4 rtl:rotate-180" aria-hidden="true" />
+          </Link>
+          <Link href={`/${locale}/products`} className="ng-btn ng-btn-lg">
+            {dictionary.nav.products}
+          </Link>
+        </div>
+      </Notice>
     </div>
   )
 }

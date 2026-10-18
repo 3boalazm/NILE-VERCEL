@@ -1,4 +1,3 @@
-import { EditorialVisual } from "@/components/care-atlas/editorial-visual";
 import { productRepository } from "@/lib/products";
 import { readCms } from "@/lib/cms/read";
 import { getExperienceCopy } from "@/lib/i18n/experience";
@@ -9,7 +8,8 @@ import { MailIcon, MapPinIcon, PhoneIcon } from "lucide-react";
 import { isValidLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { NPFContactForm } from "@/components/npf/contact-form";
-import { PageIntro } from "@/components/care-atlas/sections";
+import { PageIntro } from "@/components/glass/sections";
+import { EditorialFigure } from "@/components/glass/content";
 import { getCareAtlasCopy } from "@/lib/i18n/care-atlas";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 
@@ -82,19 +82,20 @@ export default async function ContactPage({
 
   const c = getCareAtlasCopy(locale);
   return (
-    <>
+    <div className="ng-content">
       <PageIntro
-        index="NPF / AN OPEN CONVERSATION"
+        eyebrow={c.contactLabel}
         title={dictionary.contact.pageTitle}
         accent={c.contact2}
         body={c.contactBody}
       />
-      <div className="ca-contact-page ca-section-pad">
-        <section className="ca-contact-form-panel">
-          <div className="ca-section-index">
-            <span className="ca-mono">01 / YOUR MESSAGE</span>
+      <div className="ng-wrap ng-band-tight ng-contact-grid" style={{ paddingBlockEnd: "clamp(56px, 8vw, 112px)" }}>
+        <section className="ng-glass ng-form-panel" aria-labelledby="contact-form-title">
+          <div className="ng-stack" style={{ ["--ng-stack" as string]: "8px" }}>
+            <h2 id="contact-form-title" className="ng-h3">
+              {dictionary.contact.formTitle}
+            </h2>
           </div>
-          <h2>{dictionary.contact.formTitle}</h2>
           <NPFContactForm
             key={product?.slug ?? "general"}
             initialSubject={initialSubject}
@@ -106,48 +107,50 @@ export default async function ContactPage({
             routingBody={dictionary.contact.routingBody}
             careers={{ href: `${base}/careers`, label: dictionary.contact.routingCareers }}
           />
-          <p>{dictionary.contact.responseNote}</p>
+          <p className="ng-muted ng-small">{dictionary.contact.responseNote}</p>
         </section>
-        <aside className="ca-contact-address">
-          <span className="ca-mono">02 / FIND US</span>
-          <h2>{dictionary.contact.infoTitle}</h2>
-          <ul>
-            {infoItems.map((item) => (
-              <li key={item.label}>
-                <item.icon size={22} aria-hidden="true" />
-                {item.href ? (
-                  <a href={item.href} dir="ltr">
-                    {item.label}
-                  </a>
-                ) : (
-                  <span>{item.label}</span>
-                )}
-              </li>
-            ))}
-          </ul>
-          <a
-            className="ca-map-link"
-            href={`https://maps.google.com/maps?q=${encodeURIComponent(dictionary.contact.address)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {locale === "ar"
-              ? "افتح الموقع على Google Maps"
-              : "Open our location in Google Maps"}
-            <span aria-hidden="true">↗</span>
-          </a>
-          <p>
-            {locale === "ar"
-              ? "الخريطة تفتح خارجيًا عند اختيارك للرابط."
-              : "The external map opens only when you follow the link."}
-          </p>
-          <EditorialVisual
-            kind="contact"
-            locale={locale}
-            className="ca-editorial-contact"
-          />
+        <aside className="ng-sticky" aria-labelledby="contact-info-title">
+          <div className="ng-tile">
+            <h2 id="contact-info-title" className="ng-h3">
+              {dictionary.contact.infoTitle}
+            </h2>
+            <ul className="ng-contact-list">
+              {infoItems.map((item) => (
+                <li key={item.label}>
+                  <span className="ng-contact-icon">
+                    <item.icon size={20} aria-hidden="true" />
+                  </span>
+                  {item.href ? (
+                    <a href={item.href} dir="ltr">
+                      {item.label}
+                    </a>
+                  ) : (
+                    <span>{item.label}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+            <a
+              className="ng-btn ng-btn-ghost"
+              style={{ inlineSize: "100%" }}
+              href={`https://maps.google.com/maps?q=${encodeURIComponent(dictionary.contact.address)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {locale === "ar"
+                ? "افتح الموقع على Google Maps"
+                : "Open our location in Google Maps"}
+              <span className="ng-arrow" aria-hidden="true">↗</span>
+            </a>
+            <p className="ng-muted ng-small">
+              {locale === "ar"
+                ? "الخريطة تفتح خارجيًا عند اختيارك للرابط."
+                : "The external map opens only when you follow the link."}
+            </p>
+          </div>
+          <EditorialFigure kind="contact" locale={locale} sizes="(min-width: 1000px) 40vw, 100vw" />
         </aside>
       </div>
-    </>
+    </div>
   );
 }

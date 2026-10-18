@@ -5,15 +5,14 @@ import { ArrowLeftIcon, ExternalLinkIcon, FileTextIcon, TriangleAlertIcon } from
 
 import { isValidLocale, type Locale } from "@/lib/i18n/config"
 import { getDictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
+import { Toc } from "@/components/glass/content"
 import { Reveal } from "@/components/npf/motion/reveal"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import { articleRepository, localizeArticle } from "@/lib/articles"
 import { localizeProduct, productRepository } from "@/lib/products"
 import { readCms, readCmsList } from "@/lib/cms/read"
 import { CatalogUnavailable } from "@/components/npf/catalog-unavailable"
-import { evidenceTierLabel, TIER_BADGE_CLASS, TIER_ORDER } from "@/lib/articles/evidence-tier"
-import { cn } from "@/lib/utils"
+import { evidenceTierLabel, TIER_ORDER } from "@/lib/articles/evidence-tier"
 
 export async function generateMetadata({
   params,
@@ -59,7 +58,11 @@ export default async function ArticlePage({ params }: PageProps<"/[locale]/blogs
   // The CMS could not be read. The article may well exist, so this is not a
   // 404 — the page renders the "unavailable" notice instead.
   if (articleRead.status === "unavailable") {
-    return <CatalogUnavailable locale={locale} className="ca-section-pad" />
+    return (
+      <div className="ng-wrap ng-notice-wrap">
+        <CatalogUnavailable locale={locale} />
+      </div>
+    )
   }
   const article = articleRead.value
   if (!article) notFound()
@@ -92,144 +95,139 @@ export default async function ArticlePage({ params }: PageProps<"/[locale]/blogs
       : `https://pubmed.ncbi.nlm.nih.gov/${localized.source.pubmedId}/`
     : undefined
 
+  // F-13 — the table of contents is generated from the sections this page
+  // actually renders (same ids on both ends), so it can never be empty or
+  // point at a heading that does not exist.
+  const toc = [
+    { id: "findings", heading: copy.findingsLabel },
+    { id: "caveat", heading: copy.caveatLabel },
+    { id: "source", heading: copy.sourceLabel },
+    ...(localizedProduct ? [{ id: "product", heading: copy.productCta }] : []),
+    ...(related.length > 0 ? [{ id: "related", heading: copy.relatedArticles }] : []),
+  ]
+
   return (
-    <>
-      <article className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-        <Reveal className="flex flex-col gap-5">
-          <Link
-            href={`${base}/blogs`}
-            className="inline-flex w-fit items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <ArrowLeftIcon className="size-3.5 rotate-180 rtl:rotate-0" aria-hidden="true" />
+    <div className="ng-content">
+      <article>
+        <header className="ng-wrap ng-page-intro" style={{ paddingBlockEnd: "clamp(20px, 3vw, 36px)" }}>
+          <Link href={`${base}/blogs`} className="ng-back">
+            <ArrowLeftIcon className="size-4" aria-hidden="true" />
             {copy.backToBlog}
           </Link>
-
-          <span
-            className={cn(
-              "w-fit rounded-full border px-3 py-1 text-xs font-medium",
-              TIER_BADGE_CLASS[localized.evidenceTier]
-            )}
-          >
+          <span className="ng-tier" data-tier={localized.evidenceTier}>
+            <span className="ng-sr">{copy.evidenceLabel}: </span>
             {evidenceTierLabel(localized.evidenceTier, dictionary)}
           </span>
-
-          <h1 className="font-heading text-3xl font-semibold leading-tight text-balance sm:text-4xl">
+          <h1 className="ng-h1" style={{ fontSize: "var(--ng-t-2xl)", maxInlineSize: "30ch" }}>
             {localized.title}
           </h1>
-          <p className="text-lg leading-relaxed text-muted-foreground">{localized.summary}</p>
-        </Reveal>
+          <p className="ng-lead">{localized.summary}</p>
+        </header>
 
-        {/* Key findings */}
-        <Reveal as="section" delay={0.06} className="mt-12 flex flex-col gap-4">
-          <h2 className="font-heading text-xl font-semibold">{copy.findingsLabel}</h2>
-          <ul className="flex flex-col gap-3">
-            {localized.keyFindings.map((finding) => (
-              <li key={finding} className="flex gap-3 text-pretty leading-relaxed">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                <span>{finding}</span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
+        <div className="ng-wrap ng-reader" style={{ paddingBlockEnd: "clamp(48px, 7vw, 96px)" }}>
+          <Toc title={copy.tocTitle} entries={toc} />
+          <div className="ng-reader-main">
+            {/* Key findings */}
+            <Reveal as="section" className="ng-stack" style={{ ["--ng-stack" as string]: "16px" }} aria-labelledby="findings">
+              <h2 id="findings" className="ng-h3">
+                {copy.findingsLabel}
+              </h2>
+              <ul className="ng-bullets">
+                {localized.keyFindings.map((finding) => (
+                  <li key={finding}>{finding}</li>
+                ))}
+              </ul>
+            </Reveal>
 
-        {/* Caveat — visually separated on purpose */}
-        <Reveal
-          as="section"
-          delay={0.08}
-          className="mt-10 rounded-2xl border border-chart-3/40 bg-chart-3/5 p-5 sm:p-6"
-        >
-          <h2 className="flex items-center gap-2 font-heading text-base font-semibold">
-            <TriangleAlertIcon className="size-4 text-chart-3" aria-hidden="true" />
-            {copy.caveatLabel}
-          </h2>
-          <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">{localized.caveat}</p>
-        </Reveal>
+            {/* Caveat — visually separated on purpose */}
+            <Reveal as="section" delay={0.04} className="ng-callout" aria-labelledby="caveat">
+              <div className="ng-callout-title">
+                <span className="ng-callout-icon">
+                  <TriangleAlertIcon className="size-5" aria-hidden="true" />
+                </span>
+                <h2 id="caveat" className="ng-h4">
+                  {copy.caveatLabel}
+                </h2>
+              </div>
+              <p className="ng-body">{localized.caveat}</p>
+            </Reveal>
 
-        {/* Source */}
-        <Reveal as="section" delay={0.1} className="mt-10 rounded-2xl border bg-card p-5 sm:p-6">
-          <h2 className="flex items-center gap-2 font-heading text-base font-semibold">
-            <FileTextIcon className="size-4 text-primary" aria-hidden="true" />
-            {copy.sourceLabel}
-          </h2>
-          <dl className="mt-4 flex flex-col gap-1.5 text-sm">
-            <dd className="font-medium leading-snug">{localized.source.title}</dd>
-            <dd className="text-muted-foreground">{localized.source.authors}</dd>
-            <dd className="text-muted-foreground">
-              {localized.source.journal} · {localized.source.year}
-            </dd>
-            <dd className="text-muted-foreground">{localized.source.type}</dd>
-            {localized.source.doi && <dd className="text-muted-foreground">DOI: {localized.source.doi}</dd>}
-          </dl>
-          {(sourceUrl || pubmedUrl) && (
-            <div className="mt-4 flex flex-wrap gap-3">
-              {sourceUrl && (
-                <a
-                  href={sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-                >
-                  {copy.viewSource}
-                  <ExternalLinkIcon className="size-3.5" aria-hidden="true" />
-                </a>
+            {/* Source */}
+            <Reveal as="section" delay={0.06} className="ng-tile" aria-labelledby="source">
+              <h2 id="source" className="ng-h4 ng-section-title">
+                <FileTextIcon className="size-5" aria-hidden="true" />
+                {copy.sourceLabel}
+              </h2>
+              <div className="ng-cite">
+                <p>{localized.source.title}</p>
+                <p>{localized.source.authors}</p>
+                <p>
+                  {localized.source.journal} · <span className="ng-num">{localized.source.year}</span>
+                </p>
+                <p>{localized.source.type}</p>
+                {localized.source.doi && <p dir="ltr">DOI: {localized.source.doi}</p>}
+              </div>
+              {(sourceUrl || pubmedUrl) && (
+                <div className="ng-hero-cta">
+                  {sourceUrl && (
+                    <a href={sourceUrl} target="_blank" rel="noopener noreferrer" className="ng-btn">
+                      {copy.viewSource}
+                      <ExternalLinkIcon className="size-4" aria-hidden="true" />
+                    </a>
+                  )}
+                  {pubmedUrl && (
+                    <a href={pubmedUrl} target="_blank" rel="noopener noreferrer" className="ng-btn ng-btn-ghost">
+                      PubMed
+                      <ExternalLinkIcon className="size-4" aria-hidden="true" />
+                    </a>
+                  )}
+                </div>
               )}
-              {pubmedUrl && (
-                <a
-                  href={pubmedUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
-                >
-                  PubMed
-                  <ExternalLinkIcon className="size-3.5" aria-hidden="true" />
-                </a>
-              )}
-            </div>
-          )}
-        </Reveal>
+            </Reveal>
 
-        {localizedProduct && (
-          <Reveal as="div" delay={0.12} className="mt-10">
-            <Link
-              href={`${base}/products/${localizedProduct.slug}`}
-              className={cn(ctaButtonVariants({ variant: "onLight" }), "w-fit")}
-            >
-              {copy.productCta}: {localizedProduct.name}
-            </Link>
-          </Reveal>
-        )}
-      </article>
+            {localizedProduct && (
+              <Reveal as="section" delay={0.08} aria-labelledby="product">
+                <h2 id="product" className="ng-sr">
+                  {copy.productCta}
+                </h2>
+                <Link href={`${base}/products/${localizedProduct.slug}`} className="ng-btn ng-btn-primary ng-btn-lg">
+                  <span>
+                    {copy.productCta}: <bdi dir="ltr">{localizedProduct.name}</bdi>
+                  </span>
+                  <span className="ng-arrow" aria-hidden="true">↗</span>
+                </Link>
+              </Reveal>
+            )}
 
-      {related.length > 0 && (
-        <section className="border-t bg-anti-flash-white/60 dark:bg-card/40">
-          <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 lg:px-8">
-            <h2 className="font-heading text-xl font-semibold">{copy.relatedArticles}</h2>
-            <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-              {related.map((item) => (
-                <li key={item.id}>
-                  <Link
-                    href={`${base}/blogs/${item.slug}`}
-                    className="flex h-full flex-col gap-2 rounded-2xl border bg-card p-5 transition-colors hover:border-primary/30"
-                  >
-                    <span
-                      className={cn(
-                        "w-fit rounded-full border px-2.5 py-0.5 text-[11px] font-medium",
-                        TIER_BADGE_CLASS[item.evidenceTier]
-                      )}
-                    >
-                      {evidenceTierLabel(item.evidenceTier, dictionary)}
-                    </span>
-                    <span className="font-medium leading-snug text-balance">{item.title}</span>
-                    <span className="mt-auto text-xs text-muted-foreground">
-                      {item.source.journal} · {item.source.year}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {related.length > 0 && (
+              <section className="ng-stack" style={{ ["--ng-stack" as string]: "16px" }} aria-labelledby="related">
+                <h2 id="related" className="ng-h3">
+                  {copy.relatedArticles}
+                </h2>
+                <ul className="ng-posts">
+                  {related.map((item) => (
+                    <li key={item.id}>
+                      <article className="ng-tile ng-post">
+                        <span className="ng-tier" data-tier={item.evidenceTier}>
+                          {evidenceTierLabel(item.evidenceTier, dictionary)}
+                        </span>
+                        <h3 className="ng-h4" style={{ fontSize: "var(--ng-t-md)" }}>
+                          <Link href={`${base}/blogs/${item.slug}`}>{item.title}</Link>
+                        </h3>
+                        <div className="ng-post-foot">
+                          <span>
+                            {item.source.journal} · <span className="ng-num">{item.source.year}</span>
+                          </span>
+                        </div>
+                      </article>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
           </div>
-        </section>
-      )}
-    </>
+        </div>
+      </article>
+    </div>
   )
 }

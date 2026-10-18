@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any -- generated migration */
 import {MigrationInterface, QueryRunner} from "typeorm";
 import { deduplicateTranslations } from "@vendure/core";
 

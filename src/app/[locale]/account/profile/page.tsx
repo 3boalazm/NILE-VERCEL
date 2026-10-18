@@ -27,14 +27,16 @@ export default async function AccountProfilePage({ params }: PageProps<"/[locale
   if (!customer) redirect(`/${locale}/login`)
 
   return (
-    <Reveal className="flex flex-col gap-6">
-      <h1 className="font-heading text-2xl font-semibold">{dictionary.auth.profileTitle}</h1>
-      <ProfileForm locale={locale} customer={customer} dictionary={dictionary.auth} />
+    <Reveal className="ngc-stack" style={{ ["--ngc-gap" as string]: "28px" }}>
+      <section className="ngc-stack" style={{ ["--ngc-gap" as string]: "16px" }}>
+        <h1 className="ngc-title ngc-title-sm">{dictionary.auth.profileTitle}</h1>
+        <ProfileForm locale={locale} customer={customer} dictionary={dictionary.auth} />
+      </section>
 
       {/* F-63: password rotation for signed-in users (previously only the
           email-token reset flow existed). */}
-      <section className="flex flex-col gap-4 border-t border-border pt-6" aria-labelledby="change-password-heading">
-        <h2 id="change-password-heading" className="font-heading text-lg font-semibold">
+      <section className="ngc-panel ngc-stack" style={{ ["--ngc-gap" as string]: "16px" }} aria-labelledby="change-password-heading">
+        <h2 id="change-password-heading" className="ngc-h2">
           {dictionary.auth.changePasswordTitle}
         </h2>
         <ChangePasswordForm locale={locale} dictionary={dictionary.auth} />
@@ -42,8 +44,8 @@ export default async function AccountProfilePage({ params }: PageProps<"/[locale
 
       {/* F-58: GDPR erasure intake — danger zone, last on the page on
           purpose so it cannot be hit by a stray tap. */}
-      <section className="flex flex-col gap-4 border-t border-border pt-6" aria-labelledby="delete-account-heading">
-        <h2 id="delete-account-heading" className="font-heading text-lg font-semibold text-destructive">
+      <section className="ngc-stack" style={{ ["--ngc-gap" as string]: "12px" }} aria-labelledby="delete-account-heading">
+        <h2 id="delete-account-heading" className="ngc-h2" style={{ color: "var(--ng-danger)" }}>
           {dictionary.auth.deleteAccountTitle}
         </h2>
         <DeleteAccountForm locale={locale} dictionary={dictionary.auth} />

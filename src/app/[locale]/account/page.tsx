@@ -52,36 +52,30 @@ export default async function AccountDashboardPage({ params }: PageProps<"/[loca
   ]
 
   return (
-    <Reveal className="flex flex-col gap-8">
-      <div>
-        <h1 className="font-heading text-2xl font-semibold">{dictionary.auth.dashboardTitle}</h1>
-        <p className="mt-1 text-muted-foreground">
-          {dictionary.auth.dashboardWelcome}{locale === "en" ? "," : "،"} {customer.firstName}
-        </p>
+    <Reveal className="ngc-stack" style={{ ["--ngc-gap" as string]: "28px" }}>
+      <div className="ngc-head" style={{ marginBlockEnd: 0 }}>
+        <span className="ng-eyebrow">{dictionary.auth.dashboardTitle}</span>
+        <h1 className="ngc-title">
+          {dictionary.auth.dashboardWelcome}{locale === "en" ? "," : "،"} <span className="ng-accent">{customer.firstName}</span>
+        </h1>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="ngc-tiles">
         {cards.map((card) => (
-          <Link
-            key={card.href}
-            href={card.href}
-            className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                <card.icon className="size-5" />
-              </div>
-              {typeof card.count === "number" && (
-                <span className="text-sm font-semibold tabular-nums text-muted-foreground">{card.count}</span>
-              )}
+          <Link key={card.href} href={card.href} className="ngc-tile">
+            <div className="ngc-tile-top">
+              <span className="ngc-tile-icon" aria-hidden="true">
+                <card.icon />
+              </span>
+              {typeof card.count === "number" && <span className="ngc-tile-count">{card.count}</span>}
             </div>
-            <div className="flex flex-col gap-1">
-              <h2 className="font-heading text-base font-medium">{card.title}</h2>
-              <p className="text-sm text-muted-foreground">{card.body}</p>
+            <div className="ngc-stack" style={{ ["--ngc-gap" as string]: "4px" }}>
+              <h2 className="ngc-h3">{card.title}</h2>
+              <p className="ngc-sub">{card.body}</p>
             </div>
-            <span className="mt-auto flex items-center gap-1 text-sm font-medium text-primary">
+            <span className="ngc-tile-more">
               {dictionary.auth.dashboardViewAll}
-              <ChevronLeftIcon className="size-3.5 rtl:rotate-180" />
+              <ChevronLeftIcon className="size-4 ltr:rotate-180" aria-hidden="true" />
             </span>
           </Link>
         ))}

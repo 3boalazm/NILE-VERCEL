@@ -1,5 +1,4 @@
 import Link from "next/link"
-import Image from "next/image"
 import { notFound, redirect } from "next/navigation"
 import type { Metadata } from "next"
 import { ChevronLeftIcon } from "lucide-react"
@@ -9,7 +8,7 @@ import { getDictionary } from "@/lib/i18n/dictionaries"
 import { requireActiveCustomer } from "@/lib/auth/active-customer"
 import { readOrderByCode } from "@/lib/vendure/active-order"
 import { toOrderStatusKey } from "@/lib/auth/types"
-import { ProductImagePlaceholder } from "@/components/npf/product-image-placeholder"
+import { LineThumb } from "@/components/glass/line-thumb"
 import { ReorderButton } from "@/components/npf/reorder-button"
 import { Reveal } from "@/components/npf/motion/reveal"
 
@@ -56,38 +55,40 @@ export default async function AccountOrderDetailPage({
   const reorderLines = order.items.map((item) => ({ slug: item.slug, qty: item.qty }))
 
   return (
-    <Reveal className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <Link
-            href={`${base}/account/orders`}
-            className="mb-2 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ChevronLeftIcon className="size-3.5 rotate-180 rtl:rotate-0" />
+    <Reveal className="ngc-stack" style={{ ["--ngc-gap" as string]: "20px" }}>
+      <div className="ngc-head-row">
+        <div className="ngc-stack" style={{ ["--ngc-gap" as string]: "6px" }}>
+          <Link href={`${base}/account/orders`} className="ngc-quiet justify-self-start">
+            <ChevronLeftIcon className="size-4 rtl:rotate-180" aria-hidden="true" />
             {dictionary.auth.backToOrders}
           </Link>
-          <h1 className="font-heading text-2xl font-semibold">
-            {dictionary.auth.orderNumberLabel} {order.orderNumber}
+          <h1 className="ngc-title ngc-title-sm">
+            {dictionary.auth.orderNumberLabel} <span className="ngc-mono" style={{ fontSize: "0.62em", fontWeight: 600 }}>{order.orderNumber}</span>
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {orderDate} · {dictionary.auth.orderStatus[toOrderStatusKey(ownedOrder.state)]}
+          <p className="flex flex-wrap items-center gap-2 ngc-sub">
+            {orderDate}
+            <span className="ngc-status">{dictionary.auth.orderStatus[toOrderStatusKey(ownedOrder.state)]}</span>
           </p>
         </div>
         <ReorderButton locale={locale} dictionary={dictionary.auth} lines={reorderLines} />
       </div>
 
-      <div className="rounded-2xl border border-border bg-anti-flash-white p-6 dark:bg-card">
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="ngc-panel ngc-stack" style={{ ["--ngc-gap" as string]: "20px" }}>
+        <dl className="ngc-facts">
           <div>
-            <dt className="text-xs text-muted-foreground">{dictionary.auth.paymentMethodLabel}</dt>
-            <dd className="mt-0.5 font-medium">
-              {order.paymentMethod === "cod" ? dictionary.checkout.paymentCod : dictionary.checkout.paymentBank}
+            <dt>{dictionary.auth.paymentMethodLabel}</dt>
+            <dd>
+              {order.paymentMethod === "cod"
+                ? dictionary.checkout.paymentCod
+                : order.paymentMethod === "card"
+                  ? dictionary.checkout.paymentCard
+                  : dictionary.checkout.paymentBank}
             </dd>
           </div>
           {order.fulfillmentMode && (
             <div>
-              <dt className="text-xs text-muted-foreground">{dictionary.checkout.shippingMethodTitle}</dt>
-              <dd className="mt-0.5 font-medium">
+              <dt>{dictionary.checkout.shippingMethodTitle}</dt>
+              <dd>
                 {order.fulfillmentMode === "door_to_door"
                   ? dictionary.checkout.fulfillmentDoorToDoor
                   : order.fulfillmentMode === "branch_pickup"
@@ -98,55 +99,53 @@ export default async function AccountOrderDetailPage({
           )}
           {order.customer.address && (
             <div>
-              <dt className="text-xs text-muted-foreground">{dictionary.checkout.shippingTitle}</dt>
-              <dd className="mt-0.5 font-medium">
+              <dt>{dictionary.checkout.shippingTitle}</dt>
+              <dd>
                 {order.customer.address}, {order.customer.city}
               </dd>
             </div>
           )}
         </dl>
 
-        <ul className="mt-6 flex flex-col divide-y divide-border">
+        <hr className="ngc-divider" />
+
+        <ul className="ngc-mini">
           {order.items.map((item) => (
-            <li key={item.lineId} className="flex items-center gap-3 py-3">
-              <div className="relative size-12 shrink-0 overflow-hidden rounded-lg bg-muted">
-                {item.image ? (
-                  <Image src={item.image} alt={item.name} fill sizes="48px" className="object-cover" />
-                ) : (
-                  <ProductImagePlaceholder />
-                )}
-              </div>
-              <div className="flex flex-1 flex-col">
-                <span className="line-clamp-1 text-sm font-medium">{item.name}</span>
-                <span className="text-xs text-muted-foreground">× {item.qty}</span>
-              </div>
-              <span className="shrink-0 text-sm font-medium tabular-nums">
+            <li key={item.lineId}>
+              <span className="ngc-thumb ngc-thumb-sm">
+                <LineThumb src={item.image} sizes="52px" />
+              </span>
+              <span>
+                <span className="ngc-mini-name">{item.name}</span>
+                <span className="ngc-line-meta">× {item.qty}</span>
+              </span>
+              <span className="ngc-amount">
                 {typeof item.price === "number" ? `${item.price * item.qty} ${currencyLabel}` : "—"}
               </span>
             </li>
           ))}
         </ul>
 
-        <div className="mt-4 flex flex-col gap-2 border-t border-border pt-4 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">{dictionary.checkout.subtotalLabel}</span>
-            <span className="font-semibold tabular-nums">
+        <dl className="ngc-rows">
+          <div className="ngc-row">
+            <dt>{dictionary.checkout.subtotalLabel}</dt>
+            <dd className="ngc-amount">
               {order.subtotal} {currencyLabel}
-            </span>
+            </dd>
           </div>
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">{dictionary.checkout.shippingCostLabel}</span>
-            <span className="font-semibold tabular-nums">
+          <div className="ngc-row">
+            <dt>{dictionary.checkout.shippingCostLabel}</dt>
+            <dd className="ngc-amount">
               {order.shippingCost === 0 ? dictionary.checkout.shippingFreeLabel : `${order.shippingCost} ${currencyLabel}`}
-            </span>
+            </dd>
           </div>
-          <div className="flex items-center justify-between text-base">
-            <span className="font-medium">{dictionary.checkout.totalLabel}</span>
-            <span className="font-semibold tabular-nums">
+          <div className="ngc-row ngc-row-total">
+            <dt>{dictionary.checkout.totalLabel}</dt>
+            <dd className="ngc-amount">
               {order.total} {currencyLabel}
-            </span>
+            </dd>
           </div>
-        </div>
+        </dl>
       </div>
     </Reveal>
   )

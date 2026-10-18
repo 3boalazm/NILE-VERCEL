@@ -7,10 +7,8 @@ import { Loader2Icon } from "lucide-react"
 import { createAddress } from "@/lib/auth/actions"
 import { getCommonErrors } from "@/lib/i18n/common-errors"
 import type { Dictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
 import { reportError } from "@/lib/telemetry/report-error"
 
 type AuthDictionary = Dictionary["auth"]
@@ -61,47 +59,47 @@ export function AddressForm({
   }
 
   return (
-    <form aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
-      <h2 className="font-heading text-base font-semibold">{dictionary.addAddressTitle}</h2>
-      <div className="flex flex-col gap-1.5">
+    <form method="post" aria-busy={submitting} aria-describedby={error ? "form-feedback" : undefined} onSubmit={handleSubmit} className="ngc-panel ngc-panel-strong ngc-form">
+      <h2 className="ngc-h2">{dictionary.addAddressTitle}</h2>
+      <div className="ngc-field">
         <Label htmlFor="fullName">{dictionary.addressFormFullName} *</Label>
         <Input id="fullName" name="fullName" required autoComplete="name" />
       </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
+      <div className="ngc-grid-2">
+        <div className="ngc-field">
           <Label htmlFor="province">{dictionary.addressFormProvince} *</Label>
           <Input id="province" name="province" required autoComplete="address-level1" />
         </div>
-        <div className="flex flex-col gap-1.5">
+        <div className="ngc-field">
           <Label htmlFor="city">{dictionary.addressFormCity} *</Label>
           <Input id="city" name="city" required autoComplete="address-level2" />
         </div>
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="ngc-field">
         <Label htmlFor="streetLine1">{dictionary.addressFormStreet} *</Label>
         <Input id="streetLine1" name="streetLine1" required autoComplete="street-address" />
       </div>
-      <div className="flex flex-col gap-1.5">
+      <div className="ngc-field">
         <Label htmlFor="phoneNumber">{dictionary.addressFormPhone} *</Label>
         <Input id="phoneNumber" name="phoneNumber" type="tel" required autoComplete="tel" />
       </div>
 
       {error && (
-        <p className="text-sm text-destructive" id="form-feedback" role="alert">
+        <p className="ngc-alert" id="form-feedback" role="alert">
           {error}
         </p>
       )}
 
-      <div className="flex gap-3">
+      <div className="ngc-actions">
         <button
           type="submit"
           disabled={submitting}
-          className={cn(ctaButtonVariants({ variant: "onLight" }), "gap-2")}
+          className="ng-btn ng-btn-primary"
         >
           {submitting && <Loader2Icon className="size-4 animate-spin" />}
           {submitting ? dictionary.addressFormSubmitting : dictionary.addressFormSubmit}
         </button>
-        <button type="button" onClick={onCancel} className={cn(ctaButtonVariants({ variant: "outline" }))}>
+        <button type="button" onClick={onCancel} className="ng-btn ng-btn-ghost">
           {dictionary.cancelCta}
         </button>
       </div>

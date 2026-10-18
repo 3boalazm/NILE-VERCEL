@@ -5,6 +5,7 @@ import { SerwistProvider } from "@/components/providers/serwist-provider"
 
 import "../globals.css"
 import "../glass.css"
+import "../glass-commerce.css"
 import { DirectionProvider } from "@/components/ui/direction"
 import { AnalyticsProvider } from "@/components/npf/analytics-provider"
 import { CookieConsentBanner } from "@/components/npf/cookie-consent-banner"

@@ -5,11 +5,11 @@ import type { Metadata } from "next"
 
 import { isValidLocale, type Locale } from "@/lib/i18n/config"
 import { getDictionary } from "@/lib/i18n/dictionaries"
-import { ctaButtonVariants } from "@/components/ui/button"
+import { PageIntro, SectionHead } from "@/components/glass/sections"
+import "@/app/glass-content.css"
 import { Reveal } from "@/components/npf/motion/reveal"
 import { buildPageMetadata } from "@/lib/seo/page-metadata"
 import { MECS_BRANCHES, MECS_CARRIER, mecsTelHref } from "@/lib/shipping/mecs"
-import { cn } from "@/lib/utils"
 
 export async function generateMetadata({
   params,
@@ -39,60 +39,64 @@ export default async function ShippingDeliveryPage({
     value === null ? shipping.free : `${value.toLocaleString("en-US")} ${shipping.currency}`
 
   return (
-    <>
-      {/* Hero */}
-      <section className="bg-anti-flash-white dark:bg-card">
-        <Reveal className="mx-auto flex max-w-3xl flex-col items-center gap-3 px-4 py-20 text-center sm:px-6 lg:px-8">
-          <span className="eyebrow text-primary">{dictionary.siteName}</span>
-          <h1 className="font-heading text-3xl font-semibold sm:text-4xl">{shipping.pageTitle}</h1>
-          <p className="max-w-xl text-muted-foreground">{shipping.pageSubtitle}</p>
-        </Reveal>
-      </section>
+    <div className="ng-content">
+      <PageIntro eyebrow={dictionary.siteName} title={shipping.pageTitle} body={shipping.pageSubtitle} />
 
-      <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
-        <Reveal as="div" className="relative aspect-21/9 overflow-hidden rounded-2xl">
-          <Image
-            src="/shipping-van.jpg"
-            alt={shipping.pageTitle}
-            fill
-            sizes="(min-width: 1024px) 56rem, 100vw"
-            className="object-cover"
-            priority
-          />
+      <div className="ng-wrap ng-band-tight">
+        <Reveal as="figure" className="ng-editorial ng-editorial-wide">
+          <div className="ng-editorial-media">
+            <Image
+              src="/shipping-van.jpg"
+              alt={shipping.pageTitle}
+              width={2000}
+              height={2000}
+              sizes="(min-width: 1340px) 1280px, 100vw"
+              style={{ objectPosition: "50% 78%" }}
+              priority
+            />
+          </div>
         </Reveal>
+      </div>
+
+      <section className="ng-wrap ng-band-tight" aria-labelledby="shipping-zones">
+        <div className="ng-split ng-split-even" style={{ marginBlockEnd: "clamp(20px, 3vw, 32px)" }}>
+          <Reveal className="ng-callout ng-callout-info">
+            <p className="ng-h4" id="shipping-zones">
+              {shipping.carrierLine}
+            </p>
+          </Reveal>
+          <Reveal delay={0.04} className="ng-empty" style={{ textAlign: "start" }}>
+            <p className="ng-small">{shipping.disclaimer}</p>
+          </Reveal>
+        </div>
 
         <Reveal
           delay={0.06}
-          as="div"
-          className="mt-6 rounded-2xl border border-dashed bg-muted/30 p-4 text-sm text-muted-foreground"
+          className="ng-table-frame"
+          tabIndex={0}
+          role="region"
+          aria-labelledby="shipping-zones"
         >
-          {shipping.disclaimer}
-        </Reveal>
-
-        {/* The contracted carrier — customers should know who delivers. */}
-        <Reveal delay={0.07} as="div" className="mt-4 flex items-center gap-3 rounded-2xl border bg-primary/5 p-4">
-          <p className="text-sm font-medium">{shipping.carrierLine}</p>
-        </Reveal>
-
-        <Reveal delay={0.08} as="div" className="mt-10 overflow-x-auto rounded-2xl border">
-          <table className="w-full text-start text-sm">
-            <thead className="bg-muted/50">
+          <table className="ng-table ng-table-stack">
+            <thead>
               <tr>
-                <th className="w-16 px-4 py-3 text-start font-medium">{shipping.zoneHeader}</th>
-                <th className="px-4 py-3 text-start font-medium">{shipping.areasHeader}</th>
-                <th className="w-28 px-4 py-3 text-start font-medium">{shipping.oneWayHeader}</th>
-                <th className="w-28 px-4 py-3 text-start font-medium">{shipping.roundTripHeader}</th>
+                <th scope="col" style={{ inlineSize: "4rem" }}>{shipping.zoneHeader}</th>
+                <th scope="col">{shipping.areasHeader}</th>
+                <th scope="col" style={{ inlineSize: "8rem" }}>{shipping.oneWayHeader}</th>
+                <th scope="col" style={{ inlineSize: "8rem" }}>{shipping.roundTripHeader}</th>
               </tr>
             </thead>
-            <tbody className="divide-y">
+            <tbody>
               {shipping.zones.map((row) => (
                 <tr key={row.zone}>
-                  <td className="px-4 py-3 align-top font-medium text-muted-foreground">{row.zone}</td>
-                  <td className="px-4 py-3 align-top text-pretty leading-relaxed">{row.areas}</td>
-                  <td className="px-4 py-3 align-top whitespace-nowrap font-medium">
+                  <td data-label={shipping.zoneHeader} className="ng-num" style={{ fontWeight: 700, color: "var(--ng-brand)" }}>
+                    {row.zone}
+                  </td>
+                  <td data-label={shipping.areasHeader}>{row.areas}</td>
+                  <td data-label={shipping.oneWayHeader} className="ng-nowrap ng-num" style={{ fontWeight: 600 }}>
                     {formatPrice(row.oneWay)}
                   </td>
-                  <td className="px-4 py-3 align-top whitespace-nowrap font-medium">
+                  <td data-label={shipping.roundTripHeader} className="ng-nowrap ng-num" style={{ fontWeight: 600 }}>
                     {formatPrice(row.roundTrip)}
                   </td>
                 </tr>
@@ -100,72 +104,84 @@ export default async function ShippingDeliveryPage({
             </tbody>
           </table>
         </Reveal>
+      </section>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
-          <Reveal delay={0.12} as="section">
-            <h2 className="font-heading text-lg font-semibold">{shipping.deliveryTimeTitle}</h2>
-            <ul className="mt-2 flex flex-col gap-1 text-pretty leading-relaxed text-muted-foreground">
+      <section className="ng-wrap ng-band-tight">
+        <div className="ng-split ng-split-even">
+          <Reveal as="section" className="ng-tile">
+            <h2 className="ng-h4">{shipping.deliveryTimeTitle}</h2>
+            <ul className="ng-bullets ng-small">
               <li>{shipping.deliveryTimeZone1}</li>
               <li>{shipping.deliveryTimeOthers}</li>
             </ul>
           </Reveal>
-          <Reveal delay={0.16} as="section">
-            <h2 className="font-heading text-lg font-semibold">{shipping.prepaidTitle}</h2>
-            <p className="mt-2 text-pretty leading-relaxed text-muted-foreground">{shipping.prepaidBody}</p>
+          <Reveal as="section" delay={0.06} className="ng-tile">
+            <h2 className="ng-h4">{shipping.prepaidTitle}</h2>
+            <p className="ng-body ng-small">{shipping.prepaidBody}</p>
           </Reveal>
         </div>
+      </section>
 
-        {/* MECS branch locator — the branch_pickup fulfilment option's real
-            drop-off points. Data from the carrier's own site (see mecs.ts). */}
-        <Reveal delay={0.18} as="section" className="mt-12">
-          <h2 className="font-heading text-xl font-semibold">{shipping.branchesTitle}</h2>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{shipping.branchesNote}</p>
-          <div className="mt-6 flex flex-col gap-8">
-            {MECS_BRANCHES.map((group) => (
-              <div key={group.governorateEn} className="flex flex-col gap-3">
-                <h3 className="font-heading text-base font-semibold">
-                  {group.governorateAr}
-                  <span className="ms-2 text-sm font-normal text-muted-foreground">{group.governorateEn}</span>
-                </h3>
-                <ul className="grid gap-3 sm:grid-cols-2">
-                  {group.branches.map((branch) => (
-                    <li key={`${group.governorateEn}-${branch.name}`} className="rounded-xl border p-4">
-                      <p className="text-sm font-medium">{branch.name}</p>
-                      {locale === "ar" ? (
-                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{branch.addressAr}</p>
-                      ) : (
-                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground" dir="ltr">
-                          {branch.address}
-                        </p>
-                      )}
-                      {branch.phones.length > 0 && (
-                        <p className="mt-2 flex flex-wrap gap-2">
-                          {branch.phones.map((phone) => (
-                            <a
-                              key={phone}
-                              href={mecsTelHref(phone)}
-                              className="inline-flex items-center rounded-full border border-border bg-card px-3 py-1 text-xs font-medium tabular-nums transition-colors hover:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50"
-                            >
-                              {shipping.branchesCallLabel} {phone}
-                            </a>
-                          ))}
-                        </p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+      {/* MECS branch locator — the branch_pickup fulfilment option's real
+          drop-off points. Data from the carrier's own site (see mecs.ts). */}
+      <section className="ng-wrap ng-band" aria-labelledby="shipping-branches">
+        <SectionHead title={shipping.branchesTitle} body={shipping.branchesNote} id="shipping-branches" />
+        {/* One native disclosure per governorate: 26 groups / 60+ branches
+            would otherwise be a very long scroll on a phone. Works without JS,
+            and browser find-in-page opens the matching group. */}
+        <div className="ng-acc ng-branch-acc" style={{ marginBlockStart: "clamp(24px, 4vw, 40px)" }}>
+          {MECS_BRANCHES.map((group) => (
+            <details key={group.governorateEn}>
+              <summary>
+                <span className="ng-branch-sum">
+                  <span>{locale === "ar" ? group.governorateAr : group.governorateEn}</span>
+                  <small lang={locale === "ar" ? "en" : "ar"} dir={locale === "ar" ? "ltr" : "rtl"}>
+                    {locale === "ar" ? group.governorateEn : group.governorateAr}
+                  </small>
+                </span>
+                <span className="ng-pill ng-pill-soft ng-num">{group.branches.length}</span>
+              </summary>
+              <ul className="ng-branches">
+                {group.branches.map((branch) => (
+                  <li key={`${group.governorateEn}-${branch.name}`} className="ng-tile">
+                    <h3 className="ng-small" style={{ fontWeight: 600, color: "var(--ng-ink)", margin: 0 }}>
+                      {branch.name}
+                    </h3>
+                    {locale === "ar" ? (
+                      <p className="ng-muted ng-small">{branch.addressAr}</p>
+                    ) : (
+                      <p className="ng-muted ng-small" dir="ltr">
+                        {branch.address}
+                      </p>
+                    )}
+                    {branch.phones.length > 0 && (
+                      <p className="ng-phones">
+                        {branch.phones.map((phone) => (
+                          <a key={phone} href={mecsTelHref(phone)}>
+                            {shipping.branchesCallLabel}&nbsp;<span dir="ltr">{phone}</span>
+                          </a>
+                        ))}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      <section className="ng-wrap" style={{ paddingBlockEnd: "clamp(56px, 8vw, 112px)" }}>
+        <Reveal className="ng-cta ng-glass ng-stack" style={{ ["--ng-stack" as string]: "18px" }}>
+          <p className="ng-lead">{shipping.cta}</p>
+          <div className="ng-hero-cta">
+            <Link href={`${base}/contact`} className="ng-btn ng-btn-primary ng-btn-lg">
+              {shipping.ctaButton}
+              <span className="ng-arrow" aria-hidden="true">↗</span>
+            </Link>
           </div>
         </Reveal>
-
-        <Reveal delay={0.2} as="div" className="mt-12 flex flex-col items-start gap-4">
-          <p className="text-muted-foreground">{shipping.cta}</p>
-          <Link href={`${base}/contact`} className={cn(ctaButtonVariants({ variant: "onLight" }))}>
-            {shipping.ctaButton}
-          </Link>
-        </Reveal>
-      </div>
-    </>
+      </section>
+    </div>
   )
 }

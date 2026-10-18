@@ -27,8 +27,7 @@ import { AlertTriangleIcon, RefreshCwIcon } from "lucide-react"
 import { getErrorCopy, SUPPORT_EMAIL } from "@/lib/i18n/error-copy"
 import { reportError } from "@/lib/telemetry/report-error"
 import { isValidLocale, defaultLocale, type Locale } from "@/lib/i18n/config"
-import { ctaButtonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Notice } from "@/components/glass/content"
 
 export default function LocaleError({
   error,
@@ -55,43 +54,37 @@ export default function LocaleError({
   }, [error, locale])
 
   return (
-    <div
-      role="alert"
-      className="mx-auto flex max-w-2xl flex-col items-center px-4 py-24 text-center sm:px-6 lg:px-8"
-    >
-      <span className="flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-        <AlertTriangleIcon className="size-6" aria-hidden="true" />
-      </span>
-      <span className="eyebrow mt-6 text-primary">{copy.eyebrow}</span>
-      <h1 className="mt-2 font-heading text-3xl font-semibold">{copy.title}</h1>
-      <p className="mt-3 text-pretty leading-relaxed text-muted-foreground">{copy.body}</p>
-
-      <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row">
-        <button
-          type="button"
-          onClick={retry}
-          className={cn(ctaButtonVariants({ variant: "onLight" }), "gap-2")}
-        >
-          <RefreshCwIcon className="size-4" aria-hidden="true" />
-          {copy.retry}
-        </button>
-        <Link href={`/${locale}`} className="text-sm font-medium text-primary hover:underline">
-          {copy.homeCta}
-        </Link>
-      </div>
-
-      <p className="mt-10 text-sm text-muted-foreground">
-        {copy.supportEmailLabel}{" "}
-        <a dir="ltr" href={`mailto:${SUPPORT_EMAIL}`} className="font-medium text-foreground hover:underline">
-          {SUPPORT_EMAIL}
-        </a>
-      </p>
-
-      {error?.digest && (
-        <p className="mt-2 font-mono text-xs text-muted-foreground" dir="ltr">
-          ref: {error.digest}
+    <div className="ng-content ng-wrap ng-notice-wrap">
+      <Notice
+        role="alert"
+        titleAs="h1"
+        tone="danger"
+        mark={<AlertTriangleIcon className="size-7" />}
+        eyebrow={copy.eyebrow}
+        title={copy.title}
+        body={copy.body}
+      >
+        <div className="ng-hero-cta">
+          <button type="button" onClick={retry} className="ng-btn ng-btn-primary ng-btn-lg">
+            <RefreshCwIcon className="size-4" aria-hidden="true" />
+            {copy.retry}
+          </button>
+          <Link href={`/${locale}`} className="ng-btn ng-btn-lg">
+            {copy.homeCta}
+          </Link>
+        </div>
+        <p className="ng-body ng-small">
+          {copy.supportEmailLabel}{" "}
+          <a dir="ltr" href={`mailto:${SUPPORT_EMAIL}`} className="ng-link">
+            {SUPPORT_EMAIL}
+          </a>
         </p>
-      )}
+        {error?.digest && (
+          <p className="ng-notice-ref" dir="ltr">
+            ref: {error.digest}
+          </p>
+        )}
+      </Notice>
     </div>
   )
 }

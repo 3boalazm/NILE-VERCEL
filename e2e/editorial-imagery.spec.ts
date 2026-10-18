@@ -36,7 +36,7 @@ for (const locale of ["ar", "en"]) {
       ["careers", "contact-conversation"],
     ]) {
       await page.goto(`/${locale}/${route}`);
-      const visual = page.locator(".ca-editorial-visual");
+      const visual = page.locator(".ng-editorial");
       await visual.scrollIntoViewIfNeeded();
       const image = visual.locator("img");
       await expect(image).toHaveAttribute("alt", /.+/);

@@ -58,37 +58,38 @@ export function PasswordRecoveryForm({
   }
   if (!enabled)
     return (
-      <div className="flex flex-col gap-5">
+      <div className="ngc-form">
         <p
           role="note"
-          className="text-sm leading-relaxed text-muted-foreground"
+          className="ngc-sub"
         >
           {c.unavailable}
         </p>
-        <Link href={`/${locale}/contact`} className="quiet-link">
+        <Link href={`/${locale}/contact`} className="ngc-quiet">
           {c.contact} ↗
         </Link>
       </div>
     )
   if (done)
     return (
-      <div role="status" className="flex flex-col gap-5">
+      <div role="status" className="ngc-form">
         <p>{token ? c.done : c.sent}</p>
-        <Link href={`/${locale}/login`} className="quiet-link">
+        <Link href={`/${locale}/login`} className="ngc-quiet">
           {c.login} ↗
         </Link>
       </div>
     )
   return (
     <form
+      method="post"
       onSubmit={submit}
       aria-busy={pending}
       aria-describedby={error ? "recovery-error" : undefined}
-      className="flex flex-col gap-5"
+      className="ngc-form"
     >
       {token ? (
         <>
-          <div className="space-y-2">
+          <div className="ngc-field">
             <Label htmlFor="new-password">{c.password}</Label>
             <Input
               id="new-password"
@@ -100,7 +101,7 @@ export function PasswordRecoveryForm({
               maxLength={128}
             />
           </div>
-          <div className="space-y-2">
+          <div className="ngc-field">
             <Label htmlFor="confirm-password">{c.confirm}</Label>
             <Input
               id="confirm-password"
@@ -114,7 +115,7 @@ export function PasswordRecoveryForm({
           </div>
         </>
       ) : (
-        <div className="space-y-2">
+        <div className="ngc-field">
           <Label htmlFor="recovery-email">{c.email}</Label>
           <Input
             id="recovery-email"
@@ -131,7 +132,7 @@ export function PasswordRecoveryForm({
         <p
           id="recovery-error"
           role="alert"
-          className="text-sm text-destructive"
+          className="ngc-alert"
         >
           {error}
         </p>
@@ -139,7 +140,7 @@ export function PasswordRecoveryForm({
       <button
         type="submit"
         disabled={pending}
-        className="studio-button !px-5 disabled:opacity-50"
+        className="ng-btn ng-btn-primary ng-btn-lg ngc-block"
       >
         {pending ? "…" : token ? c.save : c.send}
       </button>
