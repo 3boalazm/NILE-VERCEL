@@ -1,5 +1,6 @@
 "use client";
 
+import { FIELD_LIMITS } from "@/lib/forms/field-limits"
 import { useEffect, useId, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -159,7 +160,7 @@ export function ProductAtlas({
               setQuery(e.target.value.slice(0, 200));
               setDetail("composition");
             }}
-            maxLength={200}
+            maxLength={FIELD_LIMITS.searchQuery}
             placeholder={c.search}
             data-testid="atlas-search"
           />

@@ -1,3 +1,4 @@
+import { FIELD_LIMITS } from "@/lib/forms/field-limits"
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -26,7 +27,7 @@ import { publicCatalogProduct } from "@/lib/evidence/store";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
 import { commercialSections } from "@/lib/products/commercial-profile";
 import { canExposeStatement, publicFieldText } from "@/lib/seo/sku-evidence";
-import { careAtlasImage, productTone } from "@/lib/products/presentation";
+import { careAtlasImage, productTone, sortForListing } from "@/lib/products/presentation";
 import { PageIntro, ContactBand, SectionHead } from "@/components/glass/sections";
 import { ProductAtlas, type AtlasProduct } from "@/components/glass/product-atlas";
 import "../../glass-catalog.css";
@@ -106,7 +107,7 @@ export default async function ProductsPage({
   const category =
     categories.find((item) => item.slug === requestedCategory)?.slug ?? "";
   const publicRaw = rawProducts.map((x) => publicCatalogProduct(x));
-  const all = publicRaw.map((x) => localizeProduct(x, locale));
+  const all = sortForListing(publicRaw.map((x) => localizeProduct(x, locale)));
   let products = need ? productsForNeed(all, need) : all;
   if (category) products = products.filter((p) => p.categorySlug === category);
   if (query)
@@ -173,7 +174,7 @@ export default async function ProductsPage({
                 aria-label={c.searchLabel}
                 placeholder={c.search}
                 defaultValue={query}
-                maxLength={200}
+                maxLength={FIELD_LIMITS.searchQuery}
                 dir="auto"
               />
             </label>

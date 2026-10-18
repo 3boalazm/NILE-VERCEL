@@ -28,6 +28,8 @@ export const FIELD_LIMITS = {
   streetAddress: 200,
   /** Free-text order notes. */
   orderNotes: 500,
+  /** Catalogue search box. */
+  searchQuery: 200,
 } as const
 
 export type FieldLimit = keyof typeof FIELD_LIMITS

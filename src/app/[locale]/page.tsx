@@ -6,6 +6,7 @@ import { isValidLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getCareAtlasCopy } from "@/lib/i18n/care-atlas";
 import { productRepository, localizeProduct } from "@/lib/products";
+import { sortForListing } from "@/lib/products/presentation";
 import { readCms } from "@/lib/cms/read";
 import { publicCatalogProduct } from "@/lib/evidence/store";
 import { buildPageMetadata } from "@/lib/seo/page-metadata";
@@ -25,6 +26,8 @@ export async function generateMetadata({
     path: "",
     title: getDictionary(locale).siteName,
     description: getCareAtlasCopy(locale).heroBody,
+    // Real product photography (no generated art) for link previews.
+    image: { url: "/care-atlas/packs/proxeed-plus.webp", alt: "Proxeed Plus — Alfasigma" },
   });
 }
 const STAGE_SLUGS = ["proxeed-plus", "proxeed-women", "proxerex", "ellamuselle"] as const;
@@ -38,8 +41,10 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
   const catalogRead = await readCms("home:products", () =>
     productRepository.getAllProducts(),
   );
-  const localizedProducts = (catalogRead.status === "ok" ? catalogRead.value : []).map((p) =>
-    localizeProduct(publicCatalogProduct(p), locale),
+  const localizedProducts = sortForListing(
+    (catalogRead.status === "ok" ? catalogRead.value : []).map((p) =>
+      localizeProduct(publicCatalogProduct(p), locale),
+    ),
   );
   const leafletProduct =
     localizedProducts.find((p) => p.slug === "proxeed-plus" && p.downloadUrl) ??

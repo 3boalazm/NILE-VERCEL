@@ -22,3 +22,13 @@ describe("Care Atlas original product imagery", () => {
     ).toBe("/products/new.webp");
   });
 });
+
+describe("sortForListing", () => {
+  it("puts the supplement family first, devices last, unknown slugs after known ones in input order", async () => {
+    const { sortForListing } = await import("./presentation");
+    const input = ["ca-mi-ir-thermometer", "zzz-new", "proxerex", "proxeed-plus", "aaa-new", "proxeed-men"].map((slug) => ({ slug }));
+    expect(sortForListing(input).map((p) => p.slug)).toEqual([
+      "proxeed-plus", "proxeed-men", "proxerex", "ca-mi-ir-thermometer", "zzz-new", "aaa-new",
+    ]);
+  });
+});

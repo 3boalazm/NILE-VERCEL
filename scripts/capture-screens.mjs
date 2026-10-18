@@ -81,10 +81,10 @@ for (const width of widths) {
         await page.evaluate(async () => {
           const step = Math.max(400, innerHeight * 0.8)
           for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
-            scrollTo(0, y)
-            await new Promise((r) => setTimeout(r, 120))
+            scrollTo({ top: y, behavior: "instant" }) // html has scroll-behavior:smooth
+            await new Promise((r) => setTimeout(r, 160))
           }
-          scrollTo(0, 0)
+          scrollTo({ top: 0, behavior: "instant" })
         })
         await page.waitForTimeout(700)
         const metrics = await page.evaluate(() => ({
