@@ -1,172 +1,267 @@
-// Vendure demo-catalog seeder — mirrors the storefront catalog (slug-keyed
-// bridge) into a FRESH Vendure database: zone/channel wiring, tax category,
-// products + variants (enabled, priced, in stock), then search reindex.
-// Idempotent: existing products are skipped, so it is safe to re-run.
+// Vendure commerce provisioning — part 1: store-wide settings + the catalog.
+// Idempotent: safe to re-run on a fresh OR an already-seeded database.
 //
-// Usage: set -a && . ./.env && set +a && CATALOG_JSON=/tmp/catalog.json \
-//          node scripts/seed-vendure-catalog.mjs
-// (generate /tmp/catalog.json with scripts/dump-catalog or any 8-product file)
+//   set -a && . ./.env && set +a
+//   node scripts/seed-vendure-catalog.mjs          # create what is missing
+//   node scripts/seed-vendure-catalog.mjs --sync   # also re-align price / SKU /
+//                                                  # enabled state with the repo
 //
-// Vendure 3 API-shape notes baked in the hard way (each cost a debugging
-// round): list queries return `{ items }`; the admin login token arrives ONLY
-// in the `vendure-auth-token` response HEADER; Channel input takes
-// defaultTaxZoneId/defaultShippingZoneId while queries return zone objects;
-// products use `enabled` (there is no `published`); union mutation results
-// reject `... on ErrorResult` spreads for concrete types (select fields on
-// the concrete type); the reindex mutation is `reindex`; fresh variants
-// default to stockOnHand 0 — they are updated to a demo stock here.
-import { readFileSync } from "node:fs"
+// Needs a RUNNING Vendure server AND worker (reindex is a worker job).
+//
+// What it provisions (everything the storefront hard-depends on):
+//   - zone "Egypt" (+ the EG country), the channel's default tax + shipping zone
+//   - channel: EGP currency, ar + en languages, prices INCLUDE tax (the shop's
+//     terms say "prices include VAT where applicable" and the storefront shows
+//     priceWithTax, so the number on the card is the number charged)
+//   - tax category "Standard" + a 14% Egypt VAT rate (14% on products, shipping
+//     zero-rated — confirmed by the owner 2026-08-31, see src/plugins/npf-shipping.ts)
+//   - one product + one variant per catalog entry (scripts/data/vendure-catalog.json,
+//     generated from mock-repository.ts by scripts/dump-catalog.mjs)
+//   - the product photo as the featured Vendure asset (cart lines render it)
+//   - search reindex, awaited (the job runs in the worker process)
+//
+// Data-integrity rules (pharma / food-supplement business):
+//   - prices come ONLY from the catalog file. A product without an approved
+//     price (price === null) is created DISABLED with price 0 and stays hidden
+//     from the Shop API, so the storefront shows it as unpriced — never as "0 EGP".
+//   - stock levels are NOT invented: variants do not track inventory, they are
+//     simply orderable. Real stock counts are an owner input.
+//   - descriptions are NOT invented: product copy lives in Payload.
+import { existsSync, readFileSync } from "node:fs"
+import path from "node:path"
+import { adminLogin, gql, log, uploadAssets, waitForJob } from "./lib/vendure-admin.mjs"
 
-const ADMIN_API = process.env.VENDURE_ADMIN_API || "http://localhost:3001/admin-api"
-const CATALOG = JSON.parse(readFileSync(process.env.CATALOG_JSON || "/tmp/catalog.json", "utf8"))
-let adminToken = null
+const SYNC = process.argv.includes("--sync")
+const CATALOG_PATH = process.env.CATALOG_JSON || "scripts/data/vendure-catalog.json"
+const CATALOG = JSON.parse(readFileSync(CATALOG_PATH, "utf8"))
 
-async function gql(query, variables) {
-  const res = await fetch(ADMIN_API, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(adminToken ? { Authorization: `Bearer ${adminToken}` } : {}),
-    },
-    body: JSON.stringify({ query, variables }),
-  })
-  const headerToken = res.headers.get("vendure-auth-token")
-  if (headerToken) adminToken = headerToken
-  const json = await res.json()
-  if (json.errors) throw new Error(JSON.stringify(json.errors).slice(0, 300))
-  return json.data
+const MIME = { ".webp": "image/webp", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png" }
+
+async function ensureZoneAndChannel() {
+  // Country EG must exist before it can join the zone.
+  let countries = (await gql(`{ countries(options: { take: 300 }) { items { id code } } }`)).countries.items
+  let eg = countries.find((c) => c.code === "EG")
+  if (!eg) {
+    const created = (
+      await gql(
+        `mutation ($input: CreateCountryInput!) { createCountry(input: $input) { id code } }`,
+        {
+          input: {
+            code: "EG",
+            enabled: true,
+            translations: [
+              { languageCode: "ar", name: "مصر" },
+              { languageCode: "en", name: "Egypt" },
+            ],
+          },
+        }
+      )
+    ).createCountry
+    eg = created
+    log("country EG created")
+  }
+
+  const zones = (await gql(`{ zones(options: { take: 100 }) { items { id name members { id code } } } }`)).zones.items
+  let egypt = zones.find((z) => z.name === "Egypt")
+  if (!egypt) {
+    egypt = (await gql(`mutation { createZone(input: { name: "Egypt" }) { id name members { id code } } }`)).createZone
+    log("zone Egypt created:", egypt.id)
+  }
+  if (!egypt.members.some((m) => m.code === "EG")) {
+    await gql(`mutation ($z: ID!, $m: [ID!]!) { addMembersToZone(zoneId: $z, memberIds: $m) { id } }`, { z: egypt.id, m: [eg.id] })
+    log("EG added to zone Egypt")
+  }
+
+  await gql(`mutation { updateGlobalSettings(input: { availableLanguages: [en, ar] }) { ... on GlobalSettings { id } } }`)
+
+  const ch = (
+    await gql(
+      `{ activeChannel { id currencyCode defaultCurrencyCode availableCurrencyCodes availableLanguageCodes defaultLanguageCode pricesIncludeTax defaultTaxZone { id } defaultShippingZone { id } } }`
+    )
+  ).activeChannel
+  const wantLangs = ["ar", "en"]
+  const ok =
+    ch.currencyCode === "EGP" &&
+    ch.defaultCurrencyCode === "EGP" &&
+    ch.availableCurrencyCodes.length === 1 &&
+    ch.availableCurrencyCodes[0] === "EGP" &&
+    wantLangs.every((l) => ch.availableLanguageCodes.includes(l)) &&
+    ch.pricesIncludeTax === true &&
+    ch.defaultTaxZone?.id === egypt.id &&
+    ch.defaultShippingZone?.id === egypt.id
+  if (!ok) {
+    const upd = (
+      await gql(
+        `mutation ($input: UpdateChannelInput!) { updateChannel(input: $input) { ... on Channel { id } ... on ErrorResult { errorCode message } } }`,
+        {
+          input: {
+            id: ch.id,
+            currencyCode: "EGP",
+            defaultCurrencyCode: "EGP",
+            availableCurrencyCodes: ["EGP"],
+            availableLanguageCodes: wantLangs,
+            pricesIncludeTax: true,
+            defaultTaxZoneId: egypt.id,
+            defaultShippingZoneId: egypt.id,
+          },
+        }
+      )
+    ).updateChannel
+    if (!upd?.id) throw new Error("channel update failed: " + JSON.stringify(upd))
+    log("channel configured: EGP, ar+en, prices include tax, Egypt tax/shipping zone")
+  } else {
+    log("channel already configured")
+  }
+  return egypt
 }
 
-function createVariantFor(productId, p, taxCategoryId) {
-  return {
-    productId,
-    sku: p.sku,
-    taxCategoryId,
-    translations: [
-      { languageCode: "ar", name: p.name },
-      { languageCode: "en", name: p.name },
-    ],
-    // Catalog bridge prices are whole EGP; Vendure stores minor units.
-    price: Math.round((p.price ?? 0) * 100), // null price = legitimately unpriced demo entry (proxeed-men, proxeed-women-inositol)
+async function ensureTax(egypt) {
+  let cat = (await gql(`{ taxCategories { items { id name } } }`)).taxCategories.items.find((t) => t.name === "Standard")
+  if (!cat) {
+    cat = (await gql(`mutation { createTaxCategory(input: { name: "Standard", isDefault: true }) { id name } }`)).createTaxCategory
+    log("tax category Standard created")
+  }
+  const rates = (await gql(`{ taxRates(options: { take: 100 }) { items { id name value category { id } zone { id } } } }`)).taxRates.items
+  const rate = rates.find((r) => r.category.id === cat.id && r.zone.id === egypt.id)
+  if (!rate) {
+    await gql(
+      `mutation ($input: CreateTaxRateInput!) { createTaxRate(input: $input) { id } }`,
+      { input: { name: "Egypt VAT 14%", enabled: true, value: 14, categoryId: cat.id, zoneId: egypt.id } }
+    )
+    log("tax rate Egypt VAT 14% created")
+  } else {
+    log("tax rate exists:", rate.name, rate.value + "%")
+  }
+  return cat
+}
+
+function assetFor(item) {
+  if (!item.image) return null
+  const file = path.join("public", item.image.replace(/^\//, ""))
+  if (!existsSync(file)) return null
+  return { path: file, name: path.basename(file), type: MIME[path.extname(file).toLowerCase()] ?? "application/octet-stream" }
+}
+
+async function ensureProducts(taxCategory) {
+  for (const item of CATALOG) {
+    const priced = typeof item.price === "number" && item.price > 0
+    const minor = priced ? Math.round(item.price * 100) : 0
+    const q = await gql(
+      `query ($slug: String!) { products(options: { filter: { slug: { eq: $slug } } }) { items { id enabled featuredAsset { id } variants { id sku enabled priceWithTax trackInventory } } } }`,
+      { slug: item.slug }
+    )
+    let product = q.products.items[0]
+
+    if (!product) {
+      const created = (
+        await gql(
+          `mutation ($input: CreateProductInput!) { createProduct(input: $input) { id } }`,
+          {
+            input: {
+              enabled: priced,
+              translations: [
+                { languageCode: "ar", name: item.nameArabic || item.name, slug: item.slug, description: "" },
+                { languageCode: "en", name: item.name, slug: item.slug, description: "" },
+              ],
+            },
+          }
+        )
+      ).createProduct
+      if (!created?.id) throw new Error("createProduct failed for " + item.slug)
+      const variant = (
+        await gql(
+          `mutation ($input: [CreateProductVariantInput!]!) { createProductVariants(input: $input) { id } }`,
+          {
+            input: [
+              {
+                productId: created.id,
+                sku: item.sku,
+                price: minor,
+                taxCategoryId: taxCategory.id,
+                enabled: priced,
+                trackInventory: "FALSE",
+                translations: [
+                  { languageCode: "ar", name: item.nameArabic || item.name },
+                  { languageCode: "en", name: item.name },
+                ],
+              },
+            ],
+          }
+        )
+      ).createProductVariants?.[0]
+      if (!variant?.id) throw new Error("createProductVariants failed for " + item.slug)
+      log(`product ${item.slug} created (${item.sku}, ${priced ? item.price + " EGP" : "UNPRICED → disabled"})`)
+      product = (
+        await gql(
+          `query ($id: ID!) { product(id: $id) { id enabled featuredAsset { id } variants { id sku enabled priceWithTax trackInventory } } }`,
+          { id: created.id }
+        )
+      ).product
+    } else {
+      log(`product ${item.slug} exists`)
+    }
+
+    // Repair / sync the variant. Repair always (a variant with the wrong
+    // inventory flag cannot be ordered); price/sku/enabled drift only with --sync.
+    const v = product.variants[0]
+    if (v) {
+      const patch = {}
+      if (v.trackInventory !== "FALSE") patch.trackInventory = "FALSE"
+      if (SYNC) {
+        if (v.priceWithTax !== minor) patch.price = minor
+        if (v.sku !== item.sku) patch.sku = item.sku
+        if (v.enabled !== priced) patch.enabled = priced
+      }
+      if (Object.keys(patch).length) {
+        await gql(
+          `mutation ($input: [UpdateProductVariantInput!]!) { updateProductVariants(input: $input) { ... on ProductVariant { id } } }`,
+          { input: [{ id: v.id, ...patch }] }
+        )
+        log(`  variant ${item.sku} updated:`, JSON.stringify(patch))
+      }
+    }
+    if (SYNC && product.enabled !== priced) {
+      await gql(`mutation ($input: UpdateProductInput!) { updateProduct(input: $input) { ... on Product { id } } }`, {
+        input: { id: product.id, enabled: priced },
+      })
+      log(`  product ${item.slug} enabled=${priced}`)
+    }
+
+    // Featured image (the cart renders product.featuredAsset.preview).
+    if (!product.featuredAsset) {
+      const file = assetFor(item)
+      if (file) {
+        const [asset] = await uploadAssets([file])
+        if (asset?.id) {
+          await gql(`mutation ($input: UpdateProductInput!) { updateProduct(input: $input) { ... on Product { id } } }`, {
+            input: { id: product.id, featuredAssetId: asset.id, assetIds: [asset.id] },
+          })
+          log(`  asset ${file.name} attached`)
+        } else {
+          log(`  asset upload skipped for ${item.slug}:`, JSON.stringify(asset))
+        }
+      }
+    }
+  }
+}
+
+async function reindex() {
+  const job = (await gql(`mutation { reindex { id state } }`)).reindex
+  const done = await waitForJob(job.id)
+  log("reindex job:", done.state)
+  if (done.state !== "COMPLETED") {
+    log("  WARNING: the reindex job did not complete — is the Vendure WORKER running? (docs/OPS.md §2)")
   }
 }
 
 async function main() {
-  const login = await gql(
-    `mutation Login($u: String!, $p: String!) { login(username: $u, password: $p) { ... on CurrentUser { id identifier } ... on ErrorResult { errorCode message } } }`,
-    { u: process.env.SUPERADMIN_USERNAME || "superadmin", p: process.env.SUPERADMIN_PASSWORD || "Npf-Demo-2026!Admin" }
-  )
-  if (!login.login.id) throw new Error("admin login failed: " + JSON.stringify(login.login))
-  console.log("admin login ok:", login.login.identifier)
-
-  // ── Zone "Egypt" + channel wiring (a fresh DB has none — without a default
-  // tax zone, variant creation fails with "active tax zone could not be
-  // determined").
-  let zones = await gql(`{ zones { items { id name } } }`)
-  let egyptZone = zones.zones.items.find((z) => z.name === "Egypt")
-  if (!egyptZone) {
-    const created = await gql(`mutation { createZone(input: { name: "Egypt" }) { id name } }`)
-    egyptZone = created.createZone
-    console.log("zone Egypt created:", egyptZone.id)
-  } else {
-    console.log("zone Egypt exists:", egyptZone.id)
-  }
-  const channel = await gql(`{ activeChannel { id code defaultTaxZone { id } defaultShippingZone { id } } }`)
-  if (!channel.activeChannel.defaultTaxZone || !channel.activeChannel.defaultShippingZone) {
-    const upd = await gql(
-      `mutation UpdateChannel($input: UpdateChannelInput!) { updateChannel(input: $input) { ... on Channel { id } ... on ErrorResult { errorCode } } }`,
-      {
-        input: {
-          id: channel.activeChannel.id,
-          defaultTaxZoneId: egyptZone.id,
-          defaultShippingZoneId: egyptZone.id,
-        },
-      }
-    )
-    if (!upd.updateChannel || !upd.updateChannel.id) throw new Error("channel wiring failed: " + JSON.stringify(upd))
-    console.log("channel default tax/shipping zones wired")
-  } else {
-    console.log("channel zones already wired")
-  }
-
-  // ── Tax category "Standard".
-  let taxCats = await gql(`{ taxCategories { items { id name } } }`)
-  let standard = taxCats.taxCategories.items.find((t) => t.name === "Standard")
-  if (!standard) {
-    const created = await gql(`mutation { createTaxCategory(input: { name: "Standard" }) { id name } }`)
-    standard = created.createTaxCategory
-    console.log("tax category Standard created:", standard.id)
-  } else {
-    console.log("tax category Standard exists:", standard.id)
-  }
-
-  // ── Products + variants.
-  for (const p of CATALOG) {
-    const existing = await gql(
-      `query ($slug: String!) { products(options: { filter: { slug: { eq: $slug } } }) { items { id slug variants { id sku enabled stockOnHand } } } }`,
-      { slug: p.slug }
-    )
-    if (existing.products.items.length > 0) {
-      console.log(`product ${p.slug} exists — skipped`)
-      // Repair path: fresh variants are created disabled with 0 stock, so an
-      // interrupted first run leaves products without a sellable variant.
-      for (const v of existing.products.items[0].variants) {
-        if (!v.enabled || v.stockOnHand === 0) {
-          await gql(
-            `mutation UpdateVariants($input: [UpdateProductVariantInput!]!) { updateProductVariants(input: $input) { ... on ProductVariant { id enabled } } }`,
-            { input: [{ id: v.id, enabled: true, stockOnHand: 100 }] }
-          )
-          console.log(`  variant ${v.sku} enabled + stocked`)
-        }
-      }
-      continue
-    }
-    const createdProduct = await gql(
-      `mutation CreateProduct($input: CreateProductInput!) { createProduct(input: $input) { ... on Product { id slug } } }`,
-      {
-        input: {
-          translations: [
-            {
-              languageCode: "ar",
-              name: p.name,
-              slug: p.slug,
-              description: `${p.name} — ديمو كاتالوج نايل فارما فود.`,
-            },
-            {
-              languageCode: "en",
-              name: p.name,
-              slug: p.slug,
-              description: `${p.name} — Nile Pharma Food demo catalog.`,
-            },
-          ],
-        },
-      }
-    )
-    const product = createdProduct.createProduct
-    if (!product || !product.id) throw new Error("createProduct failed for " + p.slug + ": " + JSON.stringify(createdProduct))
-    // CreateProductInput cannot enable; flip it explicitly.
-    await gql(
-      `mutation UpdateProduct($input: UpdateProductInput!) { updateProduct(input: $input) { ... on Product { id enabled } } }`,
-      { input: { id: product.id, enabled: true } }
-    )
-    const createdVariants = await gql(
-      `mutation CreateVariants($input: [CreateProductVariantInput!]!) { createProductVariants(input: $input) { ... on ProductVariant { id sku } } }`,
-      { input: [createVariantFor(product.id, p, standard.id)] }
-    )
-    const variant = createdVariants.createProductVariants?.[0]
-    if (!variant || !variant.id) throw new Error("createProductVariants failed for " + p.slug + ": " + JSON.stringify(createdVariants))
-    // Fresh variants are disabled with stockOnHand 0 — enable + stock them.
-    await gql(
-      `mutation UpdateVariants($input: [UpdateProductVariantInput!]!) { updateProductVariants(input: $input) { ... on ProductVariant { id enabled stockOnHand } } }`,
-      { input: [{ id: variant.id, enabled: true, stockOnHand: 100 }] }
-    )
-    console.log(`product ${p.slug} created (${p.sku} @ ${p.price} EGP)`)
-  }
-
-  // ── Search reindex so the storefront queries see everything.
-  const reindex = await gql(`mutation { reindex { __typename } }`)
-  console.log("reindex done:", JSON.stringify(reindex.reindex))
-  console.log("catalog seeding complete")
+  const login = await adminLogin()
+  log("admin login ok:", login.identifier)
+  const egypt = await ensureZoneAndChannel()
+  const taxCategory = await ensureTax(egypt)
+  await ensureProducts(taxCategory)
+  await reindex()
+  log("catalog seeding complete")
 }
 
 main().catch((e) => {

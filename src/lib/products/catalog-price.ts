@@ -7,7 +7,7 @@ export function resolveCatalogPrice(
   demo: Pick<Product, "price" | "currency" | "sku"> | undefined,
   allowDemo: boolean
 ) {
-  if (live && Number.isFinite(live.price) && live.price >= 0)
+  if (live && Number.isFinite(live.price) && live.price > 0)
     return {
       price: live.price,
       currency: live.currency,

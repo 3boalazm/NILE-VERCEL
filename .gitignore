@@ -71,3 +71,6 @@ static/email/
 /docs/upgrade-2026-10-15/**/*.png
 /docs/upgrade-2026-10-15/**/*.webp
 !/docs/upgrade-2026-10-15/discovery-evidence/*.webp
+
+# Vendure asset-server uploads written by scripts/seed-vendure-catalog.mjs
+/static/assets/
