@@ -31,3 +31,7 @@ PR. Apply with `git fetch <bundle> claude/vendure-db-glass-redesign-2026-10-18`.
 
 ## Needs owner input
 See `docs/OPS.md` §11.5 (prices for Proxeed Men / Women Inositol, stock counts, VAT-inclusive confirmation, MECS 2026 price PDF, SMTP/SUPERADMIN/SEED_KEY secrets).
+
+## Part 2 checkpoint — design system + shell + home
+- `src/app/glass.css` (Nile Glass tokens `--ng-*`, `.ng-*` vocabulary), new header/dock/footer, home composition, product card/grid. Home overflow at 390px fixed (html clip).
+- Remaining: catalog/product, company/content, commerce/auth pages; removal of care-atlas CSS/components.

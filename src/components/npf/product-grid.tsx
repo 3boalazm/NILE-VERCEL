@@ -26,7 +26,7 @@ export function NPFProductGrid({
   }
 
   return (
-    <div className="ca-catalog-grid">
+    <div className="ng-products">
       {products.map((product, index) => (
         <NPFProductCard
           key={product.id}

@@ -35,7 +35,7 @@ export default function LocaleTemplate({
     );
   return (
     <div
-      className={`${animate ? "page-enter" : ""} ${utility ? "ca-functional-page" : ""}`}
+      className={`${animate ? "page-enter" : ""} ${utility ? "ng-functional" : ""}`}
     >
       {children}
     </div>
