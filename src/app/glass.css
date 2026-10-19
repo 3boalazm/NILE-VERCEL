@@ -1383,3 +1383,210 @@ html.js .ng-reveal[data-in="true"] {
 
 /* Brand mark is navy; flip it to white on the dark theme. */
 .dark :where(.ng-brand img, .ng-menu-logo, .ng-footer-logo) { filter: brightness(0) invert(1); }
+
+/* ---------- Nile Carved Glass visual bridge ------------------------------ */
+/* The attached concept uses a deep blue night canvas, cyan-to-lime accents,
+   and fine sculpted rims. Keep the existing semantic component system and
+   commerce layout; these aliases carry its new art direction site-wide. */
+:root {
+  --ng-ink: #0a2240;
+  --ng-ink-2: #2f4a6b;
+  --ng-ink-3: #455f82;
+  --ng-brand: #08607f;
+  --ng-brand-hi: #0b7897;
+  --ng-aqua: #1fa6cf;
+  --ng-aqua-soft: #d5f0f7;
+  --ng-peach: #9bded5;
+  --ng-rose: #b1d8ec;
+  --ng-rose-soft: #e2f1fa;
+  --ng-mint: #9bd58a;
+  --ng-sun: #cde99b;
+  --ng-bg: #dbe8f7;
+  --ng-bg-2: #eef4fc;
+  --ng-glass: rgba(255, 255, 255, 0.67);
+  --ng-glass-strong: rgba(255, 255, 255, 0.9);
+  --ng-glass-faint: rgba(255, 255, 255, 0.38);
+  --ng-glass-edge: rgba(255, 255, 255, 0.88);
+  --ng-hairline: rgba(10, 34, 64, 0.1);
+  --ng-hairline-strong: rgba(10, 34, 64, 0.18);
+  --ng-carve-rim: linear-gradient(135deg, #fff 0%, rgba(120, 200, 235, .78) 38%, rgba(120, 200, 120, .62) 72%, rgba(255, 255, 255, .88) 100%);
+  --ng-shadow-1: 0 1px 0 rgba(255,255,255,.9) inset, 0 12px 34px -18px rgba(10,34,64,.28);
+  --ng-shadow-2: 0 1px 0 rgba(255,255,255,.9) inset, 0 30px 64px -28px rgba(10,34,64,.38);
+  --ng-shadow-3: 0 1px 0 rgba(255,255,255,.9) inset, 0 50px 90px -38px rgba(10,34,64,.46);
+}
+.dark {
+  --ng-ink: #eaf3ff;
+  --ng-ink-2: #b8cae4;
+  --ng-ink-3: #93a9c8;
+  --ng-brand: #86d8f2;
+  --ng-brand-hi: #a6e37a;
+  --ng-aqua: #5ccdf2;
+  --ng-aqua-soft: #123d57;
+  --ng-peach: #46d6bd;
+  --ng-rose: #5592c8;
+  --ng-rose-soft: #16364c;
+  --ng-mint: #a6e37a;
+  --ng-sun: #c9ed87;
+  --ng-bg: #040c17;
+  --ng-bg-2: #07182b;
+  --ng-glass: rgba(13, 35, 59, .78);
+  --ng-glass-strong: rgba(8, 24, 46, .94);
+  --ng-glass-faint: rgba(140, 190, 240, .08);
+  --ng-glass-edge: rgba(170, 210, 255, .2);
+  --ng-hairline: rgba(170, 210, 255, .12);
+  --ng-hairline-strong: rgba(170, 210, 255, .28);
+  --ng-carve-rim: linear-gradient(135deg, rgba(255,255,255,.72), rgba(116,222,246,.62) 38%, rgba(166,227,122,.56) 72%, rgba(255,255,255,.12));
+  --ng-shadow-1: 0 1px 0 rgba(255,255,255,.06) inset, 0 14px 36px -18px rgba(0,6,20,.7);
+  --ng-shadow-2: 0 1px 0 rgba(255,255,255,.08) inset, 0 30px 68px -28px rgba(0,6,20,.82);
+  --ng-shadow-3: 0 1px 0 rgba(255,255,255,.1) inset, 0 50px 92px -38px rgba(0,6,20,.9);
+  --ng-danger: #ff9b92;
+  --ng-ok: #a6e37a;
+}
+
+body.ng-site::before {
+  background:
+    radial-gradient(60vmax 48vmax at 88% -8%, rgba(44,150,224,.24), transparent 62%),
+    radial-gradient(52vmax 44vmax at 2% 38%, rgba(70,214,189,.12), transparent 64%),
+    radial-gradient(58vmax 48vmax at 68% 108%, rgba(166,227,122,.16), transparent 62%),
+    linear-gradient(180deg, var(--ng-bg-2), var(--ng-bg));
+}
+.dark body.ng-site::before {
+  background:
+    radial-gradient(60vmax 48vmax at 88% -8%, rgba(44,150,224,.2), transparent 62%),
+    radial-gradient(52vmax 44vmax at 2% 38%, rgba(70,214,189,.09), transparent 64%),
+    radial-gradient(58vmax 48vmax at 68% 108%, rgba(28,96,206,.22), transparent 62%),
+    linear-gradient(180deg, var(--ng-bg-2), var(--ng-bg));
+}
+.ng-accent,
+.dark .ng-accent {
+  background-image: linear-gradient(112deg, var(--ng-ink) 0%, var(--ng-aqua) 46%, var(--ng-mint) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ng-eyebrow::before {
+  background: linear-gradient(90deg, var(--ng-aqua), var(--ng-mint));
+}
+.ng-btn-primary,
+.dark .ng-btn-primary {
+  --btn-bg: linear-gradient(100deg, #1c5aa5 0%, #10386f 52%, #0a2240 100%);
+  --btn-fg: #f2f7ff;
+  --btn-bd: transparent;
+  background-image: linear-gradient(100deg, #1c5aa5 0%, #10386f 52%, #0a2240 100%);
+}
+.dark .ng-btn-primary {
+  --btn-bg: linear-gradient(100deg, #88dcf7 0%, #60d8cb 52%, #abe77e 100%);
+  --btn-fg: #04121f;
+  background-image: linear-gradient(100deg, #88dcf7 0%, #60d8cb 52%, #abe77e 100%);
+  box-shadow: 0 10px 34px -12px rgba(80,214,200,.56);
+}
+.ng-btn,
+.ng-glass,
+.ng-card,
+.ng-trust-wrap,
+.ng-tile,
+.ng-acc details,
+.ng-footer-card {
+  border-color: transparent;
+  background-clip: padding-box;
+  box-shadow: var(--ng-shadow-1), 0 0 0 1px var(--ng-hairline);
+}
+.ng-btn,
+.ng-glass,
+.ng-card,
+.ng-trust-wrap,
+.ng-tile,
+.ng-acc details,
+.ng-footer-card {
+  position: relative;
+}
+.ng-btn::after,
+.ng-glass::after,
+.ng-card::before,
+.ng-trust-wrap::after,
+.ng-tile::after,
+.ng-acc details::after,
+.ng-footer-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: var(--ng-carve-rim);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+.ng-btn::after { z-index: 1; }
+.ng-btn > * { position: relative; z-index: 2; }
+.ng-card::before { z-index: 4; }
+.ng-btn {
+  border-radius: 20px 28px 20px 28px;
+}
+.ng-glass,
+.ng-card,
+.ng-trust-wrap,
+.ng-tile,
+.ng-acc details,
+.ng-footer-card,
+.ng-header-bar,
+.ng-dock {
+  border-radius: 26px 34px 26px 34px;
+}
+.ng-header-bar,
+.ng-dock {
+  border-radius: 24px;
+}
+.ng-stage-frame {
+  border-radius: clamp(32px, 7vw, 72px) clamp(22px, 4vw, 44px) clamp(32px, 7vw, 72px) clamp(22px, 4vw, 44px);
+  background:
+    radial-gradient(70% 50% at 46% 36%, rgba(60,190,240,.23), transparent 72%),
+    radial-gradient(60% 40% at 12% 96%, rgba(120,220,120,.12), transparent 70%),
+    linear-gradient(182deg, color-mix(in srgb, var(--ng-bg-2) 72%, #0a2c50), var(--ng-bg-2));
+}
+.ng-card-media {
+  border-radius: 22px 30px 22px 30px;
+  background: linear-gradient(150deg, color-mix(in srgb, var(--ng-aqua) 28%, var(--ng-glass-strong)), color-mix(in srgb, var(--ng-mint) 22%, var(--ng-bg-2)));
+}
+.ng-pill,
+.dark .ng-pill {
+  background: linear-gradient(100deg, var(--ng-aqua), var(--ng-mint));
+  color: #04121f;
+}
+.ng-nav a[aria-current="page"],
+.ng-dock a[aria-current="page"],
+.ng-filter input:checked + label {
+  background: linear-gradient(100deg, var(--ng-aqua), var(--ng-mint));
+  color: #04121f;
+  border-color: transparent;
+}
+.dark .ng-nav a[aria-current="page"],
+.dark .ng-dock a[aria-current="page"],
+.dark .ng-filter input:checked + label {
+  background: linear-gradient(100deg, var(--ng-aqua), var(--ng-mint));
+  color: #04121f;
+  border-color: transparent;
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --ng-glass: #f7fbff;
+    --ng-glass-strong: #fff;
+    --ng-glass-faint: #edf4fb;
+  }
+  .dark {
+    --ng-glass: #0b1d33;
+    --ng-glass-strong: #08182b;
+    --ng-glass-faint: #112c47;
+  }
+  .ng-header-bar,
+  .ng-dock,
+  .ng-chip-float,
+  .ng-photo-note,
+  .ng-menu-sheet {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+}
